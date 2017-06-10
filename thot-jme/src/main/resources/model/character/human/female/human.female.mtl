@@ -1,0 +1,84 @@
+#
+# mtl file for human.female.obj obj file
+#
+
+newmtl Character_Human_female_humanfemale.m2_Geoset_002
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_003
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_004
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_008
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_009
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_011
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_012
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_023
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_027_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Hair01_07.png
+newmtl Character_Human_female_humanfemale.m2_Geoset_042
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd human.female_Body.png

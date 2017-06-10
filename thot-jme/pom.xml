@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>thot-jme</artifactId>
+	<name>Thot for jMonkeyEngine</name>
+	<inceptionYear>2015</inceptionYear>
+	<description>Thot jMonkeyEngine is one of the Heliosphere's educational project based on the jMonkeyEngine scene graph Java framework.</description>
+
+	<build>
+		<plugins></plugins>
+	</build>
+
+	<properties></properties>
+
+	<modules></modules>
+
+	<parent>
+		<groupId>org.heliosphere.thot</groupId>
+		<artifactId>thot-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../thot-parent</relativePath>
+	</parent>
+
+	<scm>
+		<url>https://www.heliosphere-mannet-jts.com:10143/jazz:org.heliosphere.entertainment.thot.jenkins</url>
+		<connection>scm:jazz:https://www.heliosphere-mannet-jts.com:10143/jazz:org.heliosphere.entertainment.thot.jenkins</connection>
+		<developerConnection>scm:jazz:https://www.heliosphere-mannet-jts.com:10143/jazz:org.heliosphere.entertainment.thot.jenkins</developerConnection>
+	</scm>
+
+	<issueManagement>
+		<system>Rational Team Concert</system>
+		<url>https://www.heliosphere-mannet-jts.com:10143/ccm/web/projects/heliosphere.entertainment.titan</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://www.heliosphere-mannet-jenkins.com:9185/job/org.heliosphere.education.thot</url>
+	</ciManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-core</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-desktop</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-lwjgl</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-effects</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-plugins</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-niftygui</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3-lib</groupId>
+			<artifactId>nifty</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-jogg</artifactId>
+			<version>3.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-testdata</artifactId>
+			<version>3.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3</groupId>
+			<artifactId>jme3-jbullet</artifactId>
+			<version>3.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3-lib</groupId>
+			<artifactId>jbullet</artifactId>
+			<version>3.0.10-jme</version>
+		</dependency>
+
+		<dependency>
+			<groupId>lessvoid</groupId>
+			<artifactId>nifty-examples</artifactId>
+			<version>1.4.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jme3-lib</groupId>
+			<artifactId>vecmath</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+	</dependencies>
+
+</project>

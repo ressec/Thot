@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>thot-common</artifactId>
+	<name>Thot Common</name>
+	<inceptionYear>2013</inceptionYear>
+	<developers>
+		<developer>
+			<id>rec</id>
+			<name>Christophe Resse</name>
+			<email>christophe.resse@hotmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<organization>
+		<name>Heliosphere Corporation</name>
+	</organization>
+	<build>
+	</build>
+	<modules>
+	</modules>
+	<parent>
+		<groupId>org.heliosphere.thot</groupId>
+		<artifactId>thot-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../thot-parent</relativePath>
+	</parent>
+	<description>Thot Common is one of the Heliosphere's educational project based on the Apache's Commons library.</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,60 @@
+#
+# mtl file for worgen.female.obj obj file
+#
+
+newmtl Character_Worgen_female_worgenfemale.m2_Geoset_001
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.female_WORGENFEMALESKIN00_06_EXTRA.png
+newmtl Character_Worgen_female_worgenfemale.m2_Geoset_005
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.female_Body.png
+newmtl Character_Worgen_female_worgenfemale.m2_Geoset_007
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.female_Body.png
+newmtl Character_Worgen_female_worgenfemale.m2_Geoset_008
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.female_Body.png
+newmtl Character_Worgen_female_worgenfemale.m2_Geoset_014
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.female_Body.png
+newmtl Character_Worgen_female_worgenfemale.m2_Geoset_028
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.female_WORGENFEMALESKIN00_06_EXTRA.png
+newmtl Character_Worgen_female_worgenfemale.m2_Geoset_048
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.female_Body.png

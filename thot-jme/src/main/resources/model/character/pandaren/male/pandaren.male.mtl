@@ -1,0 +1,108 @@
+#
+# mtl file for pandaren.male.obj obj file
+#
+
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_000_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_PandaMaleSkinExtra00_04.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_002_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_PandaMaleSkinExtra00_04.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_006
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_007
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_008
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_010
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_011
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_012
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_016
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_017
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_018
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_Body.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_041_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_PandaMaleSkinExtra00_04.png
+newmtl Character_Pandaren_male_pandarenmale.m2_Geoset_084_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd pandaren.male_PandaMaleSkinExtra00_04.png

@@ -1,0 +1,92 @@
+#
+# mtl file for draenei.male.obj obj file
+#
+
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_001_Lum
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_005
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_006
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_012
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_013
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_016
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_027
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_044_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Hair00_02.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_055
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_057_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Hair00_02.png
+newmtl Character_Draenei_male_draeneimale.m2_Geoset_060
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd draenei.male_Body.png

@@ -1,0 +1,68 @@
+#
+# mtl file for scourge.male.obj obj file
+#
+
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_001
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Body.png
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_007
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Body.png
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_008
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Body.png
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_010
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Body.png
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_013
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Body.png
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_021
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Body.png
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_023
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Body.png
+newmtl Character_Scourge_male_scourgemale.m2_Geoset_045_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd scourge.male_Hair00_05.png

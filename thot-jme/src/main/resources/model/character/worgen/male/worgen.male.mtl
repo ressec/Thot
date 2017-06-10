@@ -1,0 +1,76 @@
+#
+# mtl file for worgen.male.obj obj file
+#
+
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_000_Lum
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_Body.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_002
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_WorgenMaleSkin00_03_Extra.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_006
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_Body.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_007
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_Body.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_011
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_Body.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_015
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_Body.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_024
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_WorgenMaleSkin00_03_Extra.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_047
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_WorgenMaleSkin00_03_Extra.png
+newmtl Character_Worgen_male_worgenmale.m2_Geoset_056
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd worgen.male_Body.png

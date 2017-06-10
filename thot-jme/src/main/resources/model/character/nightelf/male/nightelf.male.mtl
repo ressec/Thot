@@ -1,0 +1,68 @@
+#
+# mtl file for nightelf.male.obj obj file
+#
+
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_009
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Body.png
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_010
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Body.png
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_012
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Body.png
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_013
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Body.png
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_014
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Body.png
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_016
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Body.png
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_017
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Body.png
+newmtl Character_Nightelf_male_nightelfmale.m2_Geoset_059_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd nightelf.male_Hair00_12.png

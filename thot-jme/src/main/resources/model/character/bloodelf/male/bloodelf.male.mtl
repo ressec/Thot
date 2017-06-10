@@ -1,0 +1,84 @@
+#
+# mtl file for bloodelf.male.obj obj file
+#
+
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_002
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Body.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_004
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Body.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_005
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Body.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_007
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Body.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_010
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Body.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_014
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Body.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_016_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Hair00_11.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_021
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Body.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_025_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Hair00_11.png
+newmtl Character_Bloodelf_male_bloodelfmale.m2_Geoset_050_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd bloodelf.male_Hair00_11.png

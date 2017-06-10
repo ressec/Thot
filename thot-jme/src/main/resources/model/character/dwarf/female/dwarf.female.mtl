@@ -1,0 +1,76 @@
+#
+# mtl file for dwarf.female.obj obj file
+#
+
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_001_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Hair00_07.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_002
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Body.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_006
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Body.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_008
+illum 2
+Kd 0.000000 0.000000 0.000000
+Ka 0.250000 0.250000 0.250000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Body.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_009
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Body.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_015
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Body.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_024
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Body.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_042_Dbl
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Hair00_07.png
+newmtl Character_Dwarf_female_dwarffemale.m2_Geoset_043
+illum 2
+Kd 1.000000 1.000000 1.000000
+Ka 0.250000 0.250000 0.250000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd dwarf.female_Body.png
