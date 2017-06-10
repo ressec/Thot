@@ -2,7 +2,11 @@
 *.class
 
 # Log file
+/log
 *.log
+
+# Folder containing compiled deployables
+/target
 
 # BlueJ files
 *.ctxt
