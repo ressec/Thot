@@ -48,10 +48,5 @@ See: http://akka.io/</description>
 			<groupId>org.beryx</groupId>
 			<artifactId>text-io</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.heliosphere.drake</groupId>
-			<artifactId>drake-base</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 </project>
