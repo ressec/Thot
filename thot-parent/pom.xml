@@ -298,7 +298,7 @@
 		<module>../thot-hazelcast</module>
 		<module>../thot-hibernate</module>
 		<module>../thot-javafx</module>
-		<module>../thot-jme</module>
+		
 		<module>../thot-jms</module>
 		<module>../thot-jmx</module>
 		<module>../thot-kryo</module>
