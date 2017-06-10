@@ -1,0 +1,25 @@
+sudo: false
+language: java
+script: mvn clean package -f thot-parent/pom.xml
+jdk: oraclejdk8
+after_success:
+- echo "<settings><servers><server><id>nexus-snapshots</id><username>\${env.CI_DEPLOY_USERNAME}</username><password>\${env.CI_DEPLOY_PASSWORD}</password></server></servers></settings>"
+  > ~/settings.xml
+- if [ -z ${TRAVIS_TAG} ]; then mvn deploy -f thot-parent/pom.xml --settings
+  ~/settings.xml; fi
+before_deploy:
+- mvn package
+- zip -r ${TRAVIS_TAG}.zip target/*.jar
+deploy:
+  provider: releases
+  api_key:
+    secure: XyLxQcS14znfXS6Lylf2YrPkqpCOi13xHLLGB0yhGn5uoqfzbel0gvD/5mhCz12yOnsGZSJIP91WkJM6enjgto+FPYP994Pjvuuqn2hrMFqPDpEcdclB5es6TvJQd2wPj4FzkiBxEeootujF8I7jiMCoLJSl9Xp4peQbsM8s/jo=
+    
+  file: "${TRAVIS_TAG}.zip"
+  on:
+    repo: ressec/thot
+    tags: true
+    all_branches: true
+notifications:
+  slack:
+    secure: NAo+R/TsqVQVxofrNQiJ1WcyKfBhifjVzCHQy7/5u/+5Vu2ycIluqK76rMGgsd7hB6Bfeo2KUpQsCfd2cOlNOIRMqoHcAmfiBYvaau8VaoXVF9JTprXcEM1N9lXx6zDeHvTzGvTOVN54MZaEWeJNSnYHZktKuZaUbvk+c1b7vmiX6OXvfu/jOBA1+KkfoCmxnC5GObUgNmx9YZowhNr75EPLN+vXK7//6YRZ42kEzjUlkr8Q2wmg528wbRIdltBg+bG47QRHONFhH2iRIuKewO8rwEk2vAyvm1ArLvxLipJrIN7GMwcoGTzTFk6pUoX7ifgz5WAh1LFyz30ehprrVpVKslwF1HknzVUvSIp+RDSbEbiJyxp4P8CiZ0N6Bfo3g/lfy7HutEKlhB7QqonDTneHinfN371FwbbI/VzXkmzB55BHXsqH+be3GNiBOihU88EhS2M5l93uzLclhJwXbiuQO+VM07qaNt+9RFLg/mm+LH3a7AmB+vvTqMI7CEFDDGv2NcOXyDUl0XnnxQl/8XziSr0sx/JCDsxQTwCD03rVjKRUAOfoYTijM7H0sJAYRE5HW+iwPzhHwjSIXZPSFEeHFWYenwUInd7iFEQng7a2l/eRELhMBuWA0qBSNnbcGFQttt2bq/51NYZMKUu41An1gN56i/sHk7Od49KHjT4=
