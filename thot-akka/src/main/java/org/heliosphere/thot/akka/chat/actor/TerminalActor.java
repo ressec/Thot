@@ -76,6 +76,9 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	@Override
 	public final void onCommand(ICommand command)
 	{
+		// Pauses the terminal thread until the command response has been received.
+		terminal.pause();
+
 		switch ((CommandCategoryType) command.getMetadata().getCategory())
 		{
 			case NORMAL:
@@ -189,7 +192,8 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				break;
 		}
 
-		terminal.getTerminal().println(response.getMessages());
+		// Resumes the terminal thread.
+		terminal.resume();
 	}
 
 	/**
