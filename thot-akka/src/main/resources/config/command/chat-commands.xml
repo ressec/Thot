@@ -1,0 +1,121 @@
+<chat-command-file>
+
+  <header>
+    <company>Heliosphere Ltd.</company>
+    <version>1.0</version>
+    <author>Resse Christophe</author>
+    <description>XML file containing definitions for some chat commands.</description>
+  </header>
+
+  <commands>
+
+    <!-- AFK command which is a very simple command. -->
+    <command>
+      <group>Chat</group>
+      <category>Normal</category>
+      <name>afk</name>
+      <description>Marks you as "Away from keyboard".</description>
+      <aliases>
+        <alias>away</alias>
+      </aliases>
+      <parameters></parameters> <!-- This command has no parameter. -->
+    </command>
+
+    <!-- WHO command which is a quite complex command. -->
+    <command>
+
+      <group>Chat</group>
+      <category>Normal</category>
+      <name>who</name>
+      <description>Performs a query on the server for online players matching your query.</description>
+      <syntax>/who 'filters'</syntax>
+      <aliases>people</aliases>
+
+      <parameters>
+        <parameter>
+          <name>name</name>
+          <description>Used to filter on the player name.</description>
+          <tag>-n</tag>
+          <regexp>(-n)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/who -n "Candy" (will query for all online players having their name matching 'Candy').</example>
+            <example>/who -n "Cand*" (will query for all online players having their name starting with 'Candy').</example>
+          </examples>
+        </parameter>
+
+        <parameter>
+          <name>guild</name>
+          <description>Used to filter on the guild name.</description>
+          <tag>-g</tag>
+          <regexp>(-g)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+
+        <parameter>
+          <name>zone</name>
+          <description>Used to filter on the zone name.</description>
+          <tag>-z</tag>
+          <regexp>(-n)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+
+        <parameter>
+          <name>race</name>
+          <description>Used to filter on the race name.</description>
+          <tag>-r</tag>
+          <regexp>(-r)\s*+([a-zA-Z\p{Blank}]++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/who -r Human (will query for all online players being of race 'Human').</example>
+            <example>/who -r Dwar* (will query for all online players being of race starting with 'Dwa').</example>
+          </examples>
+        </parameter>
+
+        <parameter>
+          <name>class</name>
+          <description>Used to filter on the class name.</description>
+          <tag>-c</tag>
+          <regexp>(-c)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/who -c Priest (will query for all online players being of class 'Priest').</example>
+            <example>/who -c Wa* (will query for all online players being of class starting with 'Wa').</example>
+          </examples>
+        </parameter>
+
+        <parameter>
+          <name>server</name>
+          <description>Used to filter on the server name.</description>
+          <tag>-s</tag>
+          <type>String</type>
+          <regexp>(-s)\s*+([a-zA-Z]++)</regexp>
+          <examples>
+            <example>/who -s Tenedron (will query for all online players of the Tenedron server).</example>
+          </examples>
+        </parameter>
+
+        <parameter>
+          <name>level</name>
+          <description>Used to filter on player's level.</description>
+          <tag>-l</tag>
+          <regexp>(-l)\s*+(\d++)\s*+-\s*+(\d++)|-l\s++(\d++)</regexp>
+          <type>Integer</type>
+          <examples>
+            <example>/who -l 14-21 (will query for all online players between level 14 and level 21).</example>
+          </examples>
+        </parameter>
+
+      </parameters>
+
+    </command>
+
+  </commands>
+  
+
+  <footer>
+    <generated>2017-06-03 12:48:03</generated>
+    <changed>2017-06-06 23:15:17</changed>
+  </footer>
+
+</chat-command-file>

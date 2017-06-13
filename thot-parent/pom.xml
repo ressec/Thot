@@ -191,9 +191,14 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>3.2.1</version>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-collections4</artifactId>
+				<version>4.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.5</version>
 			</dependency>
 			<dependency>
 				<groupId>com.esotericsoftware.kryo</groupId>
@@ -256,6 +261,16 @@
 				<version>2.5.2</version>
 			</dependency>
 			<dependency>
+				<groupId>com.typesafe.akka</groupId>
+				<artifactId>akka-cluster_2.12</artifactId>
+				<version>2.5.2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.typesafe.akka</groupId>
+				<artifactId>akka-cluster-metrics_2.12</artifactId>
+				<version>2.5.2</version>
+			</dependency>
+			<dependency>
 				<groupId>com.googlecode.lanterna</groupId>
 				<artifactId>lanterna</artifactId>
 				<version>3.0.0-rc1</version>
@@ -264,6 +279,11 @@
 				<groupId>org.beryx</groupId>
 				<artifactId>text-io</artifactId>
 				<version>2.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.heliosphere.athena</groupId>
+				<artifactId>athena-base</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -275,22 +295,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<modules>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		<module>../thot-common</module>
 		<module>../thot-eclipse</module>
 		<module>../thot-eventbus</module>
@@ -298,7 +302,6 @@
 		<module>../thot-hazelcast</module>
 		<module>../thot-hibernate</module>
 		<module>../thot-javafx</module>
-		
 		<module>../thot-jms</module>
 		<module>../thot-jmx</module>
 		<module>../thot-kryo</module>
