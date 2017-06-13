@@ -146,6 +146,19 @@
 
 	</build>
 
+	<repositories>
+		<repository>
+			<id>heliosphere-public</id>
+			<name>Heliosphere Releases</name>
+			<url>http://83.153.27.91:9086/nexus/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>heliosphere-snapshot</id>
+			<name>Heliosphere Snapshots</name>
+			<url>http://83.153.27.91:9086/nexus/content/groups/public-snapshots</url>
+		</repository>
+	</repositories>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
