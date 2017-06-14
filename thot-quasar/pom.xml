@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>thot-quasar</artifactId>
+	<name>Thot Quasar</name>
+	<inceptionYear>2017</inceptionYear>
+	<developers>
+		<developer>
+			<id>rec</id>
+			<name>Christophe Resse</name>
+			<email>christophe.resse@hotmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<organization>
+		<name>Heliosphere Corporation</name>
+	</organization>
+	<build>
+		<plugins>
+		</plugins>
+	</build>
+	<properties>
+		<project.directory.benchmark>${basedir/benchmark}</project.directory.benchmark>
+		<project.directory.run>${basedir/run}</project.directory.run>
+		<project.directory.data>${basedir/data}</project.directory.data>
+		<project.directory.log>${basedir/log}</project.directory.log>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<modules>
+	</modules>
+	<parent>
+		<groupId>org.heliosphere.thot</groupId>
+		<artifactId>thot-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../thot-parent</relativePath>
+	</parent>
+	<description>Thot Quasar is one of the Heliosphere's educational project based on the Quasar library.
+</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.beryx</groupId>
+			<artifactId>text-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.heliosphere.athena</groupId>
+			<artifactId>athena-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>co.paralleluniverse</groupId>
+				<artifactId>quasar-core</artifactId>
+				<version>0.7.8</version>
+			</dependency>
+			<dependency>
+				<groupId>co.paralleluniverse</groupId>
+				<artifactId>quasar-actors</artifactId>
+				<version>0.7.8</version>
+			</dependency>
+			<dependency>
+				<groupId>co.paralleluniverse</groupId>
+				<artifactId>quasar-galaxy</artifactId>
+				<version>0.7.8</version>
+			</dependency>
+			<dependency>
+				<groupId>co.paralleluniverse</groupId>
+				<artifactId>quasar-reactive-streams</artifactId>
+				<version>0.7.8</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
