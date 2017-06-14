@@ -21,24 +21,13 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 
-public final class AkkaEchoTerminal
+public final class AkkaSimpleCommandTerminal
 {
 	/**
 	 * AKKA configuration file.
 	 */
 	@SuppressWarnings("nls")
 	private static final String AKKA_CONFIG = "./config/cluster/chat/application.conf";
-
-	/**
-	 * Terminal configuration file.
-	 */
-	@SuppressWarnings("nls")
-	private static final String TERMINAL_CONFIG = "/config/command/chat-commands.xml";
-
-	/**
-	 * Akka configuration.
-	 */
-	private static Config configuration = null;
 
 	/**
 	 * Reference to the command processor actor.
@@ -59,16 +48,7 @@ public final class AkkaEchoTerminal
 	public static void main(String[] arguments)
 	{
 		// Override the configuration of the port number.
-		Config configuration = ConfigFactory
-				.parseString("akka.remote.netty.tcp.port=" + arguments[0])
-				.withFallback(ConfigFactory.load(AKKA_CONFIG));
-
-		//		// Ensure the configuration file is accessible.
-		//		Config actorProvider = ConfigFactory.parseString("akka.actor.provider");
-		//		if (actorProvider.getString("akka.actor.provider").equals("cluster"))
-		//		{
-		//			throw new FileException(AKKA_CONFIG);
-		//		}
+		Config configuration = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + arguments[0]).withFallback(ConfigFactory.load(AKKA_CONFIG));
 
 		AkkaUtility.dumpConfigKeyFor(configuration, "akka.actor.provider");
 
