@@ -29,7 +29,12 @@ import akka.event.LoggingAdapter;
 import lombok.NonNull;
 
 /**
- * A actor managing a {@code terminal}.
+ * A actor managing a {@code terminal / console}.
+ * <p>
+ * Terminal actor is responsible to create the actor tree to handle the processing of commands. Typically it will
+ * receive commands that have been validated by the underlying terminal object. It will then dispatch the commands 
+ * according to their type to a specialized actor. When it receives the command's response, it takes the appropriate 
+ * action such as quitting or displaying the result of the command on the console.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
@@ -49,11 +54,12 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	/**
 	 * Normal command processor actor.
 	 */
-	private ActorRef normalCommandProcessor = getContext().actorOf(Props.create(NormalCommandActor.class), "normalCommandProcessor");
+	private ActorRef normalCommandProcessor = null;
 
 	/**
 	 * Creates a new terminal actor.
-	 * @throws FileException 
+	 * <hr>
+	 * @throws FileException Thrown in case an error occurred while trying to access the XML commands file.
 	 */
 	@SuppressWarnings("nls")
 	public TerminalActor() throws FileException
@@ -61,6 +67,9 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		terminal = new CommandTerminal("/config/command/chat-commands.xml");
 		terminal.registerListener(this);
 		terminal.start();
+
+		// Create an actor to handle processing of normal ('/') commands.
+		normalCommandProcessor = getContext().actorOf(Props.create(NormalCommandActor.class), "normalCommandProcessor");
 	}
 
 	@Override
