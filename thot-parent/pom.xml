@@ -22,6 +22,61 @@
 		<name>Heliosphere Corporation</name>
 	</organization>
 
+	<repositories>
+
+		<repository>
+			<id>nexus-snapshots</id>
+			<url>http://83.153.27.91:9086/nexus/content/groups/public-snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>nexus-releases</id>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+			<url>http://83.153.27.91:9086/nexus/content/groups/public</url>
+		</repository>
+
+	</repositories>
+
+	<pluginRepositories>
+	</pluginRepositories>
+
+	<distributionManagement>
+
+		<!-- Publish the releases here -->
+		<repository>
+			<id>nexus-releases</id>
+			<name>nexus-releases</name>
+			<url>http://83.153.27.91:9086/nexus/content/repositories/releases/</url>
+		</repository>
+
+		<!-- Publish the snapshots here -->
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>nexus-snapshots</name>
+			<url>http://83.153.27.91:9086/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+
+	</distributionManagement>
+		
 	<build>
 
 		<pluginManagement>
@@ -145,24 +200,6 @@
 		<plugins></plugins>
 
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>heliosphere-public</id>
-			<name>Heliosphere Releases</name>
-			<url>http://83.153.27.91:9086/nexus/content/groups/public</url>
-			<layout>default</layout>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>true</uniqueVersion>
-			<id>heliosphere-snapshot</id>
-			<name>Heliosphere Snapshots</name>
-			<url>http://83.153.27.91:9086/nexus/content/groups/public-snapshots</url>
-			<layout>legacy</layout>
-		</snapshotRepository>
-
-	</distributionManagement>
 
 	<dependencyManagement>
 		<dependencies>
