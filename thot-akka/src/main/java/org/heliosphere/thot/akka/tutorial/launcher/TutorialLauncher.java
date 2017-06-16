@@ -9,7 +9,7 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.tutorial;
+package org.heliosphere.thot.akka.tutorial.launcher;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
