@@ -30,18 +30,18 @@ import akka.actor.Props;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class PrintMyActorRef
+public class PrintMyActorRefTutorial
 {
 	/**
-	 * Application entry point.
+	 * Creates a new actor.
 	 * <hr>
-	 * @param args Arguments passed on the command-line.
+	 * @param systemName Actor system name.
 	 */
 	@SuppressWarnings("nls")
-	public static void main(String[] args)
+	public PrintMyActorRefTutorial(final String systemName)
 	{
 		// Create an actor system without special configuration file.
-		ActorSystem system = ActorSystem.create("tutorial-system");
+		ActorSystem system = ActorSystem.create(systemName);
 
 		// Create a user actor.
 		ActorRef first = system.actorOf(Props.create(PrintMyActorRefActor.class), "first-actor");
