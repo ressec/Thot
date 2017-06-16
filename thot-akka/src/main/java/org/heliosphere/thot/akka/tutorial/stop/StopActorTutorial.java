@@ -9,28 +9,23 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.actor;
+package org.heliosphere.thot.akka.tutorial.stop;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 
 /**
- * Very simple {@code Akka} actor tutorial.
+ * {@code Akka} actor tutorial demonstrating how to stop an actor's hierarchy.
  * <p>
- * It creates an actor system then a user actor {@code first-actor} and prints its reference (name) in the console output. 
- * It then sends a message {@code printit} to this actor. The {@code printit} message creates a child actor {@code second actor} 
- * and prints also its reference into the console output.
- * <p>
- * This tutorial demonstrates the following principles:<br>
- * <li>How to create a simple {@code actor system} without any specific configuration.</li> 
- * <li>How to create a user actor.</li> 
- * <li>How to create a child actor.</li> 
+ * This tutorial is creating an actor system with one user actor and one child actor. It
+ * then ask (sending messages) the actors to output their reference on the console. It finally
+ * ask the user actor to stop itself and its whole actor's hierarchy.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class PrintMyActorRefTutorial
+public class StopActorTutorial
 {
 	/**
 	 * Creates a new actor.
@@ -38,17 +33,30 @@ public class PrintMyActorRefTutorial
 	 * @param systemName Actor system name.
 	 */
 	@SuppressWarnings("nls")
-	public PrintMyActorRefTutorial(final String systemName)
+	public StopActorTutorial(final String systemName)
 	{
 		// Create an actor system without special configuration file.
 		ActorSystem system = ActorSystem.create(systemName);
 
 		// Create a user actor.
-		ActorRef first = system.actorOf(Props.create(PrintMyActorRefActor.class), "first-actor");
-		System.out.println("First : " + first);
+		ActorRef first = system.actorOf(Props.create(StopFirstActor.class), "first-actor");
 
-		// Sends a message omitting the sender.
-		first.tell("printit", ActorRef.noSender());
+		// Sends a message (omitting the sender) to ask actor to print its reference on the console.
+		first.tell("printIt", ActorRef.noSender());
+
+		try
+		{
+			// Pauses the thread for 100 milliseconds to avoid the actor shutdown before the printIt message is processed!
+			Thread.sleep(100);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+
+		// Sends a message asking 'first-actor' to stop its actor hierarchy.
+		first.tell("stopIt", ActorRef.noSender());
+
 
 		// Terminates the actor system.
 		system.terminate();

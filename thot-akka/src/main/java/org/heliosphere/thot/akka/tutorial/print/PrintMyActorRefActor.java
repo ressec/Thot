@@ -9,7 +9,7 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.actor;
+package org.heliosphere.thot.akka.tutorial.print;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -27,18 +27,18 @@ public class PrintMyActorRefActor extends AbstractActor
 	@Override
 	public Receive createReceive()
 	{
-		return receiveBuilder().matchEquals("printit", p -> HandlePrint())
+		return receiveBuilder().matchEquals("printIt", p -> HandlePrint())
 				//.matchAny()
 				.build();
 	}
 
 	/**
-	 * Handles the {@code printit} message.
+	 * Handles the {@code printIt} message.
 	 */
 	@SuppressWarnings("nls")
 	private final void HandlePrint()
 	{
-		// Create a child actor.
+		// Create a child actor that does nothing.
 		ActorRef second = getContext().actorOf(Props.empty(), "second-actor");
 		System.out.println("Second: " + second);
 	}
