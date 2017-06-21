@@ -12,10 +12,14 @@
 package org.heliosphere.thot.akka.chat.protocol;
 
 import org.heliosphere.thot.akka.chat.client.ChatClient;
+import org.heliosphere.thot.akka.chat.lobby.Lobby;
 
+import com.heliosphere.athena.base.exception.InvalidArgumentException;
 import com.heliosphere.athena.base.message.internal.IMessageContent;
 import com.heliosphere.athena.base.message.internal.IMessageType;
 import com.heliosphere.athena.base.message.internal.type.MessageUsageType;
+import com.heliosphere.athena.base.resource.bundle.BundleAthenaBase;
+import com.heliosphere.athena.base.resource.bundle.ResourceBundleManager;
 
 /**
  * Enumeration defining the message protocol handled by a {@link Chat}.
@@ -25,6 +29,11 @@ import com.heliosphere.athena.base.message.internal.type.MessageUsageType;
  */
 public enum ChatMessageProtocolType implements IMessageType
 {
+	/**
+	 * Message notifying the user status is now: Away From Keyboard.
+	 */
+	STATUS_AFK(MessageUsageType.CLIENT_ONLY, null),
+
 	/**
 	 * Message sent to a {@link Chat} by a {@link ChatClient} to request the registration of a client.
 	 */
@@ -82,5 +91,33 @@ public enum ChatMessageProtocolType implements IMessageType
 	public final Class<? extends IMessageContent> getContentClass()
 	{
 		return contentClass;
+	}
+
+	/**
+	 * Creates a message type from a given string representation.
+	 * <p>
+	 * <b>Example:</b><p> 
+	 * <code>ChatMessageProtocol.fromString("CHAT_CLIENT_REGISTER");</code>
+	 * <hr>
+	 * @param value String representing the enumerated value.
+	 * @return Message type.
+	 */
+	@Override
+	public final Enum<? extends IMessageType> fromString(String value)
+	{
+		if (value == null || value.trim().length() == 0)
+		{
+			throw new InvalidArgumentException(ResourceBundleManager.getMessage(BundleAthenaBase.CommandCategoryCannotBeNull));
+		}
+
+		for (ChatMessageProtocolType element : ChatMessageProtocolType.values())
+		{
+			if (element.name().equalsIgnoreCase(value))
+			{
+				return element;
+			}
+		}
+
+		throw new InvalidArgumentException(ResourceBundleManager.getMessage(BundleAthenaBase.CannotCreateEnumerated, ChatMessageProtocolType.class.getName(), value));
 	}
 }

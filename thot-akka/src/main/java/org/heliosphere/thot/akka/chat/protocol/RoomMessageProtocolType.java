@@ -11,11 +11,16 @@
  */
 package org.heliosphere.thot.akka.chat.protocol;
 
+import org.h2.engine.User;
 import org.heliosphere.thot.akka.chat.client.ChatClient;
+import org.heliosphere.thot.akka.chat.room.Room;
 
+import com.heliosphere.athena.base.exception.InvalidArgumentException;
 import com.heliosphere.athena.base.message.internal.IMessageContent;
 import com.heliosphere.athena.base.message.internal.IMessageType;
 import com.heliosphere.athena.base.message.internal.type.MessageUsageType;
+import com.heliosphere.athena.base.resource.bundle.BundleAthenaBase;
+import com.heliosphere.athena.base.resource.bundle.ResourceBundleManager;
 
 /**
  * Enumeration defining the message protocol for a {@link Room}.
@@ -77,5 +82,33 @@ public enum RoomMessageProtocolType implements IMessageType
 	public final Class<? extends IMessageContent> getContentClass()
 	{
 		return contentClass;
+	}
+
+	/**
+	 * Creates a message type from a given string representation.
+	 * <p>
+	 * <b>Example:</b><p> 
+	 * <code>RoomMessageProtocol.fromString("ROOM_JOIN");</code>
+	 * <hr>
+	 * @param value String representing the enumerated value.
+	 * @return Message type.
+	 */
+	@Override
+	public final Enum<? extends IMessageType> fromString(String value)
+	{
+		if (value == null || value.trim().length() == 0)
+		{
+			throw new InvalidArgumentException(ResourceBundleManager.getMessage(BundleAthenaBase.CommandCategoryCannotBeNull));
+		}
+
+		for (RoomMessageProtocolType element : RoomMessageProtocolType.values())
+		{
+			if (element.name().equalsIgnoreCase(value))
+			{
+				return element;
+			}
+		}
+
+		throw new InvalidArgumentException(ResourceBundleManager.getMessage(BundleAthenaBase.CannotCreateEnumerated, RoomMessageProtocolType.class.getName(), value));
 	}
 }

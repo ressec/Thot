@@ -40,24 +40,24 @@ public class ChatTutorial
 		// Create an actor system without special configuration file.
 		ActorSystem system = ActorSystem.create(systemName);
 
-		try
-		{
-			// Create the chat manager actor.
-			ActorRef supervisor = system.actorOf(ChatSupervisor.props(), "chat-supervisor");
+		//		try
+		//		{
+		// Create the chat manager actor.
+		ActorRef supervisor = system.actorOf(ChatSupervisor.props(), "chat-supervisor");
 
-			// Create a terminal chat client actor.
-			ActorRef terminal = system.actorOf(Terminal.props("/config/command/chat-client-commands.xml"), "chat-terminal");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			system.terminate();
-		}
-
-		// Terminates the actor system.
-		system.terminate();
+		// Create a terminal chat client actor.
+		ActorRef terminal = system.actorOf(Terminal.props("/config/command/chat-client-commands.xml"), "chat-terminal");
+		//		}
+		//		catch (Exception e)
+		//		{
+		//			e.printStackTrace();
+		//		}
+		//		finally
+		//		{
+		//			system.terminate();
+		//		}
+		//
+		//		// Terminates the actor system.
+		//		system.terminate();
 	}
 }

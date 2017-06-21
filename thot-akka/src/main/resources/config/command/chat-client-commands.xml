@@ -5,8 +5,6 @@
     <version>1.0</version>
     <author>Resse Christophe</author>
     <description>XML file containing definitions for some chat commands.</description>
-    <!-- Command protocol to use for these commands. -->
-    <!-- <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType</protocol> -->
   </header>
 
   <commands>
@@ -18,10 +16,7 @@
       <name>afk</name>
       <description>Marks you as "Away from keyboard".</description>
       <!-- Message protocol entry associated to this command. -->
-      <message>
-        <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType</protocol>
-        <entry>NOTIFY_AFK</entry>
-      </message>
+      <protocol>org.heliosphere.thot.akka.chat.protocol.ChatMessageProtocolType:STATUS_AFK</protocol>
       <aliases>
         <alias>away</alias>
       </aliases>
@@ -36,10 +31,7 @@
       <description>Request the registration of a user on the server.</description>
       <syntax>/register 'filter(s)'</syntax>
       <!-- Message protocol entry associated to this command. -->
-      <message>
-        <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType</protocol>
-        <entry>REGISTER_USER</entry>
-      </message>
+      <protocol>org.heliosphere.thot.akka.chat.protocol.ChatMessageProtocolType:CHAT_CLIENT_REGISTER</protocol>
       <aliases>
         <alias>reg</alias>
       </aliases>
@@ -47,12 +39,12 @@
         <parameter>
           <name>username</name>
           <description>User name to register.</description>
-          <tag>-user</tag>
-          <regexp>(-user)\s*+([a-zA-Z]++\*?)</regexp>
+          <tag>-user=</tag>
+          <regexp>(-user=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
           <examples>
-            <example>/reg -user albert.</example>
-            <example>/reg -useralain.</example>
+            <example>/reg -user=albert.</example>
+            <example>/reg -user=   alain.</example>
           </examples>
         </parameter>
       </parameters>

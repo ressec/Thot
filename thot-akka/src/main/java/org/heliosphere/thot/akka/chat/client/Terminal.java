@@ -12,8 +12,8 @@
 package org.heliosphere.thot.akka.chat.client;
 
 import org.apache.commons.collections4.ListUtils;
-import org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType;
 
+import com.heliosphere.athena.base.command.internal.CommandException;
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
 import com.heliosphere.athena.base.command.internal.type.CommandCategoryType;
@@ -25,8 +25,11 @@ import com.heliosphere.athena.base.terminal.CommandTerminal;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.actor.Status;
+import akka.actor.Terminated;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import jline.internal.Log;
 import lombok.NonNull;
 
 /**
@@ -71,32 +74,72 @@ public class Terminal extends AbstractActor implements ICommandListener
 	/**
 	 * Creates a new terminal actor.
 	 * <hr>
-	 * @param commandFileName Command file name.
+	 * @param commandFileName Command XML file name.
 	 * @throws FileException Thrown in case an error occurred while trying to access the XML commands file.
 	 */
 	@SuppressWarnings("nls")
 	public Terminal(final String commandFileName) throws FileException
 	{
-		terminal = new CommandTerminal(commandFileName, ChatCommandCodeType.class);
-		terminal.registerListener(this);
-		terminal.start();
+		try
+		{
+			terminal = new CommandTerminal(commandFileName);
+			terminal.registerListener(this);
+			terminal.start();
 
-		// Create an actor to handle processing of normal ('/') commands.
-		normalCommandProcessor = getContext().actorOf(Props.create(ChatNormalCommand.class), "chat-normal-command-processor");
+			// Create an actor to handle processing of normal ('/') commands.
+			normalCommandProcessor = getContext().actorOf(NormalCommandProcessor.props(), "command-processor-normal");
+			getContext().watch(normalCommandProcessor);
+		}
+		catch (FileException e)
+		{
+			Log.error(String.format("Unable to load file: %1s due to: %2s", commandFileName, e.getMessage()));
+		}
 	}
 
 	@Override
 	public Receive createReceive()
 	{
 		return receiveBuilder()
-				//.match(ICommand.class, command -> handleCommand(command))
+				.match(ICommand.class, command -> handleAndDispatchCommand(command))
 				.match(ICommandResponse.class, response -> handleResponse(response))
-				//.matchAny()
+				.match(Terminated.class, this::onTerminated)
+				.matchAny(any -> handleUnknownCommand(any))
 				.build();
 	}
 
+	/**
+	 * Handles unknown commands.
+	 * <hr>
+	 * @param any Element received.
+	 */
+	@SuppressWarnings("nls")
+	private final void handleUnknownCommand(Object any)
+	{
+		LOG.info(this + "Received an unknown command: " + any);
+	}
+
+	/**
+	 * Handles and dispatch (normal) commands.
+	 * <hr>
+	 * @param command Command to process.
+	 */
+	@SuppressWarnings("nls")
+	protected void handleAndDispatchCommand(final ICommand command)
+	{
+		// Check the command type.
+		if (command.getMetadata().getCategory() == CommandCategoryType.NORMAL)
+		{
+			int i = 0;
+		}
+		else
+		{
+			CommandException exception = new CommandException(String.format("Cannot process command: %1s, expected a 'normal' command category type!", command.getMetadata().getCategory()));
+			getSender().tell(new Status.Failure(exception), getSelf());
+		}
+	}
+
 	@Override
-	public final void onCommand(ICommand command)
+	public final void onCommand(final ICommand command)
 	{
 		// Pauses the terminal thread until the command response has been received.
 		terminal.pause();
@@ -134,7 +177,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 * <hr>
 	 * @param command Command to process.
 	 */
-	protected void handleCommandNormal(final @NonNull ICommand command)
+	protected void handleCommandNormal(final ICommand command)
 	{
 		normalCommandProcessor.tell(command, getSelf());
 	}
@@ -226,5 +269,10 @@ public class Terminal extends AbstractActor implements ICommandListener
 	protected void handleCommandUnknown(final @NonNull ICommand command)
 	{
 		// Empty, must be overridden by subclasses.
+	}
+
+	private void onTerminated(final Terminated t)
+	{
+		LOG.info("Actor {} has been terminated", t.getActor());
 	}
 }

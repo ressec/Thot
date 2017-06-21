@@ -28,6 +28,7 @@ import com.heliosphere.athena.base.message.internal.IMessage;
 import com.heliosphere.athena.base.message.internal.Message;
 
 import akka.actor.AbstractActor;
+import akka.actor.Props;
 import akka.actor.Status;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
@@ -39,12 +40,31 @@ import lombok.NonNull;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public final class ChatNormalCommand extends AbstractActor
+public final class NormalCommandProcessor extends AbstractActor
 {
 	/**
 	 * Akka logging adapter.
 	 */
 	private final LoggingAdapter LOG = Logging.getLogger(getContext().getSystem(), this);
+
+	/**
+	 * Static creation pattern for a {@link NormalCommandProcessor}.
+	 * <hr>
+	 * @return {@link Props}.
+	 */
+	public static Props props()
+	{
+		return Props.create(NormalCommandProcessor.class);
+	}
+
+	@SuppressWarnings("nls")
+	@Override
+	public void postStop() throws Exception
+	{
+		LOG.info(getSelf() + " is terminated!");
+
+		super.postStop();
+	}
 
 	@Override
 	public Receive createReceive()
@@ -52,7 +72,8 @@ public final class ChatNormalCommand extends AbstractActor
 		return receiveBuilder()
 				.match(ICommand.class, command -> handleAndDispatchCommand(command))
 				//.matchEquals("stopIt", p -> handleStop())
-				.matchAny(command -> handleUnknownCommand(command))
+				//				.matchAny(command -> handleUnknownCommand(command))
+				.matchAny(o -> LOG.info("received unknown message"))
 				.build();
 	}
 
