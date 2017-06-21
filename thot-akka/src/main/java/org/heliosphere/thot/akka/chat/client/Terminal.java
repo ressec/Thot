@@ -9,9 +9,10 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.actor;
+package org.heliosphere.thot.akka.chat.client;
 
 import org.apache.commons.collections4.ListUtils;
+import org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
@@ -39,10 +40,10 @@ import lombok.NonNull;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class TerminalActor extends AbstractActor implements ICommandListener
+public class Terminal extends AbstractActor implements ICommandListener
 {
 	/**
-	 * Akka logger.
+	 * Akka logging adapter.
 	 */
 	private final LoggingAdapter LOG = Logging.getLogger(getContext().getSystem(), this);
 
@@ -57,19 +58,31 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	private ActorRef normalCommandProcessor = null;
 
 	/**
+	 * Static creation pattern for a {@link Terminal}.
+	 * <hr>
+	 * @param commandFileName Command file name.
+	 * @return {@link Props}.
+	 */
+	public static Props props(final String commandFileName)
+	{
+		return Props.create(Terminal.class, commandFileName);
+	}
+
+	/**
 	 * Creates a new terminal actor.
 	 * <hr>
+	 * @param commandFileName Command file name.
 	 * @throws FileException Thrown in case an error occurred while trying to access the XML commands file.
 	 */
 	@SuppressWarnings("nls")
-	public TerminalActor() throws FileException
+	public Terminal(final String commandFileName) throws FileException
 	{
-		terminal = new CommandTerminal("/config/command/chat-commands.xml");
+		terminal = new CommandTerminal(commandFileName, ChatCommandCodeType.class);
 		terminal.registerListener(this);
 		terminal.start();
 
 		// Create an actor to handle processing of normal ('/') commands.
-		normalCommandProcessor = getContext().actorOf(Props.create(NormalCommandActor.class), "normalCommandProcessor");
+		normalCommandProcessor = getContext().actorOf(Props.create(ChatNormalCommand.class), "chat-normal-command-processor");
 	}
 
 	@Override

@@ -1,0 +1,69 @@
+<chat-command-file>
+
+  <header>
+    <company>Heliosphere Ltd.</company>
+    <version>1.0</version>
+    <author>Resse Christophe</author>
+    <description>XML file containing definitions for some chat commands.</description>
+    <!-- Command protocol to use for these commands. -->
+    <!-- <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType</protocol> -->
+  </header>
+
+  <commands>
+
+    <!-- AFK command which is a very simple command. -->
+    <command>
+      <group>Chat</group>
+      <category>Normal</category>
+      <name>afk</name>
+      <description>Marks you as "Away from keyboard".</description>
+      <!-- Message protocol entry associated to this command. -->
+      <message>
+        <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType</protocol>
+        <entry>NOTIFY_AFK</entry>
+      </message>
+      <aliases>
+        <alias>away</alias>
+      </aliases>
+      <parameters></parameters> <!-- This command has no parameter. -->
+    </command>
+
+    <!-- REGISTER_USER -->
+    <command>
+      <group>Chat</group>
+      <category>Normal</category>
+      <name>register</name>
+      <description>Request the registration of a user on the server.</description>
+      <syntax>/register 'filter(s)'</syntax>
+      <!-- Message protocol entry associated to this command. -->
+      <message>
+        <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandCodeType</protocol>
+        <entry>REGISTER_USER</entry>
+      </message>
+      <aliases>
+        <alias>reg</alias>
+      </aliases>
+      <parameters>
+        <parameter>
+          <name>username</name>
+          <description>User name to register.</description>
+          <tag>-user</tag>
+          <regexp>(-user)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/reg -user albert.</example>
+            <example>/reg -useralain.</example>
+          </examples>
+        </parameter>
+      </parameters>
+    </command>
+
+  </commands>
+  
+
+  <footer>
+    <generated>2017-06-03 12:48:03</generated>
+    <changed>2017-06-06 23:15:17</changed>
+  </footer>
+
+</chat-command-file>

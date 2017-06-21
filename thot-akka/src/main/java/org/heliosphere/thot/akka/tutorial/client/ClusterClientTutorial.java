@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.heliosphere.thot.akka.AkkaUtility;
-import org.heliosphere.thot.akka.chat.actor.TerminalActor;
+import org.heliosphere.thot.akka.chat.client.Terminal;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -80,6 +80,6 @@ public final class ClusterClientTutorial
 
 
 		// Creates the command terminal actor.
-		terminal = system.actorOf(Props.create(TerminalActor.class), "terminal");
+		terminal = system.actorOf(Props.create(Terminal.class), "terminal");
 	}
 }
