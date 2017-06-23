@@ -9,7 +9,7 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.protocol;
+package org.heliosphere.thot.akka.chat.protocol.data;
 
 import java.util.Locale;
 
@@ -19,7 +19,7 @@ import akka.actor.ActorRef;
 import lombok.Getter;
 import lombok.Setter;
 
-public final class ChatData implements IMessageContent
+public final class ChatMessageData implements IMessageContent
 {
 	/**
 	 * Locale for the lobby.
@@ -41,6 +41,13 @@ public final class ChatData implements IMessageContent
 	@Getter
 	@Setter
 	private String userName;
+
+	/**
+	 * Message.
+	 */
+	@Getter
+	@Setter
+	private String message;
 
 	/**
 	 * Lobby reference.

@@ -15,12 +15,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.protocol.ChatMessageProtocolType;
-import org.heliosphere.thot.akka.chat.protocol.LobbyMessageProtocolType;
+import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
 
+import com.heliosphere.athena.base.message.Message;
 import com.heliosphere.athena.base.message.internal.IMessage;
-import com.heliosphere.athena.base.message.internal.Message;
-import com.heliosphere.athena.base.message.internal.MessageException;
+import com.heliosphere.athena.base.message.internal.exception.MessageException;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -140,49 +139,29 @@ public class ChatClient extends AbstractActor
 	}
 
 	/**
-	 * Handles request {@link Message} of type {@link ChatMessageProtocolType}.
+	 * Handles request {@link IMessage}.
 	 * <hr>
 	 * @param message Message to process.
 	 */
 	@SuppressWarnings("nls")
 	private final void handleRequestMessage(final IMessage message)
 	{
-		if (message.getType() instanceof ChatMessageProtocolType)
+		if (message.getType() instanceof ChatMessageType)
 		{
-			switch ((ChatMessageProtocolType) message.getType())
+			switch ((ChatMessageType) message.getType())
 			{
-				case CHAT_CLIENT_REGISTER:
+				case REGISTER_USER:
 					break;
 
-				case CHAT_CLIENT_UNREGISTER:
+				case QUERY_WHO:
 					break;
 
-				case CHAT_LOBBY_LIST:
+				case STATUS_AFK:
 					break;
 
-				case CHAT_LOBBY_CREATE:
-					break;
-
-				case CHAT_LOBBY_DELETE:
-					break;
-
-				default:
-					LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
-					break;
-			}
-		}
-
-		if (message.getType() instanceof LobbyMessageProtocolType)
-		{
-			switch ((LobbyMessageProtocolType) message.getType())
-			{
-				case LOBBY_ROOM_CREATE:
-					break;
-
-				case LOBBY_ROOM_DELETE:
-					break;
-
-				case LOBBY_ROOM_LIST:
+				case NONE:
+				case QUERY_SERVER_TIME:
+					// Do nothing.
 					break;
 
 				default:
@@ -193,54 +172,29 @@ public class ChatClient extends AbstractActor
 	}
 
 	/**
-	 * Handles reply {@link Message} of type {@link ChatMessageProtocolType}.
+	 * Handles reply {@link IMessage}.
 	 * <hr>
 	 * @param message Message to process.
 	 */
 	@SuppressWarnings("nls")
 	private final void handleReplyMessage(final IMessage message)
 	{
-		if (message.getType() instanceof ChatMessageProtocolType)
+		if (message.getType() instanceof ChatMessageType)
 		{
-			switch ((ChatMessageProtocolType) message.getType())
+			switch ((ChatMessageType) message.getType())
 			{
-				case CHAT_CLIENT_REGISTER:
+				case REGISTER_USER:
 					handleReplyGeneric(message);
 					break;
 
-				case CHAT_CLIENT_UNREGISTER:
+				case QUERY_WHO:
 					break;
 
-				case CHAT_LOBBY_LIST:
+				case STATUS_AFK:
 					break;
 
-				case CHAT_LOBBY_CREATE:
-					handleReplyGeneric(message);
-					break;
-
-				case CHAT_LOBBY_DELETE:
-					break;
-
-				default:
-					LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
-					break;
-			}
-		}
-
-		if (message.getType() instanceof LobbyMessageProtocolType)
-		{
-			switch ((LobbyMessageProtocolType) message.getType())
-			{
-				case LOBBY_ROOM_CREATE:
-					handleReplyGeneric(message);
-					break;
-
-				case LOBBY_ROOM_DELETE:
-					handleReplyGeneric(message);
-					break;
-
-				case LOBBY_ROOM_LIST:
-					handleReplyGeneric(message);
+				case NONE:
+				case QUERY_SERVER_TIME:
 					break;
 
 				default:

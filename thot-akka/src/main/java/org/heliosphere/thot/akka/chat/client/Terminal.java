@@ -12,18 +12,24 @@
 package org.heliosphere.thot.akka.chat.client;
 
 import org.apache.commons.collections4.ListUtils;
+import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
+import org.heliosphere.thot.akka.chat.protocol.data.ChatMessageData;
 
-import com.heliosphere.athena.base.command.internal.CommandException;
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
-import com.heliosphere.athena.base.command.internal.type.CommandCategoryType;
-import com.heliosphere.athena.base.command.internal.type.CommandCodeType;
+import com.heliosphere.athena.base.command.internal.exception.CommandException;
+import com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType;
+import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.response.ICommandResponse;
 import com.heliosphere.athena.base.file.internal.FileException;
+import com.heliosphere.athena.base.message.Message;
+import com.heliosphere.athena.base.message.internal.IMessage;
+import com.heliosphere.athena.base.message.protocol.data.DefaultMessageData;
 import com.heliosphere.athena.base.terminal.CommandTerminal;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
+import akka.actor.ActorSelection;
 import akka.actor.Props;
 import akka.actor.Status;
 import akka.actor.Terminated;
@@ -61,6 +67,11 @@ public class Terminal extends AbstractActor implements ICommandListener
 	private ActorRef normalCommandProcessor = null;
 
 	/**
+	 * Reference to the chat system actor.
+	 */
+	private ActorRef chatSystem = null;
+
+	/**
 	 * Static creation pattern for a {@link Terminal}.
 	 * <hr>
 	 * @param commandFileName Command file name.
@@ -89,6 +100,11 @@ public class Terminal extends AbstractActor implements ICommandListener
 			// Create an actor to handle processing of normal ('/') commands.
 			normalCommandProcessor = getContext().actorOf(NormalCommandProcessor.props(), "command-processor-normal");
 			getContext().watch(normalCommandProcessor);
+
+			// Contact the chat system supervisor and send him a message to get its time.
+			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
+			selection.tell(Message.createRequest(ChatMessageType.QUERY_SERVER_TIME, null), getSelf());
+			//chatSystem = getContext().actorSelection("akka://chatSystem/user/chat-supervisor*").anchor();
 		}
 		catch (FileException e)
 		{
@@ -101,21 +117,108 @@ public class Terminal extends AbstractActor implements ICommandListener
 	{
 		return receiveBuilder()
 				.match(ICommand.class, command -> handleAndDispatchCommand(command))
+				.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				.match(ICommandResponse.class, response -> handleResponse(response))
+				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Terminated.class, this::onTerminated)
-				.matchAny(any -> handleUnknownCommand(any))
+				.matchAny(any -> handleUnknown(any))
 				.build();
 	}
 
 	/**
-	 * Handles unknown commands.
+	 * Handles unknown objects.
 	 * <hr>
-	 * @param any Element received.
+	 * @param any Object received.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleUnknownCommand(Object any)
+	private final void handleUnknown(Object any)
 	{
-		LOG.info(this + "Received an unknown command: " + any);
+		LOG.info(this + "Received an unknown object: " + any);
+	}
+
+	/**
+	 * Handles failures.
+	 * <hr>
+	 * @param failure Failure.
+	 */
+	@SuppressWarnings("nls")
+	private final void handleFailure(final Status.Failure failure)
+	{
+		LOG.error("Received a failure: " + failure.cause().getMessage());
+	}
+
+	/**
+	 * Handles and dispatch messages.
+	 * <hr>
+	 * @param message Message to process.
+	 */
+	@SuppressWarnings("nls")
+	protected void handleAndDispatchMessage(final IMessage message)
+	{
+		LOG.info(String.format("Received message [category=%1s, type=%2s, sender=%3s]", message.getCategoryType(), message.getType(), getSender()));
+
+		try
+		{
+			switch (message.getCategoryType())
+			{
+				case REQUEST:
+					// So then it to the server side to be processed.
+					chatSystem.tell(message, getSelf());
+					break;
+
+				case NOTIFICATION:
+					// So then it to the server side to be processed.
+					chatSystem.tell(message, getSelf());
+					break;
+
+				case REPLY:
+					// Reply messages are coming from server side.
+					handleReplyMessage(message);
+					break;
+
+				default:
+					break;
+			}
+		}
+		catch (Exception e)
+		{
+			// In case of a failure notify the end-user!
+			terminal.getTerminal().println(String.format("An error occurred due to: %1s", e.getMessage()));
+		}
+	}
+
+	/**
+	 * Handles reply {@link Message}.
+	 * <hr>
+	 * @param message Reply message to process.
+	 * @throws Exception Thrown in case an error occurred while processing a message.
+	 */
+	@SuppressWarnings("nls")
+	private final void handleReplyMessage(final IMessage message) throws Exception
+	{
+		switch ((ChatMessageType) message.getType())
+		{
+			case QUERY_SERVER_TIME:
+				// This is the first request made to the server to get its reference.
+				chatSystem = getSender();
+				System.out.println("Server time is: " + ((DefaultMessageData) message.getContent()).getData());
+				break;
+
+			case REGISTER_USER:
+				terminal.getTerminal().println(String.format("User: %1s is registered with chat system.", ((ChatMessageData) message.getContent()).getUserName()));
+				break;
+
+			case QUERY_WHO:
+			case STATUS_AFK:
+
+			case NONE:
+			default:
+				LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
+				break;
+		}
+
+		// Resume the terminal so that end-user can continue working with it.
+		terminal.resume();
 	}
 
 	/**
@@ -127,13 +230,13 @@ public class Terminal extends AbstractActor implements ICommandListener
 	protected void handleAndDispatchCommand(final ICommand command)
 	{
 		// Check the command type.
-		if (command.getMetadata().getCategory() == CommandCategoryType.NORMAL)
+		if (command.getMetadata().getCategoryType() == DefaultCommandCategoryType.NORMAL)
 		{
 			int i = 0;
 		}
 		else
 		{
-			CommandException exception = new CommandException(String.format("Cannot process command: %1s, expected a 'normal' command category type!", command.getMetadata().getCategory()));
+			CommandException exception = new CommandException(String.format("Cannot process command: %1s, expected a 'normal' command category type!", command.getMetadata().getCategoryType()));
 			getSender().tell(new Status.Failure(exception), getSelf());
 		}
 	}
@@ -144,7 +247,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 		// Pauses the terminal thread until the command response has been received.
 		terminal.pause();
 
-		switch ((CommandCategoryType) command.getMetadata().getCategory())
+		switch ((DefaultCommandCategoryType) command.getMetadata().getCategoryType())
 		{
 			case NORMAL:
 				handleCommandNormal(command);
@@ -230,7 +333,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	@SuppressWarnings("nls")
 	protected void handleResponse(final @NonNull ICommandResponse response)
 	{
-		switch ((CommandCodeType) response.getOrder())
+		switch ((DefaultCommandCodeType) response.getOrder())
 		{
 			case DISPLAY_TERMINAL:
 

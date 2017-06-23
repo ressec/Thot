@@ -11,44 +11,51 @@
  */
 package org.heliosphere.thot.akka.chat.protocol;
 
-import org.h2.engine.User;
-import org.heliosphere.thot.akka.chat.client.ChatClient;
-import org.heliosphere.thot.akka.chat.room.Room;
+import org.heliosphere.thot.akka.chat.protocol.data.ChatMessageData;
 
 import com.heliosphere.athena.base.exception.InvalidArgumentException;
 import com.heliosphere.athena.base.message.internal.IMessageContent;
-import com.heliosphere.athena.base.message.internal.IMessageType;
-import com.heliosphere.athena.base.message.internal.type.MessageUsageType;
+import com.heliosphere.athena.base.message.internal.protocol.IMessageType;
+import com.heliosphere.athena.base.message.internal.protocol.MessageUsageType;
+import com.heliosphere.athena.base.message.protocol.data.DefaultMessageData;
 import com.heliosphere.athena.base.resource.bundle.BundleAthenaBase;
 import com.heliosphere.athena.base.resource.bundle.ResourceBundleManager;
 
 /**
- * Enumeration defining the message protocol for a {@link Room}.
+ * Enumeration defining a (default) message types for testing purpose only.
+ * <p>
+ * <b>Note:</b><br>
+ * You should not use this protocol enumeration but define your(s) according to your needs.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse</a>
  * @version 1.0.0
  */
-public enum RoomMessageProtocolType implements IMessageType
+public enum ChatMessageType implements IMessageType
 {
 	/**
-	 * Message sent to a {@link Room} by a {@link ChatClient} to request a {@link User} to join the room.
+	 * Not associated with a message.
 	 */
-	ROOM_JOIN(MessageUsageType.NONE, ChatData.class), // Locale, Subject
+	NONE(MessageUsageType.NONE, null),
 
 	/**
-	 * Message sent to a {@link Room} by a {@link ChatClient} to request a {@link User} to leave the room.
+	 * Register a user.
 	 */
-	ROOM_LEAVE(MessageUsageType.NONE, ChatData.class), // Locale, Subject
+	REGISTER_USER(MessageUsageType.NONE, ChatMessageData.class),
 
 	/**
-	 * Message sent by a {@link ChatClient} to a {@link Room} to get the list of {@link User} in the room.
+	 * Query for the server time.
 	 */
-	ROOM_USER_LIST(MessageUsageType.NONE, ChatData.class), // Locale, Subject
+	QUERY_SERVER_TIME(MessageUsageType.NONE, DefaultMessageData.class),
 
 	/**
-	 * Message sent by a {@link User} to a {@link Room} to get a specific {@link User} in the room.
+	 * Query for people.
 	 */
-	ROOM_USER_GET(MessageUsageType.SERVER_ONLY, ChatData.class); // Locale, Subject
+	QUERY_WHO(MessageUsageType.NONE, ChatMessageData.class),
+
+	/**
+	 * Status: AFK (Away From Keyboard).
+	 */
+	STATUS_AFK(MessageUsageType.NONE, null);
 
 	/**
 	 * Message usage type.
@@ -66,7 +73,7 @@ public enum RoomMessageProtocolType implements IMessageType
 	 * @param usage Message usage type.
 	 * @param contentClass Message type content class.
 	 */
-	private RoomMessageProtocolType(final MessageUsageType usage, final Class<? extends IMessageContent> contentClass)
+	private ChatMessageType(final MessageUsageType usage, final Class<? extends IMessageContent> contentClass)
 	{
 		this.usage = usage;
 		this.contentClass = contentClass;
@@ -88,20 +95,20 @@ public enum RoomMessageProtocolType implements IMessageType
 	 * Creates a message type from a given string representation.
 	 * <p>
 	 * <b>Example:</b><p> 
-	 * <code>RoomMessageProtocol.fromString("ROOM_JOIN");</code>
+	 * <code>MessageType.fromString("REGISTER_USER");</code>
 	 * <hr>
 	 * @param value String representing the enumerated value.
 	 * @return Message type.
 	 */
 	@Override
-	public final Enum<? extends IMessageType> fromString(String value)
+	public Enum<? extends IMessageType> fromString(String value)
 	{
 		if (value == null || value.trim().length() == 0)
 		{
 			throw new InvalidArgumentException(ResourceBundleManager.getMessage(BundleAthenaBase.CommandCategoryCannotBeNull));
 		}
 
-		for (RoomMessageProtocolType element : RoomMessageProtocolType.values())
+		for (ChatMessageType element : ChatMessageType.values())
 		{
 			if (element.name().equalsIgnoreCase(value))
 			{
@@ -109,6 +116,6 @@ public enum RoomMessageProtocolType implements IMessageType
 			}
 		}
 
-		throw new InvalidArgumentException(ResourceBundleManager.getMessage(BundleAthenaBase.CannotCreateEnumerated, RoomMessageProtocolType.class.getName(), value));
+		throw new InvalidArgumentException(ResourceBundleManager.getMessage(BundleAthenaBase.CannotCreateEnumerated, ChatMessageType.class.getName(), value));
 	}
 }

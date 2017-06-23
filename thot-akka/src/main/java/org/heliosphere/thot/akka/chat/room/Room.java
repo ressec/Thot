@@ -15,10 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.h2.engine.User;
-import org.heliosphere.thot.akka.chat.protocol.RoomMessageProtocolType;
+import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
 
+import com.heliosphere.athena.base.message.Message;
 import com.heliosphere.athena.base.message.internal.IMessage;
-import com.heliosphere.athena.base.message.internal.Message;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -135,19 +135,19 @@ public class Room extends AbstractActor
 	@SuppressWarnings("nls")
 	private final void handleRequestMessage(final IMessage message) throws Exception
 	{
-		switch ((RoomMessageProtocolType) message.getType())
+		switch ((ChatMessageType) message.getType())
 		{
-			case ROOM_JOIN:
-				break;
-
-			case ROOM_LEAVE:
-				break;
-
-			case ROOM_USER_LIST:
-				break;
-
-			case ROOM_USER_GET:
-				break;
+			//			case ROOM_JOIN:
+			//				break;
+			//
+			//			case ROOM_LEAVE:
+			//				break;
+			//
+			//			case ROOM_USER_LIST:
+			//				break;
+			//
+			//			case ROOM_USER_GET:
+			//				break;
 
 			default:
 				LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());

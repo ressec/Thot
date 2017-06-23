@@ -11,7 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.client.command;
 
-import com.heliosphere.athena.base.command.internal.type.ICommandCodeType;
+import com.heliosphere.athena.base.command.internal.protocol.ICommandCodeType;
 import com.heliosphere.athena.base.exception.InvalidArgumentException;
 import com.heliosphere.athena.base.resource.bundle.BundleAthenaBase;
 import com.heliosphere.athena.base.resource.bundle.ResourceBundleManager;

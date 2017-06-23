@@ -5,18 +5,25 @@
     <version>1.0</version>
     <author>Resse Christophe</author>
     <description>XML file containing definitions for some chat commands.</description>
+
+    <protocol-command-category>com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType</protocol-command-category>
+    <protocol-command-group>com.heliosphere.athena.base.command.protocol.DefaultCommandGroupType</protocol-command-group>
+    <protocol-command-code>com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType</protocol-command-code>
+    <protocol-message>org.heliosphere.thot.akka.chat.protocol.ChatMessageType</protocol-message>
+
   </header>
 
   <commands>
 
     <!-- AFK command which is a very simple command. -->
     <command>
-      <group>Chat</group>
-      <category>Normal</category>
+      <group>CHAT</group>
+      <category>NORMAL</category>
+      <code>AFK</code>
+      <message>STATUS_AFK</message>
       <name>afk</name>
-      <description>Marks you as "Away from keyboard".</description>
+      <description>Marks you as "Away from the keyboard".</description>
       <!-- Message protocol entry associated to this command. -->
-      <protocol>org.heliosphere.thot.akka.chat.protocol.ChatMessageProtocolType:STATUS_AFK</protocol>
       <aliases>
         <alias>away</alias>
       </aliases>
@@ -27,11 +34,11 @@
     <command>
       <group>Chat</group>
       <category>Normal</category>
+      <code>REGISTER_USER</code>
+      <message>REGISTER_USER</message>
       <name>register</name>
       <description>Request the registration of a user on the server.</description>
       <syntax>/register 'filter(s)'</syntax>
-      <!-- Message protocol entry associated to this command. -->
-      <protocol>org.heliosphere.thot.akka.chat.protocol.ChatMessageProtocolType:CHAT_CLIENT_REGISTER</protocol>
       <aliases>
         <alias>reg</alias>
       </aliases>

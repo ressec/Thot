@@ -11,18 +11,20 @@
  */
 package org.heliosphere.thot.akka.chat.supervisor;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.heliosphere.thot.akka.chat.client.ChatClient;
 import org.heliosphere.thot.akka.chat.lobby.Lobby;
-import org.heliosphere.thot.akka.chat.protocol.ChatData;
-import org.heliosphere.thot.akka.chat.protocol.ChatMessageProtocolType;
+import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
+import org.heliosphere.thot.akka.chat.protocol.data.ChatMessageData;
 import org.heliosphere.thot.akka.chat.user.UserException;
 
+import com.heliosphere.athena.base.message.Message;
 import com.heliosphere.athena.base.message.internal.IMessage;
-import com.heliosphere.athena.base.message.internal.Message;
+import com.heliosphere.athena.base.message.protocol.data.DefaultMessageData;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -58,12 +60,11 @@ public class ChatSupervisor extends AbstractActor
 		return Props.create(ChatSupervisor.class);
 	}
 
-	@SuppressWarnings("nls")
 	@Override
 	public Receive createReceive()
 	{
 		return receiveBuilder()
-				.match(Message.class, message -> handleAndDispatchMessage(message))
+				.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				//.matchEquals("stopIt", p -> handleStop())
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
@@ -88,6 +89,8 @@ public class ChatSupervisor extends AbstractActor
 	@SuppressWarnings("nls")
 	private final void handleAndDispatchMessage(final IMessage message)
 	{
+		LOG.info(String.format("Received message [category=%1s, type=%2s, sender=%3s]", message.getCategoryType(), message.getType(), getSender()));
+
 		try
 		{
 			// Validate the message.
@@ -128,25 +131,20 @@ public class ChatSupervisor extends AbstractActor
 	@SuppressWarnings("nls")
 	private final void handleRequestMessage(final IMessage message) throws Exception
 	{
-		switch ((ChatMessageProtocolType) message.getType())
+		switch ((ChatMessageType) message.getType())
 		{
-			case CHAT_CLIENT_REGISTER:
+			case QUERY_SERVER_TIME:
+				handleRequestSystemServerTime(message);
+				break;
+
+			case REGISTER_USER:
 				handleRequestChatClientRegister(message);
 				break;
 
-			case CHAT_CLIENT_UNREGISTER:
-				break;
+			case QUERY_WHO:
+			case STATUS_AFK:
 
-			case CHAT_LOBBY_LIST:
-				break;
-
-			case CHAT_LOBBY_CREATE:
-				handleRequestChatLobbyCreation(message);
-				break;
-
-			case CHAT_LOBBY_DELETE:
-				break;
-
+			case NONE:
 			default:
 				LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
 				break;
@@ -162,7 +160,7 @@ public class ChatSupervisor extends AbstractActor
 	@SuppressWarnings("nls")
 	private final void handleRequestChatClientRegister(final IMessage message) throws Exception
 	{
-		ChatData content = (ChatData) message.getContent();
+		ChatMessageData content = (ChatMessageData) message.getContent();
 
 		if (content.getUserName() == null || content.getUserName().isEmpty())
 		{
@@ -191,7 +189,7 @@ public class ChatSupervisor extends AbstractActor
 	@SuppressWarnings("nls")
 	private final void handleRequestChatLobbyCreation(final IMessage message) throws Exception
 	{
-		ChatData content = (ChatData) message.getContent();
+		ChatMessageData content = (ChatMessageData) message.getContent();
 
 		if (content.getLocale() == null)
 		{
@@ -211,4 +209,37 @@ public class ChatSupervisor extends AbstractActor
 		content.setLobby(lobby);
 		getSender().tell(Message.createReplyConfirmed(message, content), getSelf());
 	}
+
+	/**
+	 * Handles system message requesting to get the server time.
+	 * <hr>
+	 * @param message {@link IMessage} to process.
+	 * @throws Exception Thrown in case an error occurred while processing a message.
+	 */
+	private final void handleRequestSystemServerTime(final IMessage message) throws Exception
+	{
+		DefaultMessageData data = new DefaultMessageData();
+		data.setData(LocalTime.now().toString());
+		IMessage reply = Message.createReplyConfirmed(message, data);
+		getSender().tell(reply, getSelf());
+	}
+
+	@SuppressWarnings("nls")
+	@Override
+	public final void postStop() throws Exception
+	{
+		super.postStop();
+
+		LOG.info("Has been stopped!");
+	}
+
+	@SuppressWarnings("nls")
+	@Override
+	public void preStart() throws Exception
+	{
+		super.preStart();
+
+		LOG.info("Has been started!");
+	}
+
 }

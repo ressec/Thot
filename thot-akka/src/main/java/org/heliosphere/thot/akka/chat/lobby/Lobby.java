@@ -15,12 +15,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.protocol.ChatData;
-import org.heliosphere.thot.akka.chat.protocol.LobbyMessageProtocolType;
+import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
+import org.heliosphere.thot.akka.chat.protocol.data.ChatMessageData;
 import org.heliosphere.thot.akka.chat.room.Room;
 
+import com.heliosphere.athena.base.message.Message;
 import com.heliosphere.athena.base.message.internal.IMessage;
-import com.heliosphere.athena.base.message.internal.Message;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -136,17 +136,17 @@ public class Lobby extends AbstractActor
 	@SuppressWarnings("nls")
 	private final void handleRequestMessage(final IMessage message) throws Exception
 	{
-		switch ((LobbyMessageProtocolType) message.getType())
+		switch ((ChatMessageType) message.getType())
 		{
-			case LOBBY_ROOM_CREATE:
-				handleRequestLobbyRoomCreate(message);
-				break;
-
-			case LOBBY_ROOM_DELETE:
-				break;
-
-			case LOBBY_ROOM_LIST:
-				break;
+			//			case LOBBY_ROOM_CREATE:
+			//				handleRequestLobbyRoomCreate(message);
+			//				break;
+			//
+			//			case LOBBY_ROOM_DELETE:
+			//				break;
+			//
+			//			case LOBBY_ROOM_LIST:
+			//				break;
 
 			default:
 				LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
@@ -163,7 +163,7 @@ public class Lobby extends AbstractActor
 	@SuppressWarnings("nls")
 	private final void handleRequestLobbyRoomCreate(final IMessage message) throws Exception
 	{
-		ChatData content = (ChatData) message.getContent();
+		ChatMessageData content = (ChatMessageData) message.getContent();
 
 		if (content.getRoomName() == null || content.getRoomName().isEmpty())
 		{
