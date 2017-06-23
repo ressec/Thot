@@ -111,7 +111,7 @@ public class ChatSupervisor extends AbstractActor
 					break;
 
 				default:
-					LOG.warning(this + " does not handle message category of type: " + message.getCategoryType());
+					LOG.warning("Does not handle message category: " + message.getCategoryType());
 					break;
 			}
 		}
@@ -146,7 +146,7 @@ public class ChatSupervisor extends AbstractActor
 
 			case NONE:
 			default:
-				LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
+				LOG.warning("Does not handle message of type: " + message.getType());
 				break;
 		}
 	}
@@ -164,7 +164,7 @@ public class ChatSupervisor extends AbstractActor
 
 		if (content.getUserName() == null || content.getUserName().isEmpty())
 		{
-			throw new UserException("User: " + content.getUserName() + " cannot be null or empty!");
+			throw new UserException("User name cannot be null or empty!");
 		}
 
 		// Does this client's user name already registered?

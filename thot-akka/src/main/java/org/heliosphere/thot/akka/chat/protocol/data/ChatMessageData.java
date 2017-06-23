@@ -16,50 +16,97 @@ import java.util.Locale;
 import com.heliosphere.athena.base.message.internal.IMessageContent;
 
 import akka.actor.ActorRef;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
 
 public final class ChatMessageData implements IMessageContent
 {
 	/**
 	 * Locale for the lobby.
 	 */
-	@Getter
-	@Setter
 	private Locale locale;
 
 	/**
 	 * Room name or subject.
 	 */
-	@Getter
-	@Setter
 	private String roomName;
 
 	/**
 	 * Client's user name.
 	 */
-	@Getter
-	@Setter
 	private String userName;
 
 	/**
 	 * Message.
 	 */
-	@Getter
-	@Setter
 	private String message;
 
 	/**
 	 * Lobby reference.
 	 */
-	@Getter
-	@Setter
 	private ActorRef lobby;
 
 	/**
 	 * Room reference.
 	 */
-	@Getter
-	@Setter
 	private ActorRef room;
+
+	public final String getUserName()
+	{
+		return userName;
+	}
+
+	public final void setUserName(final @NonNull String userName)
+	{
+		this.userName = userName;
+	}
+
+	public final Locale getLocale()
+	{
+		return locale;
+	}
+
+	public final void setLocale(Locale locale)
+	{
+		this.locale = locale;
+	}
+
+	public final String getRoomName()
+	{
+		return roomName;
+	}
+
+	public final void setRoomName(String roomName)
+	{
+		this.roomName = roomName;
+	}
+
+	public final String getMessage()
+	{
+		return message;
+	}
+
+	public final void setMessage(String message)
+	{
+		this.message = message;
+	}
+
+	public final ActorRef getLobby()
+	{
+		return lobby;
+	}
+
+	public final void setLobby(ActorRef lobby)
+	{
+		this.lobby = lobby;
+	}
+
+	public final ActorRef getRoom()
+	{
+		return room;
+	}
+
+	public final void setRoom(ActorRef room)
+	{
+		this.room = room;
+	}
 }

@@ -35,7 +35,6 @@ import akka.actor.Status;
 import akka.actor.Terminated;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import jline.internal.Log;
 import lombok.NonNull;
 
 /**
@@ -108,7 +107,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 		}
 		catch (FileException e)
 		{
-			Log.error(String.format("Unable to load file: %1s due to: %2s", commandFileName, e.getMessage()));
+			LOG.error(String.format("Unable to load file: %1s due to: %2s", commandFileName, e.getMessage()));
 		}
 	}
 
