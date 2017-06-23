@@ -103,7 +103,6 @@ public class Terminal extends AbstractActor implements ICommandListener
 			// Contact the chat system supervisor and send him a message to get its time.
 			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
 			selection.tell(Message.createRequest(ChatMessageType.QUERY_SERVER_TIME, null), getSelf());
-			//chatSystem = getContext().actorSelection("akka://chatSystem/user/chat-supervisor*").anchor();
 		}
 		catch (FileException e)
 		{
@@ -204,7 +203,9 @@ public class Terminal extends AbstractActor implements ICommandListener
 				break;
 
 			case REGISTER_USER:
-				terminal.getTerminal().println(String.format("User: %1s is registered with chat system.", ((ChatMessageData) message.getContent()).getUserName()));
+				String userName = ((ChatMessageData) message.getContent()).getUserName();
+				terminal.setPrompt(String.format("Command (%1s):>", userName));
+				terminal.getTerminal().println(String.format("User: %1s is registered with chat system.", userName));
 				break;
 
 			case QUERY_WHO:
