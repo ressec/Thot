@@ -12,7 +12,7 @@
 package org.heliosphere.thot.akka.tutorial;
 
 import org.heliosphere.thot.akka.AkkaUtility;
-import org.heliosphere.thot.akka.chat.actor.TerminalActor;
+import org.heliosphere.thot.akka.chat.client.Terminal;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -56,7 +56,7 @@ public final class AkkaSimpleCommandTerminal
 		ActorSystem system = ActorSystem.create("HeliosphereChatSystem", configuration);
 
 		// Creates the command terminal actor.
-		terminal = system.actorOf(Props.create(TerminalActor.class), "terminal");
+		terminal = system.actorOf(Props.create(Terminal.class), "terminal");
 
 		//		// Create a command processor actor.
 		//		commandProcessorNormal = system

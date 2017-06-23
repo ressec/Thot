@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.heliosphere.thot.akka.AkkaUtility;
-import org.heliosphere.thot.akka.chat.actor.TerminalActor;
+import org.heliosphere.thot.akka.chat.client.Terminal;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -45,11 +45,6 @@ public final class ClusterClientTutorial
 	private static final String AKKA_CONFIG = "./config/cluster/chat/application.conf";
 
 	/**
-	 * Reference to the command terminal actor.
-	 */
-	private static ActorRef terminal = null;
-
-	/**
 	 * Main entry point of the application.
 	 * <hr>
 	 * @param arguments Arguments entered on the command line.
@@ -67,19 +62,13 @@ public final class ClusterClientTutorial
 		Address clusterAddress = Cluster.get(system).selfAddress();	
 		initialContacts.add(ActorPaths.fromString(clusterAddress + "/system/receptionist"));
 
-		ActorRef clusterClient = system.actorOf(
-				ClusterClient.props(ClusterClientSettings.create(system).withInitialContacts(initialContacts)), "clusterClient");
-
-		//
-		//		final ActorRef client = ActorSystem.actorOf(ClusterClient.props(ClusterClientSettings.create(system).withInitialContacts(initialContacts())), "client");
-		//		client.tell(new ClusterClient.Send("/user/serviceA", "hello", true), ActorRef.noSender());
-		//		client.tell(new ClusterClient.SendToAll("/user/serviceB", "hi"), ActorRef.noSender());
+		ActorRef clusterClient = system.actorOf(ClusterClient.props(ClusterClientSettings.create(system).withInitialContacts(initialContacts)), "clusterClient");
 
 		// Override the configuration of the port number.
 		Config configuration = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + arguments[0]).withFallback(ConfigFactory.load(AKKA_CONFIG));
 
 
 		// Creates the command terminal actor.
-		terminal = system.actorOf(Props.create(TerminalActor.class), "terminal");
+		ActorRef terminal = system.actorOf(Props.create(Terminal.class), "terminal");
 	}
 }
