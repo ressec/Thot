@@ -12,12 +12,15 @@
 package org.heliosphere.thot.akka.chat.client;
 
 import org.apache.commons.collections4.ListUtils;
+import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinator;
+import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorProtocol;
 import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
 import org.heliosphere.thot.akka.chat.protocol.data.ChatMessageData;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
 import com.heliosphere.athena.base.command.internal.exception.CommandException;
+import com.heliosphere.athena.base.command.processor.HelpCommandProcessor;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.response.ICommandResponse;
@@ -61,9 +64,9 @@ public class Terminal extends AbstractActor implements ICommandListener
 	private CommandTerminal terminal = null;
 
 	/**
-	 * Normal command processor actor.
+	 * Command coordinator actor.
 	 */
-	private ActorRef normalCommandProcessor = null;
+	private ActorRef commandCoordinator = null;
 
 	/**
 	 * Reference to the chat system actor.
@@ -96,9 +99,12 @@ public class Terminal extends AbstractActor implements ICommandListener
 			terminal.registerListener(this);
 			terminal.start();
 
-			// Create an actor to handle processing of normal ('/') commands.
-			normalCommandProcessor = getContext().actorOf(NormalCommandProcessor.props(), "command-processor-normal");
-			getContext().watch(normalCommandProcessor);
+			// Create a command coordinator to handle processing of commands.
+			commandCoordinator = getContext().actorOf(CommandCoordinator.create(terminal.getInterpreter()), "command-processor-normal");
+
+			// Register some pre-defined commands.
+			commandCoordinator.tell(new CommandCoordinatorProtocol.RegisterCommandProcesor(DefaultCommandCodeType.HELP, HelpCommandProcessor.class), getSelf());
+			getContext().watch(commandCoordinator);
 
 			// Contact the chat system supervisor and send him a message to get its time.
 			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
@@ -117,6 +123,11 @@ public class Terminal extends AbstractActor implements ICommandListener
 				.match(ICommand.class, command -> handleAndDispatchCommand(command))
 				.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				.match(ICommandResponse.class, response -> handleResponse(response))
+				.match(TerminalProtocol.DisplayOnTerminal.class, message ->
+				{
+					terminal.getTerminal().print(message.getMessages());
+					terminal.resume();
+				})
 				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Terminated.class, this::onTerminated)
 				.matchAny(any -> handleUnknown(any))
@@ -282,7 +293,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 */
 	protected void handleCommandNormal(final ICommand command)
 	{
-		normalCommandProcessor.tell(command, getSelf());
+		commandCoordinator.tell(command, getSelf());
 	}
 
 	/**

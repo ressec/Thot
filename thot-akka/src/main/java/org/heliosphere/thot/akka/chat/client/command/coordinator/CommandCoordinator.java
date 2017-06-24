@@ -9,18 +9,26 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.client;
+package org.heliosphere.thot.akka.chat.client.command.coordinator;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.heliosphere.thot.akka.chat.client.TerminalProtocol;
 import org.heliosphere.thot.akka.chat.protocol.data.ChatMessageData;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
+import com.heliosphere.athena.base.command.internal.coordinator.ICommandCoordinator;
 import com.heliosphere.athena.base.command.internal.exception.CommandException;
+import com.heliosphere.athena.base.command.internal.interpreter.ICommandInterpreter;
+import com.heliosphere.athena.base.command.internal.processor.ICommandProcessor;
+import com.heliosphere.athena.base.command.internal.protocol.ICommandCodeType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandGroupType;
-import com.heliosphere.athena.base.command.response.CommandResponse;
-import com.heliosphere.athena.base.command.response.CommandStatusType;
-import com.heliosphere.athena.base.command.response.ICommandResponse;
 import com.heliosphere.athena.base.message.Message;
 import com.heliosphere.athena.base.message.internal.IMessage;
 
@@ -32,12 +40,12 @@ import akka.event.LoggingAdapter;
 import lombok.NonNull;
 
 /**
- * An actor for managing chat normal commands for a {@link ChatTerminal}.
+ * An actor responsible to coordinate commands for a {@link ChatTerminal}.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public final class NormalCommandProcessor extends AbstractActor
+public class CommandCoordinator extends AbstractActor implements ICommandCoordinator
 {
 	/**
 	 * Akka logging adapter.
@@ -45,13 +53,40 @@ public final class NormalCommandProcessor extends AbstractActor
 	private final LoggingAdapter LOG = Logging.getLogger(getContext().getSystem(), this);
 
 	/**
-	 * Static creation pattern for a {@link NormalCommandProcessor}.
+	 * Pre-defined command processors.
+	 */
+	private Map<Enum<? extends ICommandCodeType>, ICommandProcessor> processors = new HashMap<>();
+
+	/**
+	 * Command interpreter.
+	 */
+	private ICommandInterpreter interpreter;
+
+	/**
+	 * Static creation pattern for a {@link CommandCoordinator}.
 	 * <hr>
+	 * @param interpreter Command interpreter.
 	 * @return {@link Props}.
 	 */
-	public static Props props()
+	public static Props create(final ICommandInterpreter interpreter)
 	{
-		return Props.create(NormalCommandProcessor.class);
+		return Props.create(CommandCoordinator.class, interpreter);
+	}
+
+	/**
+	 * Create a new command coordinator.
+	 * <hr>
+	 * @param interpreter Command interpreter.
+	 */
+	public CommandCoordinator(final ICommandInterpreter interpreter)
+	{
+		this.interpreter = interpreter;
+	}
+
+	@Override
+	public final ICommandInterpreter getCommandInterpreter()
+	{
+		return interpreter;
 	}
 
 	@SuppressWarnings("nls")
@@ -64,13 +99,29 @@ public final class NormalCommandProcessor extends AbstractActor
 	}
 
 	@Override
+	public final void registerProcessor(final Enum<? extends ICommandCodeType> type, final ICommandProcessor processor)
+	{
+		if (processors.get(type) != null)
+		{
+			// TODO Throw an exception!
+		}
+		if (processor == null)
+		{
+			// TODO Throw an exception!
+		}
+
+		processors.put(type, processor);
+	}
+
+	@Override
 	public Receive createReceive()
 	{
 		return receiveBuilder()
 				.match(ICommand.class, command -> handleAndDispatchCommand(command))
+				.match(CommandCoordinatorProtocol.RegisterCommandProcesor.class, message -> handleRegisterCommandProcessor(message))
 				//.matchEquals("stopIt", p -> handleStop())
 				//				.matchAny(command -> handleUnknownCommand(command))
-				.matchAny(o -> LOG.info("received unknown message"))
+				.matchAny(o -> LOG.info("received unknown object!"))
 				.build();
 	}
 
@@ -173,6 +224,8 @@ public final class NormalCommandProcessor extends AbstractActor
 				break;
 
 			case SYSTEM:
+				handleCommandSystem(command);
+				break;
 
 			default:
 				LOG.warning("Unknown command type: " + command.getMetadata().getCategoryType());
@@ -208,39 +261,77 @@ public final class NormalCommandProcessor extends AbstractActor
 	 * Handles system commands.
 	 * <hr>
 	 * @param command Command to process.
+	 * @throws CommandException Thrown in case an error occurred while converting the command.
 	 */
-	@SuppressWarnings("nls")
-	protected void handleCommandSystem(final @NonNull ICommand command)
+	protected void handleCommandSystem(final @NonNull ICommand command) throws CommandException
 	{
-		ICommandResponse response = null;
-
-		if (command.getMetadata().getGroupType() == DefaultCommandGroupType.SYSTEM)
+		switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
 		{
-			switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
-			{
-				case QUIT:
-					response = new CommandResponse(command, CommandStatusType.PROCESSED);
+			case HELP:
+				executeCommandProcessor(command);
+				break;
 
-					// TODO Do necessary cleanup before shutting down the whole system.
+			case QUIT:
+			case AFK:
+			case DISPLAY_TERMINAL:
+			case WHO:
 
-					response.setOrder(DefaultCommandCodeType.QUIT);
-					break;
-
-				default:
-					break;
-			}
-		}
-		else
-		{
-			response = new CommandResponse(command, CommandStatusType.FAILED);
-			response.addException(new CommandException("Command is not a normal system command!"));
-		}
-
-		if (response != null)
-		{
-			getSender().tell(response, getSelf());
+			default:
+				break;
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	protected void executeCommandProcessor(final ICommand command) throws CommandException
+	{
+		ICommandProcessor processor = processors.get(command.getMetadata().getCodeType());
+		if (processor != null)
+		{
+			List<String> result = (List<String>) processor.execute(command);
+			result.add("\r\n");
+
+			// Send lines to the terminal.
+			getContext().getParent().tell(new TerminalProtocol.DisplayOnTerminal(result), getSelf());
+		}
+	}
+
+	//	/**
+	//	 * Handles system commands.
+	//	 * <hr>
+	//	 * @param command Command to process.
+	//	 */
+	//	@SuppressWarnings("nls")
+	//	protected void handleCommandSystem(final @NonNull ICommand command)
+	//	{
+	//		ICommandResponse response = null;
+	//
+	//		if (command.getMetadata().getGroupType() == DefaultCommandGroupType.SYSTEM)
+	//		{
+	//			switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
+	//			{
+	//				case QUIT:
+	//					response = new CommandResponse(command, CommandStatusType.PROCESSED);
+	//
+	//					// TODO Do necessary cleanup before shutting down the whole system.
+	//
+	//					response.setOrder(DefaultCommandCodeType.QUIT);
+	//					break;
+	//
+	//				default:
+	//					break;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			response = new CommandResponse(command, CommandStatusType.FAILED);
+	//			response.addException(new CommandException("Command is not a normal system command!"));
+	//		}
+	//
+	//		if (response != null)
+	//		{
+	//			getSender().tell(response, getSelf());
+	//		}
+	//	}
 
 	//	/**
 	//	 * Handles debug commands.
@@ -291,4 +382,57 @@ public final class NormalCommandProcessor extends AbstractActor
 	//	{
 	//		// Empty, must be overridden by subclasses.
 	//	}
+
+	/**
+	 * Handles message for registering a command processor.
+	 * <hr>
+	 * @param message Message to process.
+	 */
+	protected void handleRegisterCommandProcessor(final @NonNull CommandCoordinatorProtocol.RegisterCommandProcesor message)
+	{
+		Constructor<?> ctor;
+
+		if (processors.get(message.getType()) != null)
+		{
+			// TODO throw exception this command type is already handled!
+		}
+
+		// Create an instance of the processor class.
+		try
+		{
+			ctor = message.getCommandProcessorClass().getConstructor(Enum.class, List.class);
+			ICommandProcessor processor = (ICommandProcessor) ctor.newInstance(new Object[] { message.getType(), interpreter.getCommandDefinitions() });
+			processors.put(message.getType(), processor);
+		}
+		catch (NoSuchMethodException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (SecurityException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (InstantiationException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IllegalArgumentException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
