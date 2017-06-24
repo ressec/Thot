@@ -23,13 +23,11 @@ public final class CommandCoordinatorProtocol
 		/**
 		 * Command type.
 		 */
-		@Getter
 		private final Enum<? extends ICommandCodeType> type;
 
 		/**
 		 * Command processor class.
 		 */
-		@Getter
 		private final Class<? extends ICommandProcessor> commandProcessorClass;
 
 		/**
@@ -43,6 +41,27 @@ public final class CommandCoordinatorProtocol
 			this.type = type;
 			this.commandProcessorClass = commandProcessorClass;
 		}
-	}
 
+		/**
+		 * Returns the command type.
+		 * <hr>
+		 * @return Command type.
+		 */
+		public final Enum<? extends ICommandCodeType> getType()
+		{
+			return type;
+		}
+
+		/**
+		 * Returns the command processor class.
+		 * <hr>
+		 * @return Command processor class.
+		 */
+		public final Class<? extends ICommandProcessor> getCommandProcessorClass()
+		{
+			return commandProcessorClass;
+		}
+
+		
+	}
 }

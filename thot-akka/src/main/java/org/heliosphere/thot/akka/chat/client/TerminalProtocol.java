@@ -25,7 +25,6 @@ public final class TerminalProtocol
 		/**
 		 * List of lines to display on the terminal.
 		 */
-		@Getter
 		private final List<String> messages;
 
 		/**
@@ -37,6 +36,15 @@ public final class TerminalProtocol
 		{
 			this.messages = messages;
 		}
-	}
 
+		/**
+		 * Returns the messages that have to been displayed on the terminal.
+		 * <hr>
+		 * @return List of messages.
+		 */
+		public final List<String> getMessages()
+		{
+			return messages;
+		}
+	}
 }
