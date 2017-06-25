@@ -9,55 +9,158 @@
     <protocol-command-category>com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType</protocol-command-category>
     <protocol-command-group>com.heliosphere.athena.base.command.protocol.DefaultCommandGroupType</protocol-command-group>
     <protocol-command-code>com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType</protocol-command-code>
-    <protocol-message>org.heliosphere.thot.akka.chat.protocol.ChatMessageType</protocol-message>
+    <protocol-message>com.heliosphere.athena.base.message.protocol.DefaultMessageType</protocol-message>
 
   </header>
 
   <commands>
 
+    <!-- HELP command. -->
+    <command>
+      <category>NORMAL</category>
+      <group>SYSTEM</group>
+      <code>HELP</code>
+      <message>NONE</message> <!-- No message type associated with this command. -->
+      <name>help</name>
+      <description>Display help on commands.</description>
+      <aliases>
+        <alias>h</alias>
+      </aliases>
+      <parameters>
+        <parameter>
+          <name>category</name>
+          <description>Display the available command categories.</description>
+          <tag>-cat</tag>
+          <regexp>(-cat)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>set</name>
+          <description>Display a list of available commands for a given command category.</description>
+          <tag>-set</tag>
+          <regexp>(-set)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>command</name>
+          <description>Display detailed description on a given command.</description>
+          <tag>-command</tag>
+          <regexp>\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+      </parameters>
+    </command>
+
     <!-- AFK command which is a very simple command. -->
     <command>
-      <group>CHAT</group>
       <category>NORMAL</category>
+      <group>CHAT</group>
       <code>AFK</code>
       <message>STATUS_AFK</message>
       <name>afk</name>
-      <description>Marks you as "Away from the keyboard".</description>
-      <!-- Message protocol entry associated to this command. -->
+      <description>Mark you as: "Away from keyboard".</description>
+      <!-- Message protocol associated  with this command. Format is <full_enumeration_class_name>:<enumerated_value> -->
       <aliases>
         <alias>away</alias>
       </aliases>
       <parameters></parameters> <!-- This command has no parameter. -->
     </command>
 
-    <!-- REGISTER_USER -->
+    <!-- WHO command which is a quite complex command. -->
     <command>
-      <group>Chat</group>
-      <category>Normal</category>
-      <code>REGISTER_USER</code>
-      <message>REGISTER_USER</message>
-      <name>register</name>
-      <description>Request the registration of a user on the server.</description>
-      <syntax>/register 'filter(s)'</syntax>
+
+      <category>NORMAL</category>
+      <group>CHAT</group>
+      <code>WHO</code>
+      <message>QUERY_WHO</message>
+      <name>who</name>
+      <description>Performs a query on the server for online players matching your query.</description>
+      <syntax>/who 'filters'</syntax>
       <aliases>
-        <alias>reg</alias>
+        <alias>people</alias>
       </aliases>
       <parameters>
+
         <parameter>
-          <name>username</name>
-          <description>User name to register.</description>
-          <tag>-user=</tag>
-          <regexp>(-user=)\s*+([a-zA-Z]++\*?)</regexp>
+          <name>name</name>
+          <description>Used to filter on the player name.</description>
+          <tag>-n</tag>
+          <regexp>(-n)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
           <examples>
-            <example>/reg -user=albert.</example>
-            <example>/reg -user=   alain.</example>
+            <example>/who -n "Candy" (will query for all online players having their name matching 'Candy').</example>
+            <example>/who -n "Cand*" (will query for all online players having their name starting with 'Candy').</example>
           </examples>
         </parameter>
+
+        <parameter>
+          <name>guild</name>
+          <description>Used to filter on the guild name.</description>
+          <tag>-g</tag>
+          <regexp>(-g)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+
+        <parameter>
+          <name>zone</name>
+          <description>Used to filter on the zone name.</description>
+          <tag>-z</tag>
+          <regexp>(-n)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+
+        <parameter>
+          <name>race</name>
+          <description>Used to filter on the race name.</description>
+          <tag>-r</tag>
+          <regexp>(-r)\s*+([a-zA-Z\p{Blank}]++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/who -r Human (will query for all online players being of race 'Human').</example>
+            <example>/who -r Dwar* (will query for all online players being of race starting with 'Dwa').</example>
+          </examples>
+        </parameter>
+
+        <parameter>
+          <name>class</name>
+          <description>Used to filter on the class name.</description>
+          <tag>-c</tag>
+          <regexp>(-c)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/who -c Priest (will query for all online players being of class 'Priest').</example>
+            <example>/who -c Wa* (will query for all online players being of class starting with 'Wa').</example>
+          </examples>
+        </parameter>
+
+        <parameter>
+          <name>server</name>
+          <description>Used to filter on the server name.</description>
+          <tag>-s</tag>
+          <type>String</type>
+          <regexp>(-s)\s*+([a-zA-Z]++)</regexp>
+          <examples>
+            <example>/who -s Tenedron (will query for all online players of the Tenedron server).</example>
+          </examples>
+        </parameter>
+
+        <parameter>
+          <name>level</name>
+          <description>Used to filter on player's level.</description>
+          <tag>-l</tag>
+          <regexp>(-l)\s*+(\d++)\s*+-\s*+(\d++)|-l\s++(\d++)</regexp>
+          <type>Integer</type>
+          <examples>
+            <example>/who -l 14-21 (will query for all online players between level 14 and level 21).</example>
+          </examples>
+        </parameter>
+
       </parameters>
+
     </command>
 
   </commands>
+
   
 
   <footer>
