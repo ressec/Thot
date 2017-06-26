@@ -15,11 +15,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
-
 import com.heliosphere.athena.base.message.Message;
 import com.heliosphere.athena.base.message.internal.IMessage;
-import com.heliosphere.athena.base.message.internal.exception.MessageException;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -76,13 +73,12 @@ public class ChatClient extends AbstractActor
 		this.username = username;
 	}
 
-	@SuppressWarnings("nls")
 	@Override
 	public Receive createReceive()
 	{
 		return receiveBuilder()
 				.match(Status.Failure.class, message -> handleFailure(message))
-				.match(Message.class, message -> handleAndDispatchMessage(message))
+				//.match(Message.class, message -> handleAndDispatchMessage(message))
 				//.matchEquals("stopIt", p -> handleStop())
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
@@ -100,109 +96,109 @@ public class ChatClient extends AbstractActor
 		LOG.error("Failure due to: " + message.cause().getMessage());
 	}
 
-	/**
-	 * Handles and dispatches incoming {@link Message}.
-	 * <hr>
-	 * @param message Message to process.
-	 */
-	@SuppressWarnings("nls")
-	private final void handleAndDispatchMessage(final IMessage message)
-	{
-		try
-		{
-			// Validate the message.
-			message.validate();
+	//	/**
+	//	 * Handles and dispatches incoming {@link Message}.
+	//	 * <hr>
+	//	 * @param message Message to process.
+	//	 */
+	//	@SuppressWarnings("nls")
+	//	private final void handleAndDispatchMessage(final IMessage message)
+	//	{
+	//		try
+	//		{
+	//			// Validate the message.
+	//			message.validate();
+	//
+	//			switch (message.getCategoryType())
+	//			{
+	//				case REQUEST:
+	//					handleRequestMessage(message);
+	//					break;
+	//
+	//				case REPLY:
+	//					handleReplyMessage(message);
+	//					break;
+	//
+	//				case NOTIFICATION:
+	//					//handleNotificationChatMessage(message);
+	//					break;
+	//
+	//				default:
+	//					LOG.warning(this + " does not handle message category of type: " + message.getCategoryType());
+	//					break;
+	//			}
+	//		}
+	//		catch (MessageException me)
+	//		{
+	//			getSender().tell(new Status.Failure(me), getSelf());
+	//		}
+	//	}
 
-			switch (message.getCategoryType())
-			{
-				case REQUEST:
-					handleRequestMessage(message);
-					break;
+	//	/**
+	//	 * Handles request {@link IMessage}.
+	//	 * <hr>
+	//	 * @param message Message to process.
+	//	 */
+	//	@SuppressWarnings("nls")
+	//	private final void handleRequestMessage(final IMessage message)
+	//	{
+	//		if (message.getType() instanceof ChatMessageType)
+	//		{
+	//			switch ((ChatMessageType) message.getType())
+	//			{
+	//				case REGISTER_USER:
+	//					break;
+	//
+	//				case QUERY_WHO:
+	//					break;
+	//
+	//				case STATUS_AFK:
+	//					break;
+	//
+	//				case NONE:
+	//				case QUERY_SERVER_TIME:
+	//					// Do nothing.
+	//					break;
+	//
+	//				default:
+	//					LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
+	//					break;
+	//			}
+	//		}
+	//	}
 
-				case REPLY:
-					handleReplyMessage(message);
-					break;
-
-				case NOTIFICATION:
-					//handleNotificationChatMessage(message);
-					break;
-
-				default:
-					LOG.warning(this + " does not handle message category of type: " + message.getCategoryType());
-					break;
-			}
-		}
-		catch (MessageException me)
-		{
-			getSender().tell(new Status.Failure(me), getSelf());
-		}
-	}
-
-	/**
-	 * Handles request {@link IMessage}.
-	 * <hr>
-	 * @param message Message to process.
-	 */
-	@SuppressWarnings("nls")
-	private final void handleRequestMessage(final IMessage message)
-	{
-		if (message.getType() instanceof ChatMessageType)
-		{
-			switch ((ChatMessageType) message.getType())
-			{
-				case REGISTER_USER:
-					break;
-
-				case QUERY_WHO:
-					break;
-
-				case STATUS_AFK:
-					break;
-
-				case NONE:
-				case QUERY_SERVER_TIME:
-					// Do nothing.
-					break;
-
-				default:
-					LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
-					break;
-			}
-		}
-	}
-
-	/**
-	 * Handles reply {@link IMessage}.
-	 * <hr>
-	 * @param message Message to process.
-	 */
-	@SuppressWarnings("nls")
-	private final void handleReplyMessage(final IMessage message)
-	{
-		if (message.getType() instanceof ChatMessageType)
-		{
-			switch ((ChatMessageType) message.getType())
-			{
-				case REGISTER_USER:
-					handleReplyGeneric(message);
-					break;
-
-				case QUERY_WHO:
-					break;
-
-				case STATUS_AFK:
-					break;
-
-				case NONE:
-				case QUERY_SERVER_TIME:
-					break;
-
-				default:
-					LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
-					break;
-			}
-		}
-	}
+	//	/**
+	//	 * Handles reply {@link IMessage}.
+	//	 * <hr>
+	//	 * @param message Message to process.
+	//	 */
+	//	@SuppressWarnings("nls")
+	//	private final void handleReplyMessage(final IMessage message)
+	//	{
+	//		if (message.getType() instanceof ChatMessageType)
+	//		{
+	//			switch ((ChatMessageType) message.getType())
+	//			{
+	//				case REGISTER_USER:
+	//					handleReplyGeneric(message);
+	//					break;
+	//
+	//				case QUERY_WHO:
+	//					break;
+	//
+	//				case STATUS_AFK:
+	//					break;
+	//
+	//				case NONE:
+	//				case QUERY_SERVER_TIME:
+	//					break;
+	//
+	//				default:
+	//					LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
+	//					break;
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * Handles reply {@link Message} independently of the message type.

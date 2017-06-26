@@ -18,18 +18,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.heliosphere.thot.akka.chat.client.TerminalProtocol;
-import org.heliosphere.thot.akka.chat.protocol.data.ChatMessageData;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.coordinator.ICommandCoordinator;
 import com.heliosphere.athena.base.command.internal.exception.CommandException;
 import com.heliosphere.athena.base.command.internal.interpreter.ICommandInterpreter;
 import com.heliosphere.athena.base.command.internal.processor.ICommandProcessor;
-import com.heliosphere.athena.base.command.internal.protocol.ICommandCodeType;
+import com.heliosphere.athena.base.command.internal.protocol.ICommandProtocolType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType;
-import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandGroupType;
-import com.heliosphere.athena.base.message.Message;
 import com.heliosphere.athena.base.message.internal.IMessage;
 
 import akka.actor.AbstractActor;
@@ -55,7 +52,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	/**
 	 * Pre-defined command processors.
 	 */
-	private Map<Enum<? extends ICommandCodeType>, ICommandProcessor> processors = new HashMap<>();
+	private Map<Enum<? extends ICommandProtocolType>, ICommandProcessor> processors = new HashMap<>();
 
 	/**
 	 * Command interpreter.
@@ -99,7 +96,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	}
 
 	@Override
-	public final void registerProcessor(final Enum<? extends ICommandCodeType> type, final ICommandProcessor processor)
+	public final void registerProcessor(final Enum<? extends ICommandProtocolType> type, final ICommandProcessor processor)
 	{
 		if (processors.get(type) != null)
 		{
@@ -118,7 +115,8 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	{
 		return receiveBuilder()
 				.match(ICommand.class, command -> handleAndDispatchCommand(command))
-				.match(CommandCoordinatorProtocol.RegisterCommandProcesor.class, message -> handleRegisterCommandProcessor(message))
+				.match(CommandCoordinatorProtocol.RegisterCommandProcessor.class, message -> handleRegisterCommandProcessor(message))
+				.match(CommandCoordinatorProtocol.ExecuteCommand.class, command -> handleExecuteCommand(command))
 				//.matchEquals("stopIt", p -> handleStop())
 				//				.matchAny(command -> handleUnknownCommand(command))
 				.matchAny(o -> LOG.info("received unknown object!"))
@@ -145,7 +143,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	protected void handleAndDispatchCommand(final ICommand command)
 	{
 		// Check the command type.
-		if (command.getMetadata().getCategoryType() == DefaultCommandCategoryType.NORMAL)
+		if (command.getMetadata().getProtocolCategory() == DefaultCommandCategoryType.NORMAL)
 		{
 			try
 			{
@@ -158,7 +156,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 		}
 		else
 		{
-			CommandException exception = new CommandException(String.format("Cannot process command: %1s, expected a 'normal' command category type!", command.getMetadata().getCategoryType()));
+			CommandException exception = new CommandException(String.format("Cannot process command: %1s, expected a 'normal' command category type!", command.getMetadata().getProtocolCategory()));
 			getSender().tell(new Status.Failure(exception), getSelf());
 		}
 	}
@@ -174,36 +172,36 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	private final IMessage convert(final ICommand command) throws CommandException
 	{
 		IMessage message = null;
-		ChatMessageData data = new ChatMessageData();
-
-		switch ((DefaultCommandCategoryType) command.getMetadata().getCategoryType())
-		{
-			case NORMAL:
-				switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
-				{
-					case REGISTER_USER:
-						data.setUserName((String) command.getParameter("username").getValues().get(0));
-						message = Message.createRequest(command.getMetadata().getMessageType(), data);
-						break;
-
-					case QUIT:
-					case AFK:
-					case DISPLAY_TERMINAL:
-					case WHO:
-
-					default:
-						break;
-				}
-				break;
-
-			case ADMINISTRATION:
-			case DEBUG:
-			case SUPER_ADMINISTRATION:
-			case SYSTEM:
-
-			default:
-				break;
-		}
+		//		ChatMessageData data = new ChatMessageData();
+		//
+		//		switch ((DefaultCommandCategoryType) command.getMetadata().getProtocolCategory())
+		//		{
+		//			case NORMAL:
+		//				switch ((DefaultCommandCodeType) command.getMetadata().getProtocolGroup())
+		//				{
+		//					case REGISTER_USER:
+		//						data.setUserName((String) command.getParameter("username").getValues().get(0));
+		//						message = Message.createRequest(command.getMetadata().getMessageType(), data);
+		//						break;
+		//
+		//					case QUIT:
+		//					case AFK:
+		//					case DISPLAY_TERMINAL:
+		//					case WHO:
+		//
+		//					default:
+		//						break;
+		//				}
+		//				break;
+		//
+		//			case ADMINISTRATION:
+		//			case DEBUG:
+		//			case SUPER_ADMINISTRATION:
+		//			case SYSTEM:
+		//
+		//			default:
+		//				break;
+		//		}
 
 		return message;
 	}
@@ -217,7 +215,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	@SuppressWarnings("nls")
 	protected void handleNormalCommand(final ICommand command) throws CommandException
 	{
-		switch ((DefaultCommandGroupType) command.getMetadata().getGroupType())
+		switch ((DefaultCommandGroupType) command.getMetadata().getProtocolGroup())
 		{
 			case CHAT:
 				handleCommandChat(command);
@@ -228,7 +226,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 				break;
 
 			default:
-				LOG.warning("Unknown command type: " + command.getMetadata().getCategoryType());
+				LOG.warning("Unknown command type: " + command.getMetadata().getProtocolCategory());
 				break;
 		}
 	}
@@ -241,20 +239,20 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	 */
 	protected void handleCommandChat(final @NonNull ICommand command) throws CommandException
 	{
-		switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
-		{
-			case REGISTER_USER:
-				getSender().tell(convert(command), getSelf());
-				break;
-
-			case QUIT:
-			case AFK:
-			case DISPLAY_TERMINAL:
-			case WHO:
-
-			default:
-				break;
-		}
+		//		switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
+		//		{
+		//			case REGISTER_USER:
+		//				getSender().tell(convert(command), getSelf());
+		//				break;
+		//
+		//			case QUIT:
+		//			case AFK:
+		//			case DISPLAY_TERMINAL:
+		//			case WHO:
+		//
+		//			default:
+		//				break;
+		//		}
 	}
 
 	/**
@@ -265,35 +263,35 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	 */
 	protected void handleCommandSystem(final @NonNull ICommand command) throws CommandException
 	{
-		switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
-		{
-			case HELP:
-				executeCommandProcessor(command);
-				break;
-
-			case QUIT:
-			case AFK:
-			case DISPLAY_TERMINAL:
-			case WHO:
-
-			default:
-				break;
-		}
+		//		switch ((DefaultCommandCodeType) command.getMetadata().getCodeType())
+		//		{
+		//			case HELP:
+		//				executeCommandProcessor(command);
+		//				break;
+		//
+		//			case QUIT:
+		//			case AFK:
+		//			case DISPLAY_TERMINAL:
+		//			case WHO:
+		//
+		//			default:
+		//				break;
+		//		}
 	}
 
-	@SuppressWarnings("unchecked")
-	protected void executeCommandProcessor(final ICommand command) throws CommandException
-	{
-		ICommandProcessor processor = processors.get(command.getMetadata().getCodeType());
-		if (processor != null)
-		{
-			List<String> result = (List<String>) processor.execute(command);
-			result.add("\r\n");
-
-			// Send lines to the terminal.
-			getContext().getParent().tell(new TerminalProtocol.DisplayOnTerminal(result), getSelf());
-		}
-	}
+	//	@SuppressWarnings("unchecked")
+	//	protected void executeCommandProcessor(final ICommand command) throws CommandException
+	//	{
+	//		ICommandProcessor processor = processors.get(command.getMetadata().getProtocolGroup());
+	//		if (processor != null)
+	//		{
+	//			List<String> result = (List<String>) processor.execute(command);
+	//			result.add("\r\n");
+	//
+	//			// Send lines to the terminal.
+	//			getContext().getParent().tell(new TerminalProtocol.DisplayOnTerminal(result), getSelf());
+	//		}
+	//	}
 
 	//	/**
 	//	 * Handles system commands.
@@ -384,11 +382,39 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	//	}
 
 	/**
+	 * Handles a command execution.
+	 * <hr>
+	 * @param command Command to execute.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void handleExecuteCommand(final @NonNull CommandCoordinatorProtocol.ExecuteCommand command)
+	{
+		// Do we have a command processor for this command type?
+		ICommandProcessor processor = processors.get(command.getCommand().getMetadata().getProtocolType());
+		if (processor != null)
+		{
+			try
+			{
+				// Execute the command through the command processor.
+				Object result = processor.execute(command.getCommand());
+
+				// Send the result to the parent actor.
+				getContext().getParent().tell(new TerminalProtocol.DisplayOnTerminal((List<String>) result), getSelf());
+			}
+			catch (CommandException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
 	 * Handles message for registering a command processor.
 	 * <hr>
 	 * @param message Message to process.
 	 */
-	protected void handleRegisterCommandProcessor(final @NonNull CommandCoordinatorProtocol.RegisterCommandProcesor message)
+	protected void handleRegisterCommandProcessor(final @NonNull CommandCoordinatorProtocol.RegisterCommandProcessor message)
 	{
 		Constructor<?> ctor;
 
