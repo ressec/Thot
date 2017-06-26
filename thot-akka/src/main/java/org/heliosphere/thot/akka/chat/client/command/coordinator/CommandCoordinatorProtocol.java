@@ -11,19 +11,30 @@
  */
 package org.heliosphere.thot.akka.chat.client.command.coordinator;
 
+import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.processor.ICommandProcessor;
-import com.heliosphere.athena.base.command.internal.protocol.ICommandCodeType;
+import com.heliosphere.athena.base.command.internal.protocol.ICommandProtocolType;
 
-import lombok.Getter;
-
+/**
+ * Message protocol for a {@link CommandCoordinator} actor.
+ * <hr>
+ * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+ * @version 1.0.0
+ */
 public final class CommandCoordinatorProtocol
 {
-	public final static class RegisterCommandProcesor
+	/**
+	 * Message handled by a {@link CommandCoordinator} to have a command processor registered for a given command protocol type.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
+	public final static class RegisterCommandProcessor
 	{
 		/**
 		 * Command type.
 		 */
-		private final Enum<? extends ICommandCodeType> type;
+		private final Enum<? extends ICommandProtocolType> type;
 
 		/**
 		 * Command processor class.
@@ -36,18 +47,18 @@ public final class CommandCoordinatorProtocol
 		 * @param type Command type.
 		 * @param commandProcessorClass Command processor class.
 		 */
-		public RegisterCommandProcesor(Enum<? extends ICommandCodeType> type, Class<? extends ICommandProcessor> commandProcessorClass)
+		public RegisterCommandProcessor(Enum<? extends ICommandProtocolType> type, Class<? extends ICommandProcessor> commandProcessorClass)
 		{
 			this.type = type;
 			this.commandProcessorClass = commandProcessorClass;
 		}
 
 		/**
-		 * Returns the command type.
+		 * Returns the command protocol type.
 		 * <hr>
-		 * @return Command type.
+		 * @return Command protocol type.
 		 */
-		public final Enum<? extends ICommandCodeType> getType()
+		public final Enum<? extends ICommandProtocolType> getType()
 		{
 			return type;
 		}
@@ -61,7 +72,39 @@ public final class CommandCoordinatorProtocol
 		{
 			return commandProcessorClass;
 		}
+	}
 
-		
+	/**
+	 * Message handled by a {@link CommandCoordinator} to have a command executed by a command processor.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
+	public final static class ExecuteCommand
+	{
+		/**
+		 * Command to execute.
+		 */
+		private final ICommand command;
+
+		/**
+		 * Creates a new message.
+		 * <hr>
+		 * @param command Command to execute.
+		 */
+		public ExecuteCommand(ICommand command)
+		{
+			this.command = command;
+		}
+
+		/**
+		 * Returns the command to execute.
+		 * <hr>
+		 * @return Command to execute.
+		 */
+		public final ICommand getCommand()
+		{
+			return command;
+		}
 	}
 }

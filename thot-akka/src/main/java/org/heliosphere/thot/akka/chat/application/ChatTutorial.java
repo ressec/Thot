@@ -30,7 +30,7 @@ import akka.actor.ActorSystem;
 public class ChatTutorial
 {
 	/**
-	 * Creates a new actor.
+	 * Creates a new chat tutorial actor system.
 	 * <hr>
 	 * @param systemName Actor system name.
 	 */
@@ -40,24 +40,13 @@ public class ChatTutorial
 		// Create an actor system without special configuration file.
 		ActorSystem system = ActorSystem.create(systemName);
 
-		//		try
-		//		{
 		// Create the chat manager actor.
 		ActorRef supervisor = system.actorOf(ChatSupervisor.props(), "chat-supervisor");
 
-		// Create a terminal chat client actor.
-		ActorRef terminal = system.actorOf(Terminal.props("/config/command/chat-client-commands.xml"), "chat-terminal");
-		//		}
-		//		catch (Exception e)
-		//		{
-		//			e.printStackTrace();
-		//		}
-		//		finally
-		//		{
-		//			system.terminate();
-		//		}
-		//
-		//		// Terminates the actor system.
-		//		system.terminate();
+		// Create a first terminal chat client actor.
+		ActorRef terminal1 = system.actorOf(Terminal.props("Terminal #1", "/config/terminal/terminal-1.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-1");
+
+		// Create a second terminal chat client actor.
+		ActorRef terminal2 = system.actorOf(Terminal.props("Terminal #2", "/config/terminal/terminal-2.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-2");
 	}
 }

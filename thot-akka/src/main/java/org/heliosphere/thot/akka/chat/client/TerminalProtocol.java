@@ -13,13 +13,27 @@ package org.heliosphere.thot.akka.chat.client;
 
 import java.util.List;
 
-import com.heliosphere.athena.base.command.internal.processor.ICommandProcessor;
-import com.heliosphere.athena.base.command.internal.protocol.ICommandCodeType;
+import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
-import lombok.Getter;
-
-public final class TerminalProtocol
+/**
+ * Message protocol for a {@link Terminal} actor.
+ * <hr>
+ * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+ * @version 1.0.0
+ */
+public final class TerminalProtocol implements IMessageProtocol
 {
+	/**
+	 * Default serialization identifier.
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Message used by a {@link Terminal} to display messages on the console.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
 	public final static class DisplayOnTerminal
 	{
 		/**

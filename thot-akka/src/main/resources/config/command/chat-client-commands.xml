@@ -5,22 +5,14 @@
     <version>1.0</version>
     <author>Resse Christophe</author>
     <description>XML file containing definitions for some chat commands.</description>
-
-    <protocol-command-category>com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType</protocol-command-category>
-    <protocol-command-group>com.heliosphere.athena.base.command.protocol.DefaultCommandGroupType</protocol-command-group>
-    <protocol-command-code>com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType</protocol-command-code>
-    <protocol-message>com.heliosphere.athena.base.message.protocol.DefaultMessageType</protocol-message>
-
   </header>
 
   <commands>
 
     <!-- HELP command. -->
     <command>
-      <category>NORMAL</category>
-      <group>SYSTEM</group>
-      <code>HELP</code>
-      <message>NONE</message> <!-- No message type associated with this command. -->
+      <protocol>com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol.HELP</protocol> <!-- Command protocol enumerated value -->
+      <processor>HelpCommandProcessor</processor>
       <name>help</name>
       <description>Display help on commands.</description>
       <aliases>
@@ -38,130 +30,157 @@
           <name>set</name>
           <description>Display a list of available commands for a given command category.</description>
           <tag>-set</tag>
-          <regexp>(-set)\s*+([a-zA-Z]++\*?)</regexp>
+          <regexp>(-set=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
         </parameter>
         <parameter>
-          <name>command</name>
-          <description>Display detailed description on a given command.</description>
-          <tag>-command</tag>
-          <regexp>\s*+([a-zA-Z]++\*?)</regexp>
+          <name>name</name>
+          <description>Display detailed description on a given command name.</description>
+          <tag>-name</tag>
+          <regexp>(-name=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
         </parameter>
       </parameters>
     </command>
 
-    <!-- AFK command which is a very simple command. -->
+    <!-- AFK command. -->
     <command>
-      <category>NORMAL</category>
-      <group>CHAT</group>
-      <code>AFK</code>
-      <message>STATUS_AFK</message>
+      <protocol>com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol.AFK</protocol> <!-- Command protocol enumerated value -->
+      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
       <name>afk</name>
       <description>Mark you as: "Away from keyboard".</description>
       <!-- Message protocol associated  with this command. Format is <full_enumeration_class_name>:<enumerated_value> -->
       <aliases>
         <alias>away</alias>
       </aliases>
-      <parameters></parameters> <!-- This command has no parameter. -->
+      <parameters></parameters> <!-- This command has no parameter! -->
     </command>
 
-    <!-- WHO command which is a quite complex command. -->
+    <!-- USER command. -->
     <command>
-
-      <category>NORMAL</category>
-      <group>CHAT</group>
-      <code>WHO</code>
-      <message>QUERY_WHO</message>
-      <name>who</name>
-      <description>Performs a query on the server for online players matching your query.</description>
-      <syntax>/who 'filters'</syntax>
-      <aliases>
-        <alias>people</alias>
-      </aliases>
+      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.USER</protocol> <!-- Command protocol enumerated value -->
+      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <name>user</name>
+      <description>Manipulates users.</description>
+      <aliases></aliases>
       <parameters>
-
         <parameter>
-          <name>name</name>
-          <description>Used to filter on the player name.</description>
-          <tag>-n</tag>
-          <regexp>(-n)\s*+([a-zA-Z]++\*?)</regexp>
-          <type>String</type>
-          <examples>
-            <example>/who -n "Candy" (will query for all online players having their name matching 'Candy').</example>
-            <example>/who -n "Cand*" (will query for all online players having their name starting with 'Candy').</example>
-          </examples>
-        </parameter>
-
-        <parameter>
-          <name>guild</name>
-          <description>Used to filter on the guild name.</description>
-          <tag>-g</tag>
-          <regexp>(-g)\s*+([a-zA-Z]++\*?)</regexp>
+          <name>register</name>
+          <description>Registers a user against the chat system (server-side).</description>
+          <tag>-register</tag>
+          <regexp>(-register=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
         </parameter>
-
         <parameter>
-          <name>zone</name>
-          <description>Used to filter on the zone name.</description>
-          <tag>-z</tag>
-          <regexp>(-n)\s*+([a-zA-Z]++\*?)</regexp>
+          <name>list</name>
+          <description>List users present in a room (must have joined the room first).</description>
+          <tag>-list</tag>
+          <regexp>(-list)</regexp>
           <type>String</type>
         </parameter>
-
         <parameter>
-          <name>race</name>
-          <description>Used to filter on the race name.</description>
-          <tag>-r</tag>
-          <regexp>(-r)\s*+([a-zA-Z\p{Blank}]++\*?)</regexp>
+          <name>unregister</name>
+          <description>Un-registers the user from the chat system (server-side).</description>
+          <tag>-unregister</tag>
+          <regexp>(-unregister)</regexp>
           <type>String</type>
-          <examples>
-            <example>/who -r Human (will query for all online players being of race 'Human').</example>
-            <example>/who -r Dwar* (will query for all online players being of race starting with 'Dwa').</example>
-          </examples>
         </parameter>
-
-        <parameter>
-          <name>class</name>
-          <description>Used to filter on the class name.</description>
-          <tag>-c</tag>
-          <regexp>(-c)\s*+([a-zA-Z]++\*?)</regexp>
-          <type>String</type>
-          <examples>
-            <example>/who -c Priest (will query for all online players being of class 'Priest').</example>
-            <example>/who -c Wa* (will query for all online players being of class starting with 'Wa').</example>
-          </examples>
-        </parameter>
-
-        <parameter>
-          <name>server</name>
-          <description>Used to filter on the server name.</description>
-          <tag>-s</tag>
-          <type>String</type>
-          <regexp>(-s)\s*+([a-zA-Z]++)</regexp>
-          <examples>
-            <example>/who -s Tenedron (will query for all online players of the Tenedron server).</example>
-          </examples>
-        </parameter>
-
-        <parameter>
-          <name>level</name>
-          <description>Used to filter on player's level.</description>
-          <tag>-l</tag>
-          <regexp>(-l)\s*+(\d++)\s*+-\s*+(\d++)|-l\s++(\d++)</regexp>
-          <type>Integer</type>
-          <examples>
-            <example>/who -l 14-21 (will query for all online players between level 14 and level 21).</example>
-          </examples>
-        </parameter>
-
       </parameters>
+    </command>
 
+    <!-- LOBBY command. -->
+    <command>
+      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY</protocol> <!-- Command protocol enumerated value -->
+      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <name>lobby</name>
+      <description>Manipulates a lobby.</description>
+      <aliases></aliases>
+      <parameters>
+        <parameter>
+          <name>list</name>
+          <description>Lists the avaialble lobbies.</description>
+          <tag>-list</tag>
+          <regexp>(-list)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>create</name>
+          <description>Creates a new lobby given its locale ISO country code.</description>
+          <tag>-create</tag>
+          <regexp>(-create=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>delete</name>
+          <description>Deletes a lobby given its locale ISO country code.</description>
+          <tag>-delete</tag>
+          <regexp>(-delete=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>join</name>
+          <description>Joins a lobby given its locale ISO country code.</description>
+          <tag>-join</tag>
+          <regexp>(-join=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>leave</name>
+          <description>Leaves a lobby given its locale ISO country code.</description>
+          <tag>-leave</tag>
+          <regexp>(-leave=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+      </parameters>
+    </command>
+
+    <!-- ROOM command. -->
+    <command>
+      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM</protocol> <!-- Command protocol enumerated value -->
+      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <name>room</name>
+      <description>Manipulates a room.</description>
+      <aliases></aliases>
+      <parameters>
+        <parameter>
+          <name>list</name>
+          <description>Lists the avaialble rooms.</description>
+          <tag>-list</tag>
+          <regexp>(-list)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>create</name>
+          <description>Creates a new room given its name.</description>
+          <tag>-create</tag>
+          <regexp>(-create=)\s*+([a-zA-Z_]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>delete</name>
+          <description>Deletes a room given its name.</description>
+          <tag>-delete</tag>
+          <regexp>(-delete=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>join</name>
+          <description>Joins a room given its name.</description>
+          <tag>-join</tag>
+          <regexp>(-join=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+        <parameter>
+          <name>leave</name>
+          <description>Leaves a room given its name.</description>
+          <tag>-leave</tag>
+          <regexp>(-leave=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+        </parameter>
+      </parameters>
     </command>
 
   </commands>
-
-  
 
   <footer>
     <generated>2017-06-03 12:48:03</generated>

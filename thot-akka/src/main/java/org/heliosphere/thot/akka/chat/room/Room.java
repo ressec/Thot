@@ -11,19 +11,18 @@
  */
 package org.heliosphere.thot.akka.chat.room;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.h2.engine.User;
-import org.heliosphere.thot.akka.chat.protocol.ChatMessageType;
+import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
 
 import com.heliosphere.athena.base.message.Message;
-import com.heliosphere.athena.base.message.internal.IMessage;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.actor.Status;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
@@ -70,8 +69,11 @@ public class Room extends AbstractActor
 	public Receive createReceive()
 	{
 		return receiveBuilder()
-				.match(Message.class, message -> handleAndDispatchMessage(message))
+				//.match(Message.class, message -> handleAndDispatchMessage(message))
 				//.matchEquals("stopIt", p -> handleStop())
+				.match(ChatSupervisorProtocol.RoomConnect.class, message -> handleRoomConnect(message))
+				.match(ChatSupervisorProtocol.RoomDisconnect.class, message -> handleRoomDisconnect(message))
+				.match(ChatSupervisorProtocol.UserList.class, message -> handleUserList(message))
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
 	}
@@ -88,70 +90,121 @@ public class Room extends AbstractActor
 	}
 
 	/**
-	 * Handles and dispatches incoming {@link Message}.
+	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomConnect} message.
 	 * <hr>
 	 * @param message Message to process.
+	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleAndDispatchMessage(final IMessage message)
+	private final void handleRoomConnect(final ChatSupervisorProtocol.RoomConnect message) throws Exception
 	{
-		try
+		if (users.containsKey(message.getUser()))
 		{
-			// Validate the message.
-			message.validate();
-
-			switch (message.getCategoryType())
-			{
-				case REQUEST:
-					handleRequestMessage(message);
-					break;
-
-				case REPLY:
-					//handleReplyMessage(message);
-					break;
-
-				case NOTIFICATION:
-					//handleNotificationMessage(message);
-					break;
-
-				default:
-					LOG.warning(this + " does not handle message category of type: " + message.getCategoryType());
-					break;
-			}
+			getSender().tell(new RoomException("User: %1s has already joined room: %2s!"), getSelf());
 		}
-		catch (Exception e)
+		else
 		{
-			// Notify the sender the execution has failed!
-			getSender().tell(new Status.Failure(e), getSelf());
+			users.put(message.getUser(), getSender());
+			getSender().tell(new ChatSupervisorProtocol.RoomConnected(message.getUser(), message.getRoom()), getSelf());
 		}
 	}
 
 	/**
-	 * Handles request {@link Message}.
+	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomDisconnect} message.
 	 * <hr>
-	 * @param message Request message to process.
+	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRequestMessage(final IMessage message) throws Exception
+	private final void handleRoomDisconnect(final ChatSupervisorProtocol.RoomDisconnect message) throws Exception
 	{
-		switch ((ChatMessageType) message.getType())
+		if (!users.containsKey(message.getUser()))
 		{
-			//			case ROOM_JOIN:
-			//				break;
-			//
-			//			case ROOM_LEAVE:
-			//				break;
-			//
-			//			case ROOM_USER_LIST:
-			//				break;
-			//
-			//			case ROOM_USER_GET:
-			//				break;
-
-			default:
-				LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
-				break;
+			getSender().tell(new RoomException("User: %1s is not a member of room: %2s!"), getSelf());
+		}
+		else
+		{
+			users.remove(message.getUser());
+			getSender().tell(new ChatSupervisorProtocol.RoomDisconnected(message.getUser(), message.getRoom()), getSelf());
 		}
 	}
+
+	/**
+	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.UserList} message.
+	 * <hr>
+	 * @param message Message to process.
+	 * @throws Exception Thrown in case an error occurred while processing a message.
+	 */
+	private final void handleUserList(final ChatSupervisorProtocol.UserList message) throws Exception
+	{
+		getSender().tell(new ChatSupervisorProtocol.UserList(message.getRoom(), new ArrayList<>(users.keySet())), getSelf());
+	}
+
+	//	/**
+	//	 * Handles and dispatches incoming {@link Message}.
+	//	 * <hr>
+	//	 * @param message Message to process.
+	//	 */
+	//	@SuppressWarnings("nls")
+	//	private final void handleAndDispatchMessage(final IMessage message)
+	//	{
+	//		try
+	//		{
+	//			// Validate the message.
+	//			message.validate();
+	//
+	//			switch (message.getCategoryType())
+	//			{
+	//				case REQUEST:
+	//					handleRequestMessage(message);
+	//					break;
+	//
+	//				case REPLY:
+	//					//handleReplyMessage(message);
+	//					break;
+	//
+	//				case NOTIFICATION:
+	//					//handleNotificationMessage(message);
+	//					break;
+	//
+	//				default:
+	//					LOG.warning(this + " does not handle message category of type: " + message.getCategoryType());
+	//					break;
+	//			}
+	//		}
+	//		catch (Exception e)
+	//		{
+	//			// Notify the sender the execution has failed!
+	//			getSender().tell(new Status.Failure(e), getSelf());
+	//		}
+	//	}
+
+	//	/**
+	//	 * Handles request {@link Message}.
+	//	 * <hr>
+	//	 * @param message Request message to process.
+	//	 * @throws Exception Thrown in case an error occurred while processing a message.
+	//	 */
+	//	@SuppressWarnings("nls")
+	//	private final void handleRequestMessage(final IMessage message) throws Exception
+	//	{
+	//		switch ((ChatMessageType) message.getType())
+	//		{
+	//			//			case ROOM_JOIN:
+	//			//				break;
+	//			//
+	//			//			case ROOM_LEAVE:
+	//			//				break;
+	//			//
+	//			//			case ROOM_USER_LIST:
+	//			//				break;
+	//			//
+	//			//			case ROOM_USER_GET:
+	//			//				break;
+	//
+	//			default:
+	//				LOG.warning(this + " does not handle message (protocol) of type: " + message.getType());
+	//				break;
+	//		}
+	//	}
 }
