@@ -26,7 +26,7 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
-public class Room extends AbstractActor
+public class RoomActor extends AbstractActor
 {
 	/** 
 	 * Akka logging adapter.
@@ -44,22 +44,22 @@ public class Room extends AbstractActor
 	private Map<String, ActorRef> users = new HashMap<>();
 
 	/**
-	 * Static creation pattern for a {@link Room}.
+	 * Static creation pattern for a {@link RoomActor}.
 	 * <hr>
-	 * @param name {@link Room} name.
+	 * @param name {@link RoomActor} name.
 	 * @return {@link Props}.
 	 */
 	public static Props props(final String name)
 	{
-		return Props.create(Room.class, name);
+		return Props.create(RoomActor.class, name);
 	}
 
 	/**
-	 * Creates a new {@link Room}.
+	 * Creates a new {@link RoomActor}.
 	 * <hr>
-	 * @param name {@link Room} name.
+	 * @param name {@link RoomActor} name.
 	 */
-	public Room(final String name)
+	public RoomActor(final String name)
 	{
 		this.name = name;
 	}

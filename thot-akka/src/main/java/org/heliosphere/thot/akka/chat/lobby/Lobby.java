@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.room.Room;
+import org.heliosphere.thot.akka.chat.room.RoomActor;
 import org.heliosphere.thot.akka.chat.room.RoomException;
 import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
 
@@ -41,7 +41,7 @@ public class Lobby extends AbstractActor
 	private Locale locale = null;
 
 	/**
-	 *  Collection of {@link Room}.
+	 *  Collection of {@link RoomActor}.
 	 */
 	private Map<String, ActorRef> rooms = new HashMap<>();
 
@@ -157,7 +157,7 @@ public class Lobby extends AbstractActor
 		}
 		else
 		{
-			ActorRef room = getContext().actorOf(Room.props(message.getRoom()), "room-" + message.getRoom());
+			ActorRef room = getContext().actorOf(RoomActor.props(message.getRoom()), "room-" + message.getRoom());
 			rooms.put(message.getRoom(), room);
 			getSender().tell(new ChatSupervisorProtocol.RoomCreated(message.getUser(), message.getRoom()), getSelf());
 		}
