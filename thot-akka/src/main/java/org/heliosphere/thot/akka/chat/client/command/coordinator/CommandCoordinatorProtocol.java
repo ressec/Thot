@@ -16,7 +16,7 @@ import com.heliosphere.athena.base.command.internal.processor.ICommandProcessor;
 import com.heliosphere.athena.base.command.internal.protocol.ICommandProtocolType;
 
 /**
- * Message protocol for a {@link CommandCoordinator} actor.
+ * Message protocol for a {@link CommandCoordinatorActor} actor.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
@@ -24,7 +24,7 @@ import com.heliosphere.athena.base.command.internal.protocol.ICommandProtocolTyp
 public final class CommandCoordinatorProtocol
 {
 	/**
-	 * Message handled by a {@link CommandCoordinator} to have a command processor registered for a given command protocol type.
+	 * Message handled by a {@link CommandCoordinatorActor} to have a command processor registered for a given command protocol type.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
@@ -75,7 +75,7 @@ public final class CommandCoordinatorProtocol
 	}
 
 	/**
-	 * Message handled by a {@link CommandCoordinator} to have a command executed by a command processor.
+	 * Message handled by a {@link CommandCoordinatorActor} to have a command executed by a command processor.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0

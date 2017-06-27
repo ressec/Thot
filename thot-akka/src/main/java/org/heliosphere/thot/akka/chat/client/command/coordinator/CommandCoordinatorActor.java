@@ -42,7 +42,7 @@ import lombok.NonNull;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class CommandCoordinator extends AbstractActor implements ICommandCoordinator
+public class CommandCoordinatorActor extends AbstractActor implements ICommandCoordinator
 {
 	/**
 	 * Akka logging adapter.
@@ -60,14 +60,14 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	private ICommandInterpreter interpreter;
 
 	/**
-	 * Static creation pattern for a {@link CommandCoordinator}.
+	 * Static creation pattern for a {@link CommandCoordinatorActor}.
 	 * <hr>
 	 * @param interpreter Command interpreter.
 	 * @return {@link Props}.
 	 */
 	public static Props create(final ICommandInterpreter interpreter)
 	{
-		return Props.create(CommandCoordinator.class, interpreter);
+		return Props.create(CommandCoordinatorActor.class, interpreter);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 	 * <hr>
 	 * @param interpreter Command interpreter.
 	 */
-	public CommandCoordinator(final ICommandInterpreter interpreter)
+	public CommandCoordinatorActor(final ICommandInterpreter interpreter)
 	{
 		this.interpreter = interpreter;
 	}

@@ -15,7 +15,7 @@ import java.util.Locale;
 
 import org.apache.commons.collections4.ListUtils;
 import org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol;
-import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinator;
+import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorActor;
 import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorProtocol;
 import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
 
@@ -128,7 +128,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 			terminal.start();
 
 			// Create a command coordinator to handle processing of commands.
-			commandCoordinator = getContext().actorOf(CommandCoordinator.create(terminal.getInterpreter()), "command-processor-normal");
+			commandCoordinator = getContext().actorOf(CommandCoordinatorActor.create(terminal.getInterpreter()), "command-processor-normal");
 
 			// Register some pre-defined commands.
 			commandCoordinator.tell(new CommandCoordinatorProtocol.RegisterCommandProcessor(DefaultCommandProtocol.HELP, HelpCommandProcessor.class), getSelf());
