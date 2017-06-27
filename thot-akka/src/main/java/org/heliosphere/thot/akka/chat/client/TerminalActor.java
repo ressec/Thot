@@ -17,6 +17,7 @@ import org.apache.commons.collections4.ListUtils;
 import org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol;
 import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorActor;
 import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorProtocol;
+import org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol;
 import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
@@ -155,10 +156,10 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				.match(TerminalMessageProtocol.DisplayOnTerminal.class, message -> handleDisplayOnTerminal(message))
 				.match(ChatSupervisorProtocol.QueryServerTime.class, response -> handleQueryServerTime(response))
 				.match(ChatSupervisorProtocol.UserRegistered.class, response -> handleUserRegistered(response))
-				.match(ChatSupervisorProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
-				.match(ChatSupervisorProtocol.LobbyCreated.class, response -> handleMessageLobbyCreated(response))
-				.match(ChatSupervisorProtocol.LobbyDeleted.class, response -> handleMessageLobbyDeleted(response))
-				.match(ChatSupervisorProtocol.LobbyConnected.class, response -> handleMessageLobbyConnected(response))
+				.match(LobbyMessageProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
+				.match(LobbyMessageProtocol.LobbyCreated.class, response -> handleMessageLobbyCreated(response))
+				.match(LobbyMessageProtocol.LobbyDeleted.class, response -> handleMessageLobbyDeleted(response))
+				.match(LobbyMessageProtocol.LobbyConnected.class, response -> handleMessageLobbyConnected(response))
 				.match(ChatSupervisorProtocol.RoomList.class, response -> handleMessageRoomList(response))
 				.match(ChatSupervisorProtocol.RoomCreated.class, response -> handleMessageRoomCreated(response))
 				.match(ChatSupervisorProtocol.RoomConnected.class, response -> handleMessageRoomConnected(response))
@@ -339,31 +340,31 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		if (command.getParameter("list") != null)
 		{
 			parameter = command.getParameter("list");
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyList(this.user, null), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyList(this.user, null), getSelf());
 		}
 		else if (command.getParameter("create") != null)
 		{
 			parameter = command.getParameter("create");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyCreate(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyCreate(this.user, locale), getSelf());
 		}
 		else if (command.getParameter("delete") != null)
 		{
 			parameter = command.getParameter("delete");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyDelete(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyDelete(this.user, locale), getSelf());
 		}
 		else if (command.getParameter("join") != null)
 		{
 			parameter = command.getParameter("join");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyConnect(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyConnect(this.user, locale), getSelf());
 		}
 		else if (command.getParameter("leave") != null)
 		{
 			parameter = command.getParameter("leave");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyDisconnect(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyDisconnect(this.user, locale), getSelf());
 		}
 		else
 		{
@@ -620,7 +621,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		{
 			if (user != null)
 			{
-				chatSystem.tell(new ChatSupervisorProtocol.LobbyList(user, null), getSelf());
+				chatSystem.tell(new LobbyMessageProtocol.LobbyList(user, null), getSelf());
 			}
 		}
 	}
@@ -648,7 +649,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyList(final ChatSupervisorProtocol.LobbyList response)
+	private void handleMessageLobbyList(final LobbyMessageProtocol.LobbyList response)
 	{
 		if (response.getLobbies().isEmpty())
 		{
@@ -699,7 +700,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyCreated(final ChatSupervisorProtocol.LobbyCreated response)
+	private void handleMessageLobbyCreated(final LobbyMessageProtocol.LobbyCreated response)
 	{
 		terminal.getTerminal().println(String.format("Lobby: lobby-%1s has been created.", response.getLobby()));
 		terminal.getTerminal().println();
@@ -713,7 +714,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyDeleted(final ChatSupervisorProtocol.LobbyDeleted response)
+	private void handleMessageLobbyDeleted(final LobbyMessageProtocol.LobbyDeleted response)
 	{
 		terminal.getTerminal().println(String.format("Lobby: %1s has been deleted.", response.getLobby()));
 		terminal.getTerminal().println();
@@ -727,7 +728,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyConnected(final ChatSupervisorProtocol.LobbyConnected response)
+	private void handleMessageLobbyConnected(final LobbyMessageProtocol.LobbyConnected response)
 	{
 		lobbyProxy = getSender();
 		lobby = response.getLobby();

@@ -20,6 +20,7 @@ import java.util.Map;
 import org.heliosphere.thot.akka.chat.client.ChatClientActor;
 import org.heliosphere.thot.akka.chat.lobby.LobbyActor;
 import org.heliosphere.thot.akka.chat.lobby.LobbyException;
+import org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol;
 import org.heliosphere.thot.akka.chat.user.UserException;
 
 import com.heliosphere.athena.base.message.Message;
@@ -63,10 +64,10 @@ public class ChatSupervisorActor extends AbstractActor
 		return receiveBuilder()
 				.match(ChatSupervisorProtocol.QueryServerTime.class, message -> getSender().tell(new ChatSupervisorProtocol.QueryServerTime(LocalTime.now().toString()), getSelf()))
 				.match(ChatSupervisorProtocol.RegisterUser.class, message -> handleRegisterUser(message))
-				.match(ChatSupervisorProtocol.LobbyList.class, message -> handleLobbyList(message))
-				.match(ChatSupervisorProtocol.LobbyCreate.class, message -> handleLobbyCreate(message))
-				.match(ChatSupervisorProtocol.LobbyDelete.class, message -> handleLobbyDelete(message))
-				.match(ChatSupervisorProtocol.LobbyConnect.class, message -> handleLobbyConnect(message))
+				.match(LobbyMessageProtocol.LobbyList.class, message -> handleLobbyList(message))
+				.match(LobbyMessageProtocol.LobbyCreate.class, message -> handleLobbyCreate(message))
+				.match(LobbyMessageProtocol.LobbyDelete.class, message -> handleLobbyDelete(message))
+				.match(LobbyMessageProtocol.LobbyConnect.class, message -> handleLobbyConnect(message))
 				//.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				//.matchEquals("stopIt", p -> handleStop())
 				.matchAny(message -> handleUnknownMessage(message))
@@ -181,12 +182,12 @@ public class ChatSupervisorActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link ChatSupervisorProtocol.LobbyList} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyList} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyList(final ChatSupervisorProtocol.LobbyList message)
+	private final void handleLobbyList(final LobbyMessageProtocol.LobbyList message)
 	{
 		if (message.getUser() == null || message.getUser().isEmpty())
 		{
@@ -199,18 +200,18 @@ public class ChatSupervisorActor extends AbstractActor
 		else
 		{
 			// Confirm the user has been registered.
-			getSender().tell(new ChatSupervisorProtocol.LobbyList(message.getUser(), new ArrayList<>(lobbies.keySet())), getSelf());
+			getSender().tell(new LobbyMessageProtocol.LobbyList(message.getUser(), new ArrayList<>(lobbies.keySet())), getSelf());
 		}
 	}
 
 	/**
-	 * Handles {@link ChatSupervisorProtocol.LobbyCreate} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyCreate} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyCreate(final ChatSupervisorProtocol.LobbyCreate message) throws Exception
+	private final void handleLobbyCreate(final LobbyMessageProtocol.LobbyCreate message) throws Exception
 	{
 		if (message.getLobby() == null)
 		{
@@ -227,17 +228,17 @@ public class ChatSupervisorActor extends AbstractActor
 		lobbies.put(message.getLobby(), lobby);
 
 		// Send the client a confirmation message and inject the lobby reference.
-		getSender().tell(new ChatSupervisorProtocol.LobbyCreated(message.getLobby()), getSelf());
+		getSender().tell(new LobbyMessageProtocol.LobbyCreated(message.getLobby()), getSelf());
 	}
 
 	/**
-	 * Handles {@link ChatSupervisorProtocol.LobbyDelete} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyDelete} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyDelete(final ChatSupervisorProtocol.LobbyDelete message) throws Exception
+	private final void handleLobbyDelete(final LobbyMessageProtocol.LobbyDelete message) throws Exception
 	{
 		if (message.getLobby() == null)
 		{
@@ -257,17 +258,17 @@ public class ChatSupervisorActor extends AbstractActor
 		lobbies.remove(message.getLobby());
 
 		// Send the client a confirmation message.
-		getSender().tell(new ChatSupervisorProtocol.LobbyDeleted(message.getLobby()), getSelf());
+		getSender().tell(new LobbyMessageProtocol.LobbyDeleted(message.getLobby()), getSelf());
 	}
 
 	/**
-	 * Handles {@link ChatSupervisorProtocol.LobbyConnect} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyConnect} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyConnect(final ChatSupervisorProtocol.LobbyConnect message) throws Exception
+	private final void handleLobbyConnect(final LobbyMessageProtocol.LobbyConnect message) throws Exception
 	{
 		if (message.getLobby() == null)
 		{
