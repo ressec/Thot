@@ -29,7 +29,7 @@ public final class TerminalProtocol implements IMessageProtocol
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Message used by a {@link Terminal} to display messages on the console.
+	 * Message handled by a {@link Terminal} to display messages on the console.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
