@@ -28,7 +28,7 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
-public class Lobby extends AbstractActor
+public class LobbyActor extends AbstractActor
 {
 	/** 
 	 * Akka logging adapter.
@@ -51,22 +51,22 @@ public class Lobby extends AbstractActor
 	private Map<String, ActorRef> users = new HashMap<>();
 
 	/**
-	 * Static creation pattern for a {@link Lobby}.
+	 * Static creation pattern for a {@link LobbyActor}.
 	 * <hr>
-	 * @param locale Locale for the {@link Lobby}.
+	 * @param locale Locale for the {@link LobbyActor}.
 	 * @return {@link Props}.
 	 */
 	public static Props props(final Locale locale)
 	{
-		return Props.create(Lobby.class, locale);
+		return Props.create(LobbyActor.class, locale);
 	}
 
 	/**
-	 * Creates a new {@link Lobby}.
+	 * Creates a new {@link LobbyActor}.
 	 * <hr>
 	 * @param locale Locale for the lobby.
 	 */
-	public Lobby(final Locale locale)
+	public LobbyActor(final Locale locale)
 	{
 		this.locale = locale;
 	}

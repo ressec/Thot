@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.heliosphere.thot.akka.chat.client.ChatClientActor;
-import org.heliosphere.thot.akka.chat.lobby.Lobby;
+import org.heliosphere.thot.akka.chat.lobby.LobbyActor;
 import org.heliosphere.thot.akka.chat.lobby.LobbyException;
 import org.heliosphere.thot.akka.chat.user.UserException;
 
@@ -38,7 +38,7 @@ public class ChatSupervisor extends AbstractActor
 	private final LoggingAdapter LOG = Logging.getLogger(getContext().getSystem(), this);
 
 	/**
-	 *  Collection of {@link Lobby}.
+	 *  Collection of {@link LobbyActor}.
 	 */
 	private Map<Locale, ActorRef> lobbies = new HashMap<>();
 
@@ -223,7 +223,7 @@ public class ChatSupervisor extends AbstractActor
 		}
 
 		// Create the lobby and register it.
-		ActorRef lobby = getContext().actorOf(Lobby.props(message.getLobby()), "lobby-" + message.getLobby().toString());
+		ActorRef lobby = getContext().actorOf(LobbyActor.props(message.getLobby()), "lobby-" + message.getLobby().toString());
 		lobbies.put(message.getLobby(), lobby);
 
 		// Send the client a confirmation message and inject the lobby reference.
