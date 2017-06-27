@@ -11,7 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.application;
 
-import org.heliosphere.thot.akka.chat.client.Terminal;
+import org.heliosphere.thot.akka.chat.client.TerminalActor;
 import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisor;
 
 import akka.actor.ActorRef;
@@ -44,9 +44,9 @@ public class ChatTutorial
 		ActorRef supervisor = system.actorOf(ChatSupervisor.props(), "chat-supervisor");
 
 		// Create a first terminal chat client actor.
-		ActorRef terminal1 = system.actorOf(Terminal.props("Terminal #1", "/config/terminal/terminal-1.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-1");
+		ActorRef terminal1 = system.actorOf(TerminalActor.props("Terminal #1", "/config/terminal/terminal-1.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-1");
 
 		// Create a second terminal chat client actor.
-		ActorRef terminal2 = system.actorOf(Terminal.props("Terminal #2", "/config/terminal/terminal-2.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-2");
+		ActorRef terminal2 = system.actorOf(TerminalActor.props("Terminal #2", "/config/terminal/terminal-2.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-2");
 	}
 }

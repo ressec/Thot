@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.client.TerminalProtocol;
+import org.heliosphere.thot.akka.chat.client.TerminalMessageProtocol;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.coordinator.ICommandCoordinator;
@@ -399,7 +399,7 @@ public class CommandCoordinator extends AbstractActor implements ICommandCoordin
 				Object result = processor.execute(command.getCommand());
 
 				// Send the result to the parent actor.
-				getContext().getParent().tell(new TerminalProtocol.DisplayOnTerminal((List<String>) result), getSelf());
+				getContext().getParent().tell(new TerminalMessageProtocol.DisplayOnTerminal((List<String>) result), getSelf());
 			}
 			catch (CommandException e)
 			{

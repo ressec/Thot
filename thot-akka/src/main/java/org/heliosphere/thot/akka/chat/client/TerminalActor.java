@@ -50,7 +50,7 @@ import lombok.NonNull;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class Terminal extends AbstractActor implements ICommandListener
+public class TerminalActor extends AbstractActor implements ICommandListener
 {
 	/**
 	 * Akka logging adapter.
@@ -98,7 +98,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	private String user = null;
 
 	/**
-	 * Static creation pattern for a {@link Terminal}.
+	 * Static creation pattern for a {@link TerminalActor}.
 	 * <hr>
 	 * @param name Terminal's session name.
 	 * @param terminalConfigFilename Terminal configuration file name.
@@ -107,7 +107,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 */
 	public static Props props(final String name, final String terminalConfigFilename, final String commandFileName)
 	{
-		return Props.create(Terminal.class, name, terminalConfigFilename, commandFileName);
+		return Props.create(TerminalActor.class, name, terminalConfigFilename, commandFileName);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 * @throws FileException Thrown in case an error occurred while trying to access the XML commands file.
 	 */
 	@SuppressWarnings("nls")
-	public Terminal(String name, String terminalConfigFilename, final String commandFileName) throws FileException
+	public TerminalActor(String name, String terminalConfigFilename, final String commandFileName) throws FileException
 	{
 		try
 		{
@@ -152,7 +152,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 				//.match(ICommand.class, command -> handleAndDispatchCommand(command)) // Generic handler & dispatcher for commands.
 				//.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				//.match(ICommandResponse.class, response -> handleResponse(response))
-				.match(TerminalProtocol.DisplayOnTerminal.class, message -> handleDisplayOnTerminal(message))
+				.match(TerminalMessageProtocol.DisplayOnTerminal.class, message -> handleDisplayOnTerminal(message))
 				.match(ChatSupervisorProtocol.QueryServerTime.class, response -> handleQueryServerTime(response))
 				.match(ChatSupervisorProtocol.UserRegistered.class, response -> handleUserRegistered(response))
 				.match(ChatSupervisorProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
@@ -832,11 +832,11 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link TerminalProtocol.DisplayOnTerminal} message.
+	 * Handles a {@link TerminalMessageProtocol.DisplayOnTerminal} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */
-	private void handleDisplayOnTerminal(final TerminalProtocol.DisplayOnTerminal message)
+	private void handleDisplayOnTerminal(final TerminalMessageProtocol.DisplayOnTerminal message)
 	{
 		terminal.getTerminal().print(message.getMessages());
 		terminal.resume();
