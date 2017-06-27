@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.client.ChatClient;
+import org.heliosphere.thot.akka.chat.client.ChatClientActor;
 import org.heliosphere.thot.akka.chat.lobby.Lobby;
 import org.heliosphere.thot.akka.chat.lobby.LobbyException;
 import org.heliosphere.thot.akka.chat.user.UserException;
@@ -43,7 +43,7 @@ public class ChatSupervisor extends AbstractActor
 	private Map<Locale, ActorRef> lobbies = new HashMap<>();
 
 	/**
-	 * Collection of registered {@link ChatClient} users.
+	 * Collection of registered {@link ChatClientActor} users.
 	 */
 	private Map<String, ActorRef> clients = new HashMap<>();
 

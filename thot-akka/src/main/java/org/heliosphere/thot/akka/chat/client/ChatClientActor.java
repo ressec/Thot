@@ -25,7 +25,7 @@ import akka.actor.Status;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
-public class ChatClient extends AbstractActor
+public class ChatClientActor extends AbstractActor
 {
 	/** 
 	 * Akka logging adapter.
@@ -59,7 +59,7 @@ public class ChatClient extends AbstractActor
 	 */
 	public static Props props(final String username)
 	{
-		return Props.create(ChatClient.class, username);
+		return Props.create(ChatClientActor.class, username);
 
 	}
 
@@ -68,7 +68,7 @@ public class ChatClient extends AbstractActor
 	 * <hr>
 	 * @param username User name.
 	 */
-	public ChatClient(final String username)
+	public ChatClientActor(final String username)
 	{
 		this.username = username;
 	}
