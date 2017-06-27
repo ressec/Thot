@@ -159,7 +159,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				.match(LobbyMessageProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
 				.match(LobbyMessageProtocol.LobbyCreated.class, response -> handleMessageLobbyCreated(response))
 				.match(LobbyMessageProtocol.LobbyDeleted.class, response -> handleMessageLobbyDeleted(response))
-				.match(LobbyMessageProtocol.LobbyConnected.class, response -> handleMessageLobbyConnected(response))
+				.match(LobbyMessageProtocol.LobbyJoined.class, response -> handleMessageLobbyJoined(response))
 				.match(ChatSupervisorProtocol.RoomList.class, response -> handleMessageRoomList(response))
 				.match(ChatSupervisorProtocol.RoomCreated.class, response -> handleMessageRoomCreated(response))
 				.match(ChatSupervisorProtocol.RoomConnected.class, response -> handleMessageRoomConnected(response))
@@ -358,13 +358,13 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		{
 			parameter = command.getParameter("join");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new LobbyMessageProtocol.LobbyConnect(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyJoin(this.user, locale), getSelf());
 		}
 		else if (command.getParameter("leave") != null)
 		{
 			parameter = command.getParameter("leave");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new LobbyMessageProtocol.LobbyDisconnect(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyLeave(this.user, locale), getSelf());
 		}
 		else
 		{
@@ -695,7 +695,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyCreated} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.LobbyMessageProtocol.LobbyCreated} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
@@ -709,7 +709,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyDeleted} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.LobbyMessageProtocol.LobbyDeleted} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
@@ -723,12 +723,12 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyConnected} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyJoined} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyConnected(final LobbyMessageProtocol.LobbyConnected response)
+	private void handleMessageLobbyJoined(final LobbyMessageProtocol.LobbyJoined response)
 	{
 		lobbyProxy = getSender();
 		lobby = response.getLobby();

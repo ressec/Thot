@@ -76,8 +76,8 @@ public class LobbyActor extends AbstractActor
 	{
 		return receiveBuilder()
 				//.match(Message.class, message -> handleAndDispatchMessage(message))
-				.match(LobbyMessageProtocol.LobbyConnect.class, message -> handleLobbyConnect(message))
-				.match(LobbyMessageProtocol.LobbyDisconnect.class, message -> handleLobbyDisconnect(message))
+				.match(LobbyMessageProtocol.LobbyJoin.class, message -> handleLobbyJoin(message))
+				.match(LobbyMessageProtocol.LobbyLeave.class, message -> handleLobbyLeave(message))
 				.match(ChatSupervisorProtocol.RoomCreate.class, message -> handleRoomCreate(message))
 				.match(ChatSupervisorProtocol.RoomList.class, message -> handleRoomList(message))
 				.match(ChatSupervisorProtocol.RoomConnect.class, message -> handleRoomConnect(message))
@@ -98,13 +98,13 @@ public class LobbyActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link LobbyMessageProtocol.LobbyConnect} message.
+	 * Handles {@link LobbyMessageProtocol.LobbyJoin} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyConnect(final LobbyMessageProtocol.LobbyConnect message) throws Exception
+	private final void handleLobbyJoin(final LobbyMessageProtocol.LobbyJoin message) throws Exception
 	{
 		// User already connected?
 		if (users.get(message.getUser()) != null)
@@ -114,18 +114,18 @@ public class LobbyActor extends AbstractActor
 		else
 		{
 			users.put(message.getUser(), getSender());
-			getSender().tell(new LobbyMessageProtocol.LobbyConnected(message.getUser(), message.getLobby()), getSelf());
+			getSender().tell(new LobbyMessageProtocol.LobbyJoined(message.getUser(), message.getLobby()), getSelf());
 		}
 	}
 
 	/**
-	 * Handles {@link LobbyMessageProtocol.LobbyDisconnect} message.
+	 * Handles {@link LobbyMessageProtocol.LobbyLeave} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyDisconnect(final LobbyMessageProtocol.LobbyDisconnect message) throws Exception
+	private final void handleLobbyLeave(final LobbyMessageProtocol.LobbyLeave message) throws Exception
 	{
 		// User already connected?
 		if (users.get(message.getUser()) == null)
@@ -134,7 +134,7 @@ public class LobbyActor extends AbstractActor
 		}
 		else
 		{
-			getSender().tell(new LobbyMessageProtocol.LobbyDisconnected(message.getUser(), message.getLobby()), getSelf());
+			getSender().tell(new LobbyMessageProtocol.LobbyLeft(message.getUser(), message.getLobby()), getSelf());
 		}
 	}
 

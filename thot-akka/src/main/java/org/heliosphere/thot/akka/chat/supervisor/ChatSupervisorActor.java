@@ -67,7 +67,7 @@ public class ChatSupervisorActor extends AbstractActor
 				.match(LobbyMessageProtocol.LobbyList.class, message -> handleLobbyList(message))
 				.match(LobbyMessageProtocol.LobbyCreate.class, message -> handleLobbyCreate(message))
 				.match(LobbyMessageProtocol.LobbyDelete.class, message -> handleLobbyDelete(message))
-				.match(LobbyMessageProtocol.LobbyConnect.class, message -> handleLobbyConnect(message))
+				.match(LobbyMessageProtocol.LobbyJoin.class, message -> handleLobbyJoin(message))
 				//.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				//.matchEquals("stopIt", p -> handleStop())
 				.matchAny(message -> handleUnknownMessage(message))
@@ -262,13 +262,13 @@ public class ChatSupervisorActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyConnect} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyJoin} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyConnect(final LobbyMessageProtocol.LobbyConnect message) throws Exception
+	private final void handleLobbyJoin(final LobbyMessageProtocol.LobbyJoin message) throws Exception
 	{
 		if (message.getLobby() == null)
 		{

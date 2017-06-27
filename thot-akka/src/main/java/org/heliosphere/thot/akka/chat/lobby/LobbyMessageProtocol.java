@@ -245,12 +245,12 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	}
 
 	/**
-	 * Message used to connect to a lobby.
+	 * Message used to join a lobby.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyConnect
+	public final static class LobbyJoin
 	{
 		/**
 		 * User.
@@ -268,7 +268,7 @@ public class LobbyMessageProtocol implements IMessageProtocol
 		 * @param user User.
 		 * @param lobby Lobby's locale.
 		 */
-		public LobbyConnect(String user, Locale lobby)
+		public LobbyJoin(String user, Locale lobby)
 		{
 			this.user = user;
 			this.lobby = lobby;
@@ -296,12 +296,12 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	}
 
 	/**
-	 * Message used to confirm a user has connected to a lobby.
+	 * Message used to confirm a user has joined a lobby.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyConnected
+	public final static class LobbyJoined
 	{
 		/**
 		 * User.
@@ -319,7 +319,7 @@ public class LobbyMessageProtocol implements IMessageProtocol
 		 * @param user User.
 		 * @param lobby Lobby's locale.
 		 */
-		public LobbyConnected(String user, Locale lobby)
+		public LobbyJoined(String user, Locale lobby)
 		{
 			this.user = user;
 			this.lobby = lobby;
@@ -347,12 +347,12 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	}
 
 	/**
-	 * Message used to disconnect from a lobby.
+	 * Message used to to request a user to leave a lobby.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDisconnect
+	public final static class LobbyLeave
 	{
 		/**
 		 * User.
@@ -370,7 +370,7 @@ public class LobbyMessageProtocol implements IMessageProtocol
 		 * @param user User.
 		 * @param lobby Lobby's locale.
 		 */
-		public LobbyDisconnect(String user, Locale lobby)
+		public LobbyLeave(String user, Locale lobby)
 		{
 			this.user = user;
 			this.lobby = lobby;
@@ -398,12 +398,12 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	}
 
 	/**
-	 * Message used to confirm a user has been disconnected from a lobby.
+	 * Message used to confirm a user has left a lobby.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDisconnected
+	public final static class LobbyLeft
 	{
 		/**
 		 * User.
@@ -421,7 +421,7 @@ public class LobbyMessageProtocol implements IMessageProtocol
 		 * @param user User.
 		 * @param lobby Lobby's locale.
 		 */
-		public LobbyDisconnected(String user, Locale lobby)
+		public LobbyLeft(String user, Locale lobby)
 		{
 			this.user = user;
 			this.lobby = lobby;
