@@ -25,6 +25,9 @@
           <tag>-cat</tag>
           <regexp>(-cat)</regexp>
           <type>String</type>
+          <examples>
+            <example>/help -cat</example>
+          </examples>
         </parameter>
         <parameter>
           <name>set</name>
@@ -32,6 +35,11 @@
           <tag>-set</tag>
           <regexp>(-set=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
+          <examples>
+            <example>/help -set=system</example>
+            <example>/help -set=normal</example>
+            <example>/help -set=chat</example>
+          </examples>
         </parameter>
         <parameter>
           <name>name</name>
@@ -39,6 +47,11 @@
           <tag>-name</tag>
           <regexp>(-name=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
+          <examples>
+            <example>/help -name=help</example>
+            <example>/help -name=user</example>
+            <example>/help -name=room</example>
+          </examples>
         </parameter>
       </parameters>
     </command>
@@ -61,15 +74,18 @@
       <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.USER</protocol> <!-- Command protocol enumerated value -->
       <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
       <name>user</name>
-      <description>Manipulates users.</description>
+      <description>Command used to manipulate a user.</description>
       <aliases></aliases>
       <parameters>
         <parameter>
           <name>register</name>
-          <description>Registers a user against the chat system (server-side).</description>
+          <description>Registers a user against the chat system.</description>
           <tag>-register</tag>
           <regexp>(-register=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
+          <examples>
+            <example>/user -register=alan</example>
+          </examples>
         </parameter>
         <parameter>
           <name>list</name>
@@ -77,13 +93,19 @@
           <tag>-list</tag>
           <regexp>(-list)</regexp>
           <type>String</type>
+          <examples>
+            <example>/user -list</example>
+          </examples>
         </parameter>
         <parameter>
           <name>unregister</name>
-          <description>Un-registers the user from the chat system (server-side).</description>
+          <description>Un-registers the current user from the chat system.</description>
           <tag>-unregister</tag>
           <regexp>(-unregister)</regexp>
           <type>String</type>
+          <examples>
+            <example>/user -unregister</example>
+          </examples>
         </parameter>
       </parameters>
     </command>
@@ -93,7 +115,7 @@
       <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY</protocol> <!-- Command protocol enumerated value -->
       <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
       <name>lobby</name>
-      <description>Manipulates a lobby.</description>
+      <description>Command used to manipulates a lobby.</description>
       <aliases></aliases>
       <parameters>
         <parameter>
@@ -139,7 +161,7 @@
       <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM</protocol> <!-- Command protocol enumerated value -->
       <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
       <name>room</name>
-      <description>Manipulates a room.</description>
+      <description>Command used to manipulate a room.</description>
       <aliases></aliases>
       <parameters>
         <parameter>
