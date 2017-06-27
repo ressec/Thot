@@ -17,7 +17,7 @@ import java.util.Locale;
 import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
 /**
- * Message protocol for a {@link ChatSupervisor} actor.
+ * Message protocol for a {@link ChatSupervisorActor} actor.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0

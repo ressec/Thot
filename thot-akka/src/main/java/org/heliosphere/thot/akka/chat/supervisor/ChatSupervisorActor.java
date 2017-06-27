@@ -30,7 +30,7 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
-public class ChatSupervisor extends AbstractActor
+public class ChatSupervisorActor extends AbstractActor
 {
 	/** 
 	 * Akka logging adapter.
@@ -48,13 +48,13 @@ public class ChatSupervisor extends AbstractActor
 	private Map<String, ActorRef> clients = new HashMap<>();
 
 	/**
-	 * Static creation pattern for a {@link ChatSupervisor}.
+	 * Static creation pattern for a {@link ChatSupervisorActor}.
 	 * <hr>
 	 * @return {@link Props}.
 	 */
 	public static Props props()
 	{
-		return Props.create(ChatSupervisor.class);
+		return Props.create(ChatSupervisorActor.class);
 	}
 
 	@Override
