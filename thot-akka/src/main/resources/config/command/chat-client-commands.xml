@@ -62,11 +62,33 @@
       <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
       <name>afk</name>
       <description>Mark you as: "Away from keyboard".</description>
-      <!-- Message protocol associated  with this command. Format is <full_enumeration_class_name>:<enumerated_value> -->
       <aliases>
         <alias>away</alias>
       </aliases>
       <parameters></parameters> <!-- This command has no parameter! -->
+    </command>
+
+    <!-- SAY command. -->
+    <command>
+      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.SAY</protocol> <!-- Command protocol enumerated value -->
+      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <name>say</name>
+      <description>Says a text in a room.</description>
+      <aliases>
+        <alias>tell</alias>
+      </aliases>
+      <parameters>
+        <parameter>
+          <name>text</name>
+          <description>Text of the say command.</description>
+          <tag>-text</tag>
+          <regexp>(-text=)\s*+(.++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/say -text=Hi guys ... happy to be there with you :)</example>
+          </examples>
+        </parameter>
+      </parameters>
     </command>
 
     <!-- USER command. -->

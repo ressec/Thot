@@ -90,13 +90,81 @@ public class UserMessageProtocol implements IMessageProtocol
 		private final String message;
 
 		/**
+		 * User.
+		 */
+		private final String user;
+
+		/**
 		 * Creates a new message.
 		 * <hr>
+		 * @param user User.
 		 * @param message Message.
 		 */
-		public Say(String message)
+		public Say(String user, String message)
 		{
+			this.user = user;
 			this.message = message;
+		}
+
+		/**
+		 * Returns the user.
+		 * <hr>
+		 * @return User.
+		 */
+		public final String getUser()
+		{
+			return user;
+		}
+
+		/**
+		 * Returns the message.
+		 * <hr>
+		 * @return Message.
+		 */
+		public final String getMessage()
+		{
+			return message;
+		}
+	}
+
+	/**
+	 * Message send by a {@link RoomActor} to a {@link TerminalActor} to notify a user sent a public message in a room.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
+	public final static class Said
+	{
+		/**
+		 * Message.
+		 */
+		private final String message;
+
+		/**
+		 * User.
+		 */
+		private final String user;
+
+		/**
+		 * Creates a new message.
+		 * <hr>
+		 * @param user User.
+		 * @param message Message.
+		 */
+		public Said(String user, String message)
+		{
+			this.user = user;
+			this.message = message;
+		}
+
+		/**
+		 * Returns the user.
+		 * <hr>
+		 * @return User.
+		 */
+		public final String getUser()
+		{
+			return user;
 		}
 
 		/**

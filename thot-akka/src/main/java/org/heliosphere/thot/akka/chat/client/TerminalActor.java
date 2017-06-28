@@ -166,6 +166,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				.match(RoomMessageProtocol.RoomJoined.class, response -> handleMessageRoomConnected(response))
 				.match(RoomMessageProtocol.RoomLeft.class, response -> handleMessageRoomDisconnected(response))
 				.match(UserMessageProtocol.UserList.class, response -> handleMessageUserList(response))
+				.match(UserMessageProtocol.Said.class, message -> handleSaid(message))
 				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Exception.class, exception -> handleException(exception))
 				.match(Terminated.class, this::onTerminated)
@@ -434,6 +435,41 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		}
 	}
 
+	@SuppressWarnings("nls")
+	private final void handleSayCommand(final ICommand command)
+	{
+		ICommandParameter text = command.getParameter("text");
+
+		if (text != null)
+		{
+			roomProxy.tell(new UserMessageProtocol.Say(user, (String) text.getValue()), getSelf());
+		}
+		else
+		{
+			// TODO Throw exception as message!
+		}
+	}
+
+	@SuppressWarnings("nls")
+	private final void handleWhisperCommand(final ICommand command)
+	{
+		ICommandParameter user = command.getParameter("user");
+		ICommandParameter text = command.getParameter("text");
+
+		if (user == null)
+		{
+			// TODO Throw Exception message!
+		}
+		else if (text == null)
+		{
+			// TODO Throw Exception message!
+		}
+		else
+		{
+			roomProxy.tell(new UserMessageProtocol.Whisper((String) user.getValue(), (String) text.getValue()), getSelf());
+		}
+	}
+
 	@Override
 	public final void onCommand(final ICommand command)
 	{
@@ -458,6 +494,14 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 
 				case ROOM:
 					handleRoomCommand(command);
+					break;
+
+				case SAY:
+					handleSayCommand(command);
+					break;
+
+				case WHIPSER:
+					handleWhisperCommand(command);
 					break;
 
 				default:
@@ -810,6 +854,20 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 			}
 			terminal.getTerminal().println();
 		}
+
+		terminal.resume();
+	}
+
+	/**
+	 * Handles a {@code said} message.
+	 * <hr>
+	 * @param message Message to handle.
+	 */
+	@SuppressWarnings("nls")
+	private void handleSaid(final UserMessageProtocol.Said message)
+	{
+		terminal.getTerminal().println(String.format("%1s: %2s", message.getUser(), message.getMessage()));
+		terminal.getTerminal().println();
 
 		terminal.resume();
 	}

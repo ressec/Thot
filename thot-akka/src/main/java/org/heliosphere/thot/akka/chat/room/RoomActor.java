@@ -74,6 +74,7 @@ public class RoomActor extends AbstractActor
 				.match(RoomMessageProtocol.RoomJoin.class, message -> handleRoomJoin(message))
 				.match(RoomMessageProtocol.RoomLeave.class, message -> handleRoomLeave(message))
 				.match(UserMessageProtocol.UserList.class, message -> handleUserList(message))
+				.match(UserMessageProtocol.Say.class, message -> handleSay(message))
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
 	}
@@ -138,6 +139,21 @@ public class RoomActor extends AbstractActor
 	private final void handleUserList(final UserMessageProtocol.UserList message) throws Exception
 	{
 		getSender().tell(new UserMessageProtocol.UserList(message.getRoom(), new ArrayList<>(users.keySet())), getSelf());
+	}
+
+	/**
+	 * Handles a {@code say} message.
+	 * <hr>
+	 * @param message Message to process.
+	 * @throws Exception Thrown in case an error occurred while processing a message.
+	 */
+	private final void handleSay(final UserMessageProtocol.Say message) throws Exception
+	{
+		// Dispatch the message to all users in the room.
+		for (ActorRef user : users.values())
+		{
+			user.tell(new UserMessageProtocol.Said(message.getUser(), message.getMessage()), getSelf());
+		}
 	}
 
 	//	/**
