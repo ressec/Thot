@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.h2.engine.User;
-import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
+import org.heliosphere.thot.akka.chat.user.UserMessageProtocol;
 
 import com.heliosphere.athena.base.message.Message;
 
@@ -71,9 +71,9 @@ public class RoomActor extends AbstractActor
 		return receiveBuilder()
 				//.match(Message.class, message -> handleAndDispatchMessage(message))
 				//.matchEquals("stopIt", p -> handleStop())
-				.match(ChatSupervisorProtocol.RoomConnect.class, message -> handleRoomConnect(message))
-				.match(ChatSupervisorProtocol.RoomDisconnect.class, message -> handleRoomDisconnect(message))
-				.match(ChatSupervisorProtocol.UserList.class, message -> handleUserList(message))
+				.match(RoomMessageProtocol.RoomJoin.class, message -> handleRoomJoin(message))
+				.match(RoomMessageProtocol.RoomLeave.class, message -> handleRoomLeave(message))
+				.match(UserMessageProtocol.UserList.class, message -> handleUserList(message))
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
 	}
@@ -90,13 +90,13 @@ public class RoomActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomConnect} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomJoin} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomConnect(final ChatSupervisorProtocol.RoomConnect message) throws Exception
+	private final void handleRoomJoin(final RoomMessageProtocol.RoomJoin message) throws Exception
 	{
 		if (users.containsKey(message.getUser()))
 		{
@@ -105,18 +105,18 @@ public class RoomActor extends AbstractActor
 		else
 		{
 			users.put(message.getUser(), getSender());
-			getSender().tell(new ChatSupervisorProtocol.RoomConnected(message.getUser(), message.getRoom()), getSelf());
+			getSender().tell(new RoomMessageProtocol.RoomJoined(message.getUser(), message.getRoom()), getSelf());
 		}
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomDisconnect} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomLeave} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomDisconnect(final ChatSupervisorProtocol.RoomDisconnect message) throws Exception
+	private final void handleRoomLeave(final RoomMessageProtocol.RoomLeave message) throws Exception
 	{
 		if (!users.containsKey(message.getUser()))
 		{
@@ -125,19 +125,19 @@ public class RoomActor extends AbstractActor
 		else
 		{
 			users.remove(message.getUser());
-			getSender().tell(new ChatSupervisorProtocol.RoomDisconnected(message.getUser(), message.getRoom()), getSelf());
+			getSender().tell(new RoomMessageProtocol.RoomLeft(message.getUser(), message.getRoom()), getSelf());
 		}
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.UserList} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.UserMessageProtocol.UserList} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
-	private final void handleUserList(final ChatSupervisorProtocol.UserList message) throws Exception
+	private final void handleUserList(final UserMessageProtocol.UserList message) throws Exception
 	{
-		getSender().tell(new ChatSupervisorProtocol.UserList(message.getRoom(), new ArrayList<>(users.keySet())), getSelf());
+		getSender().tell(new UserMessageProtocol.UserList(message.getRoom(), new ArrayList<>(users.keySet())), getSelf());
 	}
 
 	//	/**

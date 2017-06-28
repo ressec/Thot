@@ -18,7 +18,9 @@ import org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol;
 import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorActor;
 import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorProtocol;
 import org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol;
+import org.heliosphere.thot.akka.chat.room.RoomMessageProtocol;
 import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
+import org.heliosphere.thot.akka.chat.user.UserMessageProtocol;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
@@ -137,8 +139,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 
 			// Contact the chat system supervisor and send him a message to get its time.
 			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
-			//			selection.tell(Message.createRequest(ChatMessageType.QUERY_SERVER_TIME, null), getSelf());
-			selection.tell(new ChatSupervisorProtocol.QueryServerTime(null), getSelf());
+			selection.tell(new ChatSupervisorProtocol.InitiateConversation(), getSelf());
 		}
 		catch (FileException e)
 		{
@@ -154,17 +155,17 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				//.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				//.match(ICommandResponse.class, response -> handleResponse(response))
 				.match(TerminalMessageProtocol.DisplayOnTerminal.class, message -> handleDisplayOnTerminal(message))
-				.match(ChatSupervisorProtocol.QueryServerTime.class, response -> handleQueryServerTime(response))
+				.match(ChatSupervisorProtocol.ConversationInitiated.class, response -> handleConversationInitiated())
 				.match(ChatSupervisorProtocol.UserRegistered.class, response -> handleUserRegistered(response))
 				.match(LobbyMessageProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
 				.match(LobbyMessageProtocol.LobbyCreated.class, response -> handleMessageLobbyCreated(response))
 				.match(LobbyMessageProtocol.LobbyDeleted.class, response -> handleMessageLobbyDeleted(response))
 				.match(LobbyMessageProtocol.LobbyJoined.class, response -> handleMessageLobbyJoined(response))
-				.match(ChatSupervisorProtocol.RoomList.class, response -> handleMessageRoomList(response))
-				.match(ChatSupervisorProtocol.RoomCreated.class, response -> handleMessageRoomCreated(response))
-				.match(ChatSupervisorProtocol.RoomConnected.class, response -> handleMessageRoomConnected(response))
-				.match(ChatSupervisorProtocol.RoomDisconnected.class, response -> handleMessageRoomDisconnected(response))
-				.match(ChatSupervisorProtocol.UserList.class, response -> handleMessageUserList(response))
+				.match(RoomMessageProtocol.RoomList.class, response -> handleMessageRoomList(response))
+				.match(RoomMessageProtocol.RoomCreated.class, response -> handleMessageRoomCreated(response))
+				.match(RoomMessageProtocol.RoomJoined.class, response -> handleMessageRoomConnected(response))
+				.match(RoomMessageProtocol.RoomLeft.class, response -> handleMessageRoomDisconnected(response))
+				.match(UserMessageProtocol.UserList.class, response -> handleMessageUserList(response))
 				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Exception.class, exception -> handleException(exception))
 				.match(Terminated.class, this::onTerminated)
@@ -211,13 +212,10 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.QueryServerTime} message.
-	 * <hr>
-	 * @param response Response message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.ConversationInitiated} message.
 	 */
-	private final void handleQueryServerTime(final ChatSupervisorProtocol.QueryServerTime response)
+	private final void handleConversationInitiated()
 	{
-		System.out.println(response.getServerTime());
 		chatSystem = getSender();
 	}
 
@@ -382,27 +380,27 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		if (command.getParameter("list") != null)
 		{
 			parameter = command.getParameter("list");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomList(this.user, lobby, null), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomList(this.user, lobby, null), getSelf());
 		}
 		else if (command.getParameter("create") != null)
 		{
 			parameter = command.getParameter("create");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomCreate(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomCreate(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else if (command.getParameter("delete") != null)
 		{
 			parameter = command.getParameter("delete");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else if (command.getParameter("join") != null)
 		{
 			parameter = command.getParameter("join");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomConnect(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomJoin(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else if (command.getParameter("leave") != null)
 		{
 			parameter = command.getParameter("leave");
-			roomProxy.tell(new ChatSupervisorProtocol.RoomDisconnect(this.user, (String) parameter.getValue()), getSelf());
+			roomProxy.tell(new RoomMessageProtocol.RoomLeave(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else
 		{
@@ -418,7 +416,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		if (command.getParameter("list") != null)
 		{
 			parameter = command.getParameter("list");
-			roomProxy.tell(new ChatSupervisorProtocol.UserList(room, null), getSelf());
+			roomProxy.tell(new UserMessageProtocol.UserList(room, null), getSelf());
 		}
 		else if (command.getParameter("register") != null)
 		{
@@ -428,7 +426,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		else if (command.getParameter("unregister") != null)
 		{
 			parameter = command.getParameter("unregister");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else
 		{
@@ -669,12 +667,12 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomList} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.room.RoomMessageProtocol.RoomList} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomList(final ChatSupervisorProtocol.RoomList response)
+	private void handleMessageRoomList(final RoomMessageProtocol.RoomList response)
 	{
 		if (response.getRooms().isEmpty())
 		{
@@ -746,7 +744,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomCreated(final ChatSupervisorProtocol.RoomCreated response)
+	private void handleMessageRoomCreated(final RoomMessageProtocol.RoomCreated response)
 	{
 		terminal.getTerminal().println(String.format("Room: room-%1s has been created.", response.getRoom()));
 		terminal.getTerminal().println();
@@ -755,12 +753,12 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomConnected} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomJoined} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomConnected(final ChatSupervisorProtocol.RoomConnected response)
+	private void handleMessageRoomConnected(final RoomMessageProtocol.RoomJoined response)
 	{
 		roomProxy = getSender();
 		room = response.getRoom();
@@ -773,12 +771,12 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomDisconnected} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomLeft} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomDisconnected(final ChatSupervisorProtocol.RoomDisconnected response)
+	private void handleMessageRoomDisconnected(final RoomMessageProtocol.RoomLeft response)
 	{
 		roomProxy = null;
 		room = null;
@@ -791,12 +789,12 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.UserList} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.UserMessageProtocol.UserList} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageUserList(final ChatSupervisorProtocol.UserList response)
+	private void handleMessageUserList(final UserMessageProtocol.UserList response)
 	{
 		if (response.getUsers().isEmpty())
 		{

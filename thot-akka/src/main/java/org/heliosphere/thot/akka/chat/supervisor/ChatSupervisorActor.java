@@ -11,7 +11,6 @@
  */
 package org.heliosphere.thot.akka.chat.supervisor;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -62,7 +61,7 @@ public class ChatSupervisorActor extends AbstractActor
 	public Receive createReceive()
 	{
 		return receiveBuilder()
-				.match(ChatSupervisorProtocol.QueryServerTime.class, message -> getSender().tell(new ChatSupervisorProtocol.QueryServerTime(LocalTime.now().toString()), getSelf()))
+				.match(ChatSupervisorProtocol.InitiateConversation.class, message -> getSender().tell(new ChatSupervisorProtocol.ConversationInitiated(), getSelf()))
 				.match(ChatSupervisorProtocol.RegisterUser.class, message -> handleRegisterUser(message))
 				.match(LobbyMessageProtocol.LobbyList.class, message -> handleLobbyList(message))
 				.match(LobbyMessageProtocol.LobbyCreate.class, message -> handleLobbyCreate(message))
