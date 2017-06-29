@@ -11,6 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.client;
 
+import java.time.LocalTime;
 import java.util.Locale;
 
 import org.apache.commons.collections4.ListUtils;
@@ -31,6 +32,7 @@ import com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol;
 import com.heliosphere.athena.base.command.response.ICommandResponse;
 import com.heliosphere.athena.base.file.internal.FileException;
 import com.heliosphere.athena.base.terminal.CommandTerminal;
+import com.heliosphere.athena.base.terminal.OutputTerminal;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -64,6 +66,11 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * Terminal.
 	 */
 	private CommandTerminal terminal = null;
+
+	/**
+	 * Output terminal for the discussion.
+	 */
+	private OutputTerminal output = null;
 
 	/**
 	 * Command coordinator actor.
@@ -128,7 +135,8 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		{
 			terminal = new CommandTerminal(name, terminalConfigFilename, commandFileName);
 			terminal.registerListener(this);
-			terminal.start();
+
+			output = new OutputTerminal("Discussion Console", "/config/terminal/terminal-discussion.properties");
 
 			// Create a command coordinator to handle processing of commands.
 			commandCoordinator = getContext().actorOf(CommandCoordinatorActor.create(terminal.getInterpreter()), "command-processor-normal");
@@ -140,6 +148,9 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 			// Contact the chat system supervisor and send him a message to get its time.
 			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
 			selection.tell(new ChatSupervisorProtocol.InitiateConversation(), getSelf());
+
+			terminal.start();
+			output.start();
 		}
 		catch (FileException e)
 		{
@@ -448,6 +459,8 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		{
 			// TODO Throw exception as message!
 		}
+
+		terminal.resume();
 	}
 
 	@SuppressWarnings("nls")
@@ -468,6 +481,8 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		{
 			roomProxy.tell(new UserMessageProtocol.Whisper((String) user.getValue(), (String) text.getValue()), getSelf());
 		}
+
+		terminal.resume();
 	}
 
 	@Override
@@ -777,6 +792,9 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		terminal.getTerminal().println(String.format("User: %1s has joined lobby: %2s.", response.getUser(), response.getLobby().toString()));
 		terminal.getTerminal().println();
 
+		output.setTitle(String.format("Chat window for user [%1s] on [lobby-%2s]", user, lobby.toString()));
+		output.getTerminal().println(String.format("Welcome in: lobby-%2s", lobby.toString()));
+
 		terminal.setPrompt(String.format("Command (%1s:%2s):>", response.getUser(), response.getLobby().toString()));
 
 		terminal.resume();
@@ -808,6 +826,9 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		room = response.getRoom();
 		terminal.getTerminal().println(String.format("User: %1s has joined room: %2s.", response.getUser(), response.getRoom()));
 		terminal.getTerminal().println();
+
+		output.setTitle(String.format("Chat window for user [%1s] on [lobby-%2s] in room [%3s]", user, lobby.toString(), room));
+		output.getTerminal().println(String.format("Welcome in: room-%1s", room));
 
 		terminal.setPrompt(String.format("Command (%1s:%2s@%3s):>", response.getUser(), lobby.toString(), response.getRoom()));
 
@@ -863,13 +884,9 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * <hr>
 	 * @param message Message to handle.
 	 */
-	@SuppressWarnings("nls")
 	private void handleSaid(final UserMessageProtocol.Said message)
 	{
-		terminal.getTerminal().println(String.format("%1s: %2s", message.getUser(), message.getMessage()));
-		terminal.getTerminal().println();
-
-		terminal.resume();
+		output.printSay(LocalTime.now().toString(), message.getUser(), message.getMessage());
 	}
 
 	/**
