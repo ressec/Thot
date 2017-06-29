@@ -11,13 +11,12 @@
  */
 package org.heliosphere.thot.akka.chat.client;
 
+import java.awt.Color;
 import java.time.LocalTime;
 import java.util.Locale;
 
 import org.apache.commons.collections4.ListUtils;
 import org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol;
-import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorActor;
-import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorProtocol;
 import org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol;
 import org.heliosphere.thot.akka.chat.room.RoomMessageProtocol;
 import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
@@ -26,6 +25,9 @@ import org.heliosphere.thot.akka.chat.user.UserMessageProtocol;
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
 import com.heliosphere.athena.base.command.internal.ICommandParameter;
+import com.heliosphere.athena.base.command.internal.coordinator.CommandCoordinator;
+import com.heliosphere.athena.base.command.internal.coordinator.ICommandCoordinator;
+import com.heliosphere.athena.base.command.internal.exception.CommandNotFoundException;
 import com.heliosphere.athena.base.command.processor.HelpCommandProcessor;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol;
@@ -75,7 +77,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	/**
 	 * Command coordinator actor.
 	 */
-	private ActorRef commandCoordinator = null;
+	private ICommandCoordinator coordinator = null;
 
 	/**
 	 * Reference to the chat system actor.
@@ -138,12 +140,14 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 
 			output = new OutputTerminal("Discussion Console", "/config/terminal/terminal-discussion.properties");
 
-			// Create a command coordinator to handle processing of commands.
-			commandCoordinator = getContext().actorOf(CommandCoordinatorActor.create(terminal.getInterpreter()), "command-processor-normal");
+			// Create a command coordinator to handle execution of pre-implemented commands.
+			//coordinator = getContext().actorOf(CommandCoordinatorActor.create(terminal), "command-processor-normal");
+			coordinator = new CommandCoordinator(terminal);
 
-			// Register some pre-defined commands.
-			commandCoordinator.tell(new CommandCoordinatorProtocol.RegisterCommandProcessor(DefaultCommandProtocol.HELP, HelpCommandProcessor.class), getSelf());
-			getContext().watch(commandCoordinator);
+			// Register some pre-implemented commands.
+			coordinator.registerExecutable(DefaultCommandProtocol.HELP, new HelpCommandProcessor(terminal.getInterpreter().getCommandDefinitions()));
+			//coordinator.tell(new CommandCoordinatorProtocol.RegisterCommandProcessor(DefaultCommandProtocol.HELP, HelpCommandProcessor.class), getSelf());
+			//getContext().watch(coordinator);
 
 			// Contact the chat system supervisor and send him a message to get its time.
 			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
@@ -530,13 +534,25 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 * <hr>
 	 * @param command Command to handle.
 	 */
+	@SuppressWarnings("nls")
 	private final void handleDefaultCommandProtocol(final ICommand command)
 	{
 		switch ((DefaultCommandProtocol) command.getMetadata().getProtocolType())
 		{
 			case HELP:
 				// This command is handled by a pre-defined command processor.
-				commandCoordinator.tell(new CommandCoordinatorProtocol.ExecuteCommand(command), getSelf());
+				try
+				{
+					coordinator.execute(command);
+				}
+				catch (CommandNotFoundException e)
+				{
+					terminal.appendToPane(String.format("[ERROR] %1s\n", e.getMessage()), Color.ORANGE);
+				}
+				finally
+				{
+					terminal.resume();
+				}
 				break;
 
 			case AFK:
@@ -585,7 +601,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	 */
 	protected void handleCommandNormal(final ICommand command)
 	{
-		commandCoordinator.tell(command, getSelf());
+		//coordinator.tell(command, getSelf());
 	}
 
 	/**
