@@ -11,23 +11,30 @@
  */
 package org.heliosphere.thot.akka.chat.client;
 
+import java.awt.Color;
+import java.time.LocalTime;
 import java.util.Locale;
 
 import org.apache.commons.collections4.ListUtils;
 import org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol;
-import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinator;
-import org.heliosphere.thot.akka.chat.client.command.coordinator.CommandCoordinatorProtocol;
+import org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol;
+import org.heliosphere.thot.akka.chat.room.RoomMessageProtocol;
 import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
+import org.heliosphere.thot.akka.chat.user.UserMessageProtocol;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
 import com.heliosphere.athena.base.command.internal.ICommandParameter;
+import com.heliosphere.athena.base.command.internal.coordinator.CommandCoordinator;
+import com.heliosphere.athena.base.command.internal.coordinator.ICommandCoordinator;
+import com.heliosphere.athena.base.command.internal.exception.CommandNotFoundException;
 import com.heliosphere.athena.base.command.processor.HelpCommandProcessor;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol;
 import com.heliosphere.athena.base.command.response.ICommandResponse;
 import com.heliosphere.athena.base.file.internal.FileException;
 import com.heliosphere.athena.base.terminal.CommandTerminal;
+import com.heliosphere.athena.base.terminal.OutputTerminal;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -50,7 +57,7 @@ import lombok.NonNull;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class Terminal extends AbstractActor implements ICommandListener
+public class TerminalActor extends AbstractActor implements ICommandListener
 {
 	/**
 	 * Akka logging adapter.
@@ -63,9 +70,14 @@ public class Terminal extends AbstractActor implements ICommandListener
 	private CommandTerminal terminal = null;
 
 	/**
+	 * Output terminal for the discussion.
+	 */
+	private OutputTerminal output = null;
+
+	/**
 	 * Command coordinator actor.
 	 */
-	private ActorRef commandCoordinator = null;
+	private ICommandCoordinator coordinator = null;
 
 	/**
 	 * Reference to the chat system actor.
@@ -98,7 +110,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	private String user = null;
 
 	/**
-	 * Static creation pattern for a {@link Terminal}.
+	 * Static creation pattern for a {@link TerminalActor}.
 	 * <hr>
 	 * @param name Terminal's session name.
 	 * @param terminalConfigFilename Terminal configuration file name.
@@ -107,7 +119,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 */
 	public static Props props(final String name, final String terminalConfigFilename, final String commandFileName)
 	{
-		return Props.create(Terminal.class, name, terminalConfigFilename, commandFileName);
+		return Props.create(TerminalActor.class, name, terminalConfigFilename, commandFileName);
 	}
 
 	/**
@@ -119,25 +131,30 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 * @throws FileException Thrown in case an error occurred while trying to access the XML commands file.
 	 */
 	@SuppressWarnings("nls")
-	public Terminal(String name, String terminalConfigFilename, final String commandFileName) throws FileException
+	public TerminalActor(String name, String terminalConfigFilename, final String commandFileName) throws FileException
 	{
 		try
 		{
 			terminal = new CommandTerminal(name, terminalConfigFilename, commandFileName);
 			terminal.registerListener(this);
-			terminal.start();
 
-			// Create a command coordinator to handle processing of commands.
-			commandCoordinator = getContext().actorOf(CommandCoordinator.create(terminal.getInterpreter()), "command-processor-normal");
+			output = new OutputTerminal("Discussion Console", "/config/terminal/terminal-discussion.properties");
 
-			// Register some pre-defined commands.
-			commandCoordinator.tell(new CommandCoordinatorProtocol.RegisterCommandProcessor(DefaultCommandProtocol.HELP, HelpCommandProcessor.class), getSelf());
-			getContext().watch(commandCoordinator);
+			// Create a command coordinator to handle execution of pre-implemented commands.
+			//coordinator = getContext().actorOf(CommandCoordinatorActor.create(terminal), "command-processor-normal");
+			coordinator = new CommandCoordinator(terminal);
+
+			// Register some pre-implemented commands.
+			coordinator.registerExecutable(DefaultCommandProtocol.HELP, new HelpCommandProcessor(terminal.getInterpreter().getCommandDefinitions()));
+			//coordinator.tell(new CommandCoordinatorProtocol.RegisterCommandProcessor(DefaultCommandProtocol.HELP, HelpCommandProcessor.class), getSelf());
+			//getContext().watch(coordinator);
 
 			// Contact the chat system supervisor and send him a message to get its time.
 			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
-			//			selection.tell(Message.createRequest(ChatMessageType.QUERY_SERVER_TIME, null), getSelf());
-			selection.tell(new ChatSupervisorProtocol.QueryServerTime(null), getSelf());
+			selection.tell(new ChatSupervisorProtocol.InitiateConversation(), getSelf());
+
+			terminal.start();
+			output.start();
 		}
 		catch (FileException e)
 		{
@@ -152,18 +169,19 @@ public class Terminal extends AbstractActor implements ICommandListener
 				//.match(ICommand.class, command -> handleAndDispatchCommand(command)) // Generic handler & dispatcher for commands.
 				//.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				//.match(ICommandResponse.class, response -> handleResponse(response))
-				.match(TerminalProtocol.DisplayOnTerminal.class, message -> handleDisplayOnTerminal(message))
-				.match(ChatSupervisorProtocol.QueryServerTime.class, response -> handleQueryServerTime(response))
+				.match(TerminalMessageProtocol.DisplayOnTerminal.class, message -> handleDisplayOnTerminal(message))
+				.match(ChatSupervisorProtocol.ConversationInitiated.class, response -> handleConversationInitiated())
 				.match(ChatSupervisorProtocol.UserRegistered.class, response -> handleUserRegistered(response))
-				.match(ChatSupervisorProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
-				.match(ChatSupervisorProtocol.LobbyCreated.class, response -> handleMessageLobbyCreated(response))
-				.match(ChatSupervisorProtocol.LobbyDeleted.class, response -> handleMessageLobbyDeleted(response))
-				.match(ChatSupervisorProtocol.LobbyConnected.class, response -> handleMessageLobbyConnected(response))
-				.match(ChatSupervisorProtocol.RoomList.class, response -> handleMessageRoomList(response))
-				.match(ChatSupervisorProtocol.RoomCreated.class, response -> handleMessageRoomCreated(response))
-				.match(ChatSupervisorProtocol.RoomConnected.class, response -> handleMessageRoomConnected(response))
-				.match(ChatSupervisorProtocol.RoomDisconnected.class, response -> handleMessageRoomDisconnected(response))
-				.match(ChatSupervisorProtocol.UserList.class, response -> handleMessageUserList(response))
+				.match(LobbyMessageProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
+				.match(LobbyMessageProtocol.LobbyCreated.class, response -> handleMessageLobbyCreated(response))
+				.match(LobbyMessageProtocol.LobbyDeleted.class, response -> handleMessageLobbyDeleted(response))
+				.match(LobbyMessageProtocol.LobbyJoined.class, response -> handleMessageLobbyJoined(response))
+				.match(RoomMessageProtocol.RoomList.class, response -> handleMessageRoomList(response))
+				.match(RoomMessageProtocol.RoomCreated.class, response -> handleMessageRoomCreated(response))
+				.match(RoomMessageProtocol.RoomJoined.class, response -> handleMessageRoomConnected(response))
+				.match(RoomMessageProtocol.RoomLeft.class, response -> handleMessageRoomDisconnected(response))
+				.match(UserMessageProtocol.UserList.class, response -> handleMessageUserList(response))
+				.match(UserMessageProtocol.Said.class, message -> handleSaid(message))
 				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Exception.class, exception -> handleException(exception))
 				.match(Terminated.class, this::onTerminated)
@@ -210,13 +228,10 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.QueryServerTime} message.
-	 * <hr>
-	 * @param response Response message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.ConversationInitiated} message.
 	 */
-	private final void handleQueryServerTime(final ChatSupervisorProtocol.QueryServerTime response)
+	private final void handleConversationInitiated()
 	{
-		System.out.println(response.getServerTime());
 		chatSystem = getSender();
 	}
 
@@ -339,31 +354,31 @@ public class Terminal extends AbstractActor implements ICommandListener
 		if (command.getParameter("list") != null)
 		{
 			parameter = command.getParameter("list");
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyList(this.user, null), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyList(this.user, null), getSelf());
 		}
 		else if (command.getParameter("create") != null)
 		{
 			parameter = command.getParameter("create");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyCreate(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyCreate(this.user, locale), getSelf());
 		}
 		else if (command.getParameter("delete") != null)
 		{
 			parameter = command.getParameter("delete");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyDelete(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyDelete(this.user, locale), getSelf());
 		}
 		else if (command.getParameter("join") != null)
 		{
 			parameter = command.getParameter("join");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyConnect(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyJoin(this.user, locale), getSelf());
 		}
 		else if (command.getParameter("leave") != null)
 		{
 			parameter = command.getParameter("leave");
 			Locale locale = new Locale((String) parameter.getValue());
-			chatSystem.tell(new ChatSupervisorProtocol.LobbyDisconnect(this.user, locale), getSelf());
+			chatSystem.tell(new LobbyMessageProtocol.LobbyLeave(this.user, locale), getSelf());
 		}
 		else
 		{
@@ -381,27 +396,27 @@ public class Terminal extends AbstractActor implements ICommandListener
 		if (command.getParameter("list") != null)
 		{
 			parameter = command.getParameter("list");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomList(this.user, lobby, null), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomList(this.user, lobby, null), getSelf());
 		}
 		else if (command.getParameter("create") != null)
 		{
 			parameter = command.getParameter("create");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomCreate(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomCreate(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else if (command.getParameter("delete") != null)
 		{
 			parameter = command.getParameter("delete");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else if (command.getParameter("join") != null)
 		{
 			parameter = command.getParameter("join");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomConnect(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomJoin(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else if (command.getParameter("leave") != null)
 		{
 			parameter = command.getParameter("leave");
-			roomProxy.tell(new ChatSupervisorProtocol.RoomDisconnect(this.user, (String) parameter.getValue()), getSelf());
+			roomProxy.tell(new RoomMessageProtocol.RoomLeave(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else
 		{
@@ -417,7 +432,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 		if (command.getParameter("list") != null)
 		{
 			parameter = command.getParameter("list");
-			roomProxy.tell(new ChatSupervisorProtocol.UserList(room, null), getSelf());
+			roomProxy.tell(new UserMessageProtocol.UserList(room, null), getSelf());
 		}
 		else if (command.getParameter("register") != null)
 		{
@@ -427,12 +442,51 @@ public class Terminal extends AbstractActor implements ICommandListener
 		else if (command.getParameter("unregister") != null)
 		{
 			parameter = command.getParameter("unregister");
-			lobbyProxy.tell(new ChatSupervisorProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
+			lobbyProxy.tell(new RoomMessageProtocol.RoomDelete(this.user, (String) parameter.getValue()), getSelf());
 		}
 		else
 		{
 			// TODO Unknown parameter!
 		}
+	}
+
+	@SuppressWarnings("nls")
+	private final void handleSayCommand(final ICommand command)
+	{
+		ICommandParameter text = command.getParameter("text");
+
+		if (text != null)
+		{
+			roomProxy.tell(new UserMessageProtocol.Say(user, (String) text.getValue()), getSelf());
+		}
+		else
+		{
+			// TODO Throw exception as message!
+		}
+
+		terminal.resume();
+	}
+
+	@SuppressWarnings("nls")
+	private final void handleWhisperCommand(final ICommand command)
+	{
+		ICommandParameter user = command.getParameter("user");
+		ICommandParameter text = command.getParameter("text");
+
+		if (user == null)
+		{
+			// TODO Throw Exception message!
+		}
+		else if (text == null)
+		{
+			// TODO Throw Exception message!
+		}
+		else
+		{
+			roomProxy.tell(new UserMessageProtocol.Whisper((String) user.getValue(), (String) text.getValue()), getSelf());
+		}
+
+		terminal.resume();
 	}
 
 	@Override
@@ -461,6 +515,14 @@ public class Terminal extends AbstractActor implements ICommandListener
 					handleRoomCommand(command);
 					break;
 
+				case SAY:
+					handleSayCommand(command);
+					break;
+
+				case WHIPSER:
+					handleWhisperCommand(command);
+					break;
+
 				default:
 					break;
 			}
@@ -472,13 +534,25 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 * <hr>
 	 * @param command Command to handle.
 	 */
+	@SuppressWarnings("nls")
 	private final void handleDefaultCommandProtocol(final ICommand command)
 	{
 		switch ((DefaultCommandProtocol) command.getMetadata().getProtocolType())
 		{
 			case HELP:
 				// This command is handled by a pre-defined command processor.
-				commandCoordinator.tell(new CommandCoordinatorProtocol.ExecuteCommand(command), getSelf());
+				try
+				{
+					coordinator.execute(command);
+				}
+				catch (CommandNotFoundException e)
+				{
+					terminal.appendToPane(String.format("[ERROR] %1s\n", e.getMessage()), Color.ORANGE);
+				}
+				finally
+				{
+					terminal.resume();
+				}
 				break;
 
 			case AFK:
@@ -527,7 +601,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 */
 	protected void handleCommandNormal(final ICommand command)
 	{
-		commandCoordinator.tell(command, getSelf());
+		//coordinator.tell(command, getSelf());
 	}
 
 	/**
@@ -620,7 +694,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 		{
 			if (user != null)
 			{
-				chatSystem.tell(new ChatSupervisorProtocol.LobbyList(user, null), getSelf());
+				chatSystem.tell(new LobbyMessageProtocol.LobbyList(user, null), getSelf());
 			}
 		}
 	}
@@ -648,7 +722,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyList(final ChatSupervisorProtocol.LobbyList response)
+	private void handleMessageLobbyList(final LobbyMessageProtocol.LobbyList response)
 	{
 		if (response.getLobbies().isEmpty())
 		{
@@ -668,12 +742,12 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomList} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.room.RoomMessageProtocol.RoomList} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomList(final ChatSupervisorProtocol.RoomList response)
+	private void handleMessageRoomList(final RoomMessageProtocol.RoomList response)
 	{
 		if (response.getRooms().isEmpty())
 		{
@@ -694,12 +768,12 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyCreated} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.LobbyMessageProtocol.LobbyCreated} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyCreated(final ChatSupervisorProtocol.LobbyCreated response)
+	private void handleMessageLobbyCreated(final LobbyMessageProtocol.LobbyCreated response)
 	{
 		terminal.getTerminal().println(String.format("Lobby: lobby-%1s has been created.", response.getLobby()));
 		terminal.getTerminal().println();
@@ -708,12 +782,12 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyDeleted} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.LobbyMessageProtocol.LobbyDeleted} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyDeleted(final ChatSupervisorProtocol.LobbyDeleted response)
+	private void handleMessageLobbyDeleted(final LobbyMessageProtocol.LobbyDeleted response)
 	{
 		terminal.getTerminal().println(String.format("Lobby: %1s has been deleted.", response.getLobby()));
 		terminal.getTerminal().println();
@@ -722,17 +796,20 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyConnected} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyJoined} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageLobbyConnected(final ChatSupervisorProtocol.LobbyConnected response)
+	private void handleMessageLobbyJoined(final LobbyMessageProtocol.LobbyJoined response)
 	{
 		lobbyProxy = getSender();
 		lobby = response.getLobby();
 		terminal.getTerminal().println(String.format("User: %1s has joined lobby: %2s.", response.getUser(), response.getLobby().toString()));
 		terminal.getTerminal().println();
+
+		output.setTitle(String.format("Chat window for user [%1s] on [lobby-%2s]", user, lobby.toString()));
+		output.getTerminal().println(String.format("Welcome in: lobby-%2s", lobby.toString()));
 
 		terminal.setPrompt(String.format("Command (%1s:%2s):>", response.getUser(), response.getLobby().toString()));
 
@@ -745,7 +822,7 @@ public class Terminal extends AbstractActor implements ICommandListener
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomCreated(final ChatSupervisorProtocol.RoomCreated response)
+	private void handleMessageRoomCreated(final RoomMessageProtocol.RoomCreated response)
 	{
 		terminal.getTerminal().println(String.format("Room: room-%1s has been created.", response.getRoom()));
 		terminal.getTerminal().println();
@@ -754,17 +831,20 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomConnected} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomJoined} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomConnected(final ChatSupervisorProtocol.RoomConnected response)
+	private void handleMessageRoomConnected(final RoomMessageProtocol.RoomJoined response)
 	{
 		roomProxy = getSender();
 		room = response.getRoom();
 		terminal.getTerminal().println(String.format("User: %1s has joined room: %2s.", response.getUser(), response.getRoom()));
 		terminal.getTerminal().println();
+
+		output.setTitle(String.format("Chat window for user [%1s] on [lobby-%2s] in room [%3s]", user, lobby.toString(), room));
+		output.getTerminal().println(String.format("Welcome in: room-%1s", room));
 
 		terminal.setPrompt(String.format("Command (%1s:%2s@%3s):>", response.getUser(), lobby.toString(), response.getRoom()));
 
@@ -772,12 +852,12 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomDisconnected} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomLeft} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageRoomDisconnected(final ChatSupervisorProtocol.RoomDisconnected response)
+	private void handleMessageRoomDisconnected(final RoomMessageProtocol.RoomLeft response)
 	{
 		roomProxy = null;
 		room = null;
@@ -790,12 +870,12 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.UserList} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.UserMessageProtocol.UserList} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
 	@SuppressWarnings("nls")
-	private void handleMessageUserList(final ChatSupervisorProtocol.UserList response)
+	private void handleMessageUserList(final UserMessageProtocol.UserList response)
 	{
 		if (response.getUsers().isEmpty())
 		{
@@ -816,6 +896,16 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
+	 * Handles a {@code said} message.
+	 * <hr>
+	 * @param message Message to handle.
+	 */
+	private void handleSaid(final UserMessageProtocol.Said message)
+	{
+		output.printSay(LocalTime.now().toString(), message.getUser(), message.getMessage());
+	}
+
+	/**
 	 * Handles unknown commands.
 	 * <hr>
 	 * @param command Unknown command to process.
@@ -832,11 +922,11 @@ public class Terminal extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link TerminalProtocol.DisplayOnTerminal} message.
+	 * Handles a {@link TerminalMessageProtocol.DisplayOnTerminal} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */
-	private void handleDisplayOnTerminal(final TerminalProtocol.DisplayOnTerminal message)
+	private void handleDisplayOnTerminal(final TerminalMessageProtocol.DisplayOnTerminal message)
 	{
 		terminal.getTerminal().print(message.getMessages());
 		terminal.resume();

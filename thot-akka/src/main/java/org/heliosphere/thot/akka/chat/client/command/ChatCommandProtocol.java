@@ -28,6 +28,16 @@ public enum ChatCommandProtocol implements ICommandProtocolType
 	USER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.SYSTEM),
 
 	/**
+	 * Command to send text message.
+	 */
+	SAY(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT),
+
+	/**
+	 * Command to send private text message.
+	 */
+	WHIPSER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT),
+
+	/**
 	 * Command to manipulate lobbies.
 	 */
 	LOBBY(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT),

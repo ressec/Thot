@@ -16,7 +16,7 @@ import com.heliosphere.athena.base.exception.IExceptionType;
 import com.heliosphere.athena.base.resource.bundle.IBundle;
 
 /**
- * Checked exception thrown to indicate an error occurred while processing a {@link Room}.
+ * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
@@ -29,7 +29,7 @@ public class RoomException extends AbstractCheckedException
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link Room}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 */
 	public RoomException()
 	{
@@ -37,7 +37,7 @@ public class RoomException extends AbstractCheckedException
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link Room}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param key Resource bundle key (enumerated value coming from an
 	 * enumeration implementing the {@link IBundle} interface).
@@ -48,7 +48,7 @@ public class RoomException extends AbstractCheckedException
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link Room}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param key Exception key (enumerated value coming from an enumeration
 	 * implementing the {@link IExceptionType} interface).
@@ -61,7 +61,7 @@ public class RoomException extends AbstractCheckedException
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link Room}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param exception Parent exception.
 	 */
@@ -71,7 +71,7 @@ public class RoomException extends AbstractCheckedException
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link Room}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param message Message describing the error being the cause of the raised
 	 * exception.
@@ -82,7 +82,7 @@ public class RoomException extends AbstractCheckedException
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link Room}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param message Message describing the error being the cause of the raised
 	 * exception.

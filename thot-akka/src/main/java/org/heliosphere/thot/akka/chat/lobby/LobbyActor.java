@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.room.Room;
+import org.heliosphere.thot.akka.chat.room.RoomActor;
 import org.heliosphere.thot.akka.chat.room.RoomException;
-import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
+import org.heliosphere.thot.akka.chat.room.RoomMessageProtocol;
 
 import com.heliosphere.athena.base.message.Message;
 
@@ -28,7 +28,7 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
-public class Lobby extends AbstractActor
+public class LobbyActor extends AbstractActor
 {
 	/** 
 	 * Akka logging adapter.
@@ -41,7 +41,7 @@ public class Lobby extends AbstractActor
 	private Locale locale = null;
 
 	/**
-	 *  Collection of {@link Room}.
+	 *  Collection of {@link RoomActor}.
 	 */
 	private Map<String, ActorRef> rooms = new HashMap<>();
 
@@ -51,22 +51,22 @@ public class Lobby extends AbstractActor
 	private Map<String, ActorRef> users = new HashMap<>();
 
 	/**
-	 * Static creation pattern for a {@link Lobby}.
+	 * Static creation pattern for a {@link LobbyActor}.
 	 * <hr>
-	 * @param locale Locale for the {@link Lobby}.
+	 * @param locale Locale for the {@link LobbyActor}.
 	 * @return {@link Props}.
 	 */
 	public static Props props(final Locale locale)
 	{
-		return Props.create(Lobby.class, locale);
+		return Props.create(LobbyActor.class, locale);
 	}
 
 	/**
-	 * Creates a new {@link Lobby}.
+	 * Creates a new {@link LobbyActor}.
 	 * <hr>
 	 * @param locale Locale for the lobby.
 	 */
-	public Lobby(final Locale locale)
+	public LobbyActor(final Locale locale)
 	{
 		this.locale = locale;
 	}
@@ -76,11 +76,11 @@ public class Lobby extends AbstractActor
 	{
 		return receiveBuilder()
 				//.match(Message.class, message -> handleAndDispatchMessage(message))
-				.match(ChatSupervisorProtocol.LobbyConnect.class, message -> handleLobbyConnect(message))
-				.match(ChatSupervisorProtocol.LobbyDisconnect.class, message -> handleLobbyDisconnect(message))
-				.match(ChatSupervisorProtocol.RoomCreate.class, message -> handleRoomCreate(message))
-				.match(ChatSupervisorProtocol.RoomList.class, message -> handleRoomList(message))
-				.match(ChatSupervisorProtocol.RoomConnect.class, message -> handleRoomConnect(message))
+				.match(LobbyMessageProtocol.LobbyJoin.class, message -> handleLobbyJoin(message))
+				.match(LobbyMessageProtocol.LobbyLeave.class, message -> handleLobbyLeave(message))
+				.match(RoomMessageProtocol.RoomCreate.class, message -> handleRoomCreate(message))
+				.match(RoomMessageProtocol.RoomList.class, message -> handleRoomList(message))
+				.match(RoomMessageProtocol.RoomJoin.class, message -> handleRoomConnect(message))
 				//.matchEquals("stopIt", p -> handleStop())
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
@@ -98,13 +98,13 @@ public class Lobby extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyConnect} message.
+	 * Handles {@link LobbyMessageProtocol.LobbyJoin} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyConnect(final ChatSupervisorProtocol.LobbyConnect message) throws Exception
+	private final void handleLobbyJoin(final LobbyMessageProtocol.LobbyJoin message) throws Exception
 	{
 		// User already connected?
 		if (users.get(message.getUser()) != null)
@@ -114,18 +114,18 @@ public class Lobby extends AbstractActor
 		else
 		{
 			users.put(message.getUser(), getSender());
-			getSender().tell(new ChatSupervisorProtocol.LobbyConnected(message.getUser(), message.getLobby()), getSelf());
+			getSender().tell(new LobbyMessageProtocol.LobbyJoined(message.getUser(), message.getLobby()), getSelf());
 		}
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.LobbyDisconnect} message.
+	 * Handles {@link LobbyMessageProtocol.LobbyLeave} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyDisconnect(final ChatSupervisorProtocol.LobbyDisconnect message) throws Exception
+	private final void handleLobbyLeave(final LobbyMessageProtocol.LobbyLeave message) throws Exception
 	{
 		// User already connected?
 		if (users.get(message.getUser()) == null)
@@ -134,7 +134,7 @@ public class Lobby extends AbstractActor
 		}
 		else
 		{
-			getSender().tell(new ChatSupervisorProtocol.LobbyDisconnected(message.getUser(), message.getLobby()), getSelf());
+			getSender().tell(new LobbyMessageProtocol.LobbyLeft(message.getUser(), message.getLobby()), getSelf());
 		}
 	}
 
@@ -145,7 +145,7 @@ public class Lobby extends AbstractActor
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomCreate(final ChatSupervisorProtocol.RoomCreate message) throws Exception
+	private final void handleRoomCreate(final RoomMessageProtocol.RoomCreate message) throws Exception
 	{
 		if (message.getRoom() == null)
 		{
@@ -157,9 +157,9 @@ public class Lobby extends AbstractActor
 		}
 		else
 		{
-			ActorRef room = getContext().actorOf(Room.props(message.getRoom()), "room-" + message.getRoom());
+			ActorRef room = getContext().actorOf(RoomActor.props(message.getRoom()), "room-" + message.getRoom());
 			rooms.put(message.getRoom(), room);
-			getSender().tell(new ChatSupervisorProtocol.RoomCreated(message.getUser(), message.getRoom()), getSelf());
+			getSender().tell(new RoomMessageProtocol.RoomCreated(message.getUser(), message.getRoom()), getSelf());
 		}
 	}
 
@@ -169,7 +169,7 @@ public class Lobby extends AbstractActor
 	 * @param message Message to process.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomList(final ChatSupervisorProtocol.RoomList message)
+	private final void handleRoomList(final RoomMessageProtocol.RoomList message)
 	{
 		if (message.getUser() == null || message.getUser().isEmpty())
 		{
@@ -182,18 +182,18 @@ public class Lobby extends AbstractActor
 		else
 		{
 			// Returns the rooms.
-			getSender().tell(new ChatSupervisorProtocol.RoomList(message.getUser(), message.getLobby(), new ArrayList<>(rooms.keySet())), getSelf());
+			getSender().tell(new RoomMessageProtocol.RoomList(message.getUser(), message.getLobby(), new ArrayList<>(rooms.keySet())), getSelf());
 		}
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomConnect} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomJoin} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomConnect(final ChatSupervisorProtocol.RoomConnect message) throws Exception
+	private final void handleRoomConnect(final RoomMessageProtocol.RoomJoin message) throws Exception
 	{
 		if (message.getRoom() == null)
 		{
