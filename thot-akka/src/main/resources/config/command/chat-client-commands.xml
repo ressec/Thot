@@ -9,29 +9,53 @@
 
   <commands>
 
-    <!-- HELP command. -->
+
+    <!-- 
+      COMMAND: 'QUIT' 
+    -->
     <command>
-      <protocol>com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol.HELP</protocol> <!-- Command protocol enumerated value -->
-      <processor>HelpCommandProcessor</processor>
+
+      <name>quit</name>
+      <description>Quits the client application.</description>
+      <protocol>com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol.QUIT</protocol>
+      <processor></processor> <!-- No implementation provided, it's the responsibility of the application to do its own cleanup before exiting! -->
+      <aliases>
+        <alias>exit</alias>
+      </aliases>
+      <parameters>
+      </parameters>
+    </command>
+
+    <!-- 
+      COMMAND: 'HELP' 
+    -->
+    <command>
+      
       <name>help</name>
-      <description>Display help on commands.</description>
+      <description>Display help for commands.</description>
+      <protocol>com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol.HELP</protocol>
+      <processor>com.heliosphere.athena.base.command.processor.HelpCommandProcessor</processor>
       <aliases>
         <alias>h</alias>
       </aliases>
       <parameters>
+
         <parameter>
           <name>category</name>
           <description>Display the available command categories.</description>
+          <protocol></protocol>
           <tag>-cat</tag>
           <regexp>(-cat)</regexp>
           <type>String</type>
           <examples>
             <example>/help -cat</example>
-          </examples>
+          </examples>        
         </parameter>
+        
         <parameter>
           <name>set</name>
           <description>Display a list of available commands for a given command category.</description>
+          <protocol></protocol>
           <tag>-set</tag>
           <regexp>(-set=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -41,9 +65,11 @@
             <example>/help -set=chat</example>
           </examples>
         </parameter>
+        
         <parameter>
           <name>name</name>
           <description>Display detailed description on a given command name.</description>
+          <protocol></protocol>
           <tag>-name</tag>
           <regexp>(-name=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -53,25 +79,17 @@
             <example>/help -name=room</example>
           </examples>
         </parameter>
+      
       </parameters>
+    
     </command>
 
-    <!-- AFK command. -->
+    <!-- 
+      COMMAND: 'SAY' 
+    -->
     <command>
-      <protocol>com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol.AFK</protocol> <!-- Command protocol enumerated value -->
-      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
-      <name>afk</name>
-      <description>Mark you as: "Away from keyboard".</description>
-      <aliases>
-        <alias>away</alias>
-      </aliases>
-      <parameters></parameters> <!-- This command has no parameter! -->
-    </command>
-
-    <!-- SAY command. -->
-    <command>
-      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.SAY</protocol> <!-- Command protocol enumerated value -->
-      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.MESSAGE_SAY</protocol>
+      <processor></processor>
       <name>say</name>
       <description>Says a text in a room.</description>
       <aliases>
@@ -91,10 +109,12 @@
       </parameters>
     </command>
 
-    <!-- USER command. -->
+    <!-- 
+      COMMAND: 'USER' 
+    -->
     <command>
-      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.USER</protocol> <!-- Command protocol enumerated value -->
-      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <protocol></protocol>
+      <processor></processor>
       <name>user</name>
       <description>Command used to manipulate a user.</description>
       <aliases></aliases>
@@ -102,6 +122,7 @@
         <parameter>
           <name>register</name>
           <description>Registers a user against the chat system.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.USER_REGISTER</protocol>
           <tag>-register</tag>
           <regexp>(-register=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -112,6 +133,7 @@
         <parameter>
           <name>list</name>
           <description>List users present in a room (must have joined the room first).</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.USER_LIST</protocol>
           <tag>-list</tag>
           <regexp>(-list)</regexp>
           <type>String</type>
@@ -122,6 +144,7 @@
         <parameter>
           <name>unregister</name>
           <description>Un-registers the current user from the chat system.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.USER_UNREGISTER</protocol>
           <tag>-unregister</tag>
           <regexp>(-unregister)</regexp>
           <type>String</type>
@@ -132,10 +155,12 @@
       </parameters>
     </command>
 
-    <!-- LOBBY command. -->
+    <!-- 
+      COMMAND: 'LOBBY' 
+    -->
     <command>
-      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY</protocol> <!-- Command protocol enumerated value -->
-      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <protocol></protocol>
+      <processor></processor>
       <name>lobby</name>
       <description>Command used to manipulates a lobby.</description>
       <aliases></aliases>
@@ -143,6 +168,7 @@
         <parameter>
           <name>list</name>
           <description>Lists the avaialble lobbies.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY_LIST</protocol>
           <tag>-list</tag>
           <regexp>(-list)</regexp>
           <type>String</type>
@@ -150,6 +176,7 @@
         <parameter>
           <name>create</name>
           <description>Creates a new lobby given its locale ISO country code.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY_CREATE</protocol>
           <tag>-create</tag>
           <regexp>(-create=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -157,6 +184,7 @@
         <parameter>
           <name>delete</name>
           <description>Deletes a lobby given its locale ISO country code.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY_DELETE</protocol>
           <tag>-delete</tag>
           <regexp>(-delete=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -164,6 +192,7 @@
         <parameter>
           <name>join</name>
           <description>Joins a lobby given its locale ISO country code.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY_JOIN</protocol>
           <tag>-join</tag>
           <regexp>(-join=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -171,6 +200,7 @@
         <parameter>
           <name>leave</name>
           <description>Leaves a lobby given its locale ISO country code.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.LOBBY_LEAVE</protocol>
           <tag>-leave</tag>
           <regexp>(-leave=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -178,10 +208,12 @@
       </parameters>
     </command>
 
-    <!-- ROOM command. -->
+    <!-- 
+      COMMAND: 'ROOM' 
+    -->
     <command>
-      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM</protocol> <!-- Command protocol enumerated value -->
-      <processor></processor> <!-- This command has no pre-defined command processor, it will be handled by a message -->
+      <protocol></protocol>
+      <processor></processor>
       <name>room</name>
       <description>Command used to manipulate a room.</description>
       <aliases></aliases>
@@ -189,6 +221,7 @@
         <parameter>
           <name>list</name>
           <description>Lists the avaialble rooms.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM_LIST</protocol>
           <tag>-list</tag>
           <regexp>(-list)</regexp>
           <type>String</type>
@@ -196,6 +229,7 @@
         <parameter>
           <name>create</name>
           <description>Creates a new room given its name.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM_CREATE</protocol>
           <tag>-create</tag>
           <regexp>(-create=)\s*+([a-zA-Z_]++\*?)</regexp>
           <type>String</type>
@@ -203,6 +237,7 @@
         <parameter>
           <name>delete</name>
           <description>Deletes a room given its name.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM_DELETE</protocol>
           <tag>-delete</tag>
           <regexp>(-delete=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -210,6 +245,7 @@
         <parameter>
           <name>join</name>
           <description>Joins a room given its name.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM_JOIN</protocol>
           <tag>-join</tag>
           <regexp>(-join=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>
@@ -217,6 +253,7 @@
         <parameter>
           <name>leave</name>
           <description>Leaves a room given its name.</description>
+          <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.ROOM_LEAVE</protocol>
           <tag>-leave</tag>
           <regexp>(-leave=)\s*+([a-zA-Z]++\*?)</regexp>
           <type>String</type>

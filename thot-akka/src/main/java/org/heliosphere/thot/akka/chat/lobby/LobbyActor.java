@@ -25,6 +25,7 @@ import com.heliosphere.athena.base.message.Message;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.actor.Status;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
@@ -79,8 +80,9 @@ public class LobbyActor extends AbstractActor
 				.match(LobbyMessageProtocol.LobbyJoin.class, message -> handleLobbyJoin(message))
 				.match(LobbyMessageProtocol.LobbyLeave.class, message -> handleLobbyLeave(message))
 				.match(RoomMessageProtocol.RoomCreate.class, message -> handleRoomCreate(message))
+				.match(RoomMessageProtocol.RoomDelete.class, message -> handleRoomDelete(message))
 				.match(RoomMessageProtocol.RoomList.class, message -> handleRoomList(message))
-				.match(RoomMessageProtocol.RoomJoin.class, message -> handleRoomConnect(message))
+				.match(RoomMessageProtocol.RoomJoin.class, message -> handleRoomJoin(message))
 				//.matchEquals("stopIt", p -> handleStop())
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
@@ -101,15 +103,14 @@ public class LobbyActor extends AbstractActor
 	 * Handles {@link LobbyMessageProtocol.LobbyJoin} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyJoin(final LobbyMessageProtocol.LobbyJoin message) throws Exception
+	private final void handleLobbyJoin(final LobbyMessageProtocol.LobbyJoin message)
 	{
 		// User already connected?
 		if (users.get(message.getUser()) != null)
 		{
-			getSender().tell(new LobbyException(String.format("User: %1s is already connected to lobby: lobby-%2s", message.getUser(), message.getLobby().toString())), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException(String.format("User: %1s is already connected to lobby: lobby-%2s", message.getUser(), message.getLobby().toString()))), getSelf());
 		}
 		else
 		{
@@ -122,15 +123,14 @@ public class LobbyActor extends AbstractActor
 	 * Handles {@link LobbyMessageProtocol.LobbyLeave} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyLeave(final LobbyMessageProtocol.LobbyLeave message) throws Exception
+	private final void handleLobbyLeave(final LobbyMessageProtocol.LobbyLeave message)
 	{
 		// User already connected?
 		if (users.get(message.getUser()) == null)
 		{
-			getSender().tell(new LobbyException(String.format("No user: %1s connected to lobby: lobby-%2s", message.getUser(), message.getLobby().toString())), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException(String.format("No user: %1s connected to lobby: lobby-%2s", message.getUser(), message.getLobby().toString()))), getSelf());
 		}
 		else
 		{
@@ -142,18 +142,17 @@ public class LobbyActor extends AbstractActor
 	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomCreate} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomCreate(final RoomMessageProtocol.RoomCreate message) throws Exception
+	private final void handleRoomCreate(final RoomMessageProtocol.RoomCreate message)
 	{
 		if (message.getRoom() == null)
 		{
-			getSender().tell(new RoomException("Room (name) cannot be null or empty!"), getSelf());
+			getSender().tell(new Status.Failure(new RoomException("Room (name) cannot be null or empty!")), getSelf());
 		}
 		else if (rooms.containsKey(message.getRoom()))
 		{
-			getSender().tell(new RoomException(String.format("Room name: %1s already exist!", message.getRoom())), getSelf());
+			getSender().tell(new Status.Failure(new RoomException(String.format("Room name: %1s already exist!", message.getRoom()))), getSelf());
 		}
 		else
 		{
@@ -164,7 +163,29 @@ public class LobbyActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomList} message.
+	 * Handles a {@code room delete} message.
+	 * <hr>
+	 * @param message Message to process.
+	 */
+	@SuppressWarnings("nls")
+	private final void handleRoomDelete(final RoomMessageProtocol.RoomDelete message)
+	{
+		if (message.getRoom() == null)
+		{
+			getSender().tell(new Status.Failure(new RoomException("Room (name) cannot be null or empty!")), getSelf());
+		}
+		else if (!rooms.containsKey(message.getRoom()))
+		{
+			getSender().tell(new Status.Failure(new RoomException(String.format("Room name: %1s does not exist!", message.getRoom()))), getSelf());
+		}
+		else
+		{
+			rooms.get(message.getRoom()).tell(new RoomMessageProtocol.RoomDelete(message.getUser(), message.getRoom()), getSelf());
+		}
+	}
+
+	/**
+	 * Handles a {@code room list} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */
@@ -173,11 +194,11 @@ public class LobbyActor extends AbstractActor
 	{
 		if (message.getUser() == null || message.getUser().isEmpty())
 		{
-			getSender().tell(new LobbyException("User (name) cannot be null or empty!"), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException("User (name) cannot be null or empty!")), getSelf());
 		}
 		else if (users.get(message.getUser()) == null)
 		{
-			getSender().tell(new LobbyException(String.format("User: %1s is not connected to lobby: lobby-%2s", message.getUser(), locale.toString())), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException(String.format("User: %1s is not connected to lobby: lobby-%2s", message.getUser(), locale.toString()))), getSelf());
 		}
 		else
 		{
@@ -187,21 +208,21 @@ public class LobbyActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomJoin} message.
+	 * Handles a {@code room join} message.
 	 * <hr>
 	 * @param message Message to process.
 	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomConnect(final RoomMessageProtocol.RoomJoin message) throws Exception
+	private final void handleRoomJoin(final RoomMessageProtocol.RoomJoin message) throws Exception
 	{
 		if (message.getRoom() == null)
 		{
-			getSender().tell(new RoomException("Room (name) cannot be null or empty!"), getSelf());
+			getSender().tell(new Status.Failure(new RoomException("Room (name) cannot be null or empty!")), getSelf());
 		}
 		else if (!rooms.containsKey(message.getRoom()))
 		{
-			getSender().tell(new RoomException(String.format("Room name: %1s does not exist!", message.getRoom())), getSelf());
+			getSender().tell(new Status.Failure(new RoomException(String.format("Room name: %1s does not exist!", message.getRoom()))), getSelf());
 		}
 		else
 		{

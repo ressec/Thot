@@ -12,6 +12,7 @@
 package org.heliosphere.thot.akka.chat.client.command;
 
 import com.heliosphere.athena.base.command.internal.protocol.ICommandCategoryType;
+import com.heliosphere.athena.base.command.internal.protocol.ICommandDomainType;
 import com.heliosphere.athena.base.command.internal.protocol.ICommandGroupType;
 import com.heliosphere.athena.base.command.internal.protocol.ICommandProtocolType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandCategoryType;
@@ -23,29 +24,79 @@ import com.heliosphere.athena.base.resource.bundle.ResourceBundleManager;
 public enum ChatCommandProtocol implements ICommandProtocolType
 {
 	/**
-	 * Command to manipulate users.
+	 * Command used to list the lobbies.
 	 */
-	USER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.SYSTEM),
+	LOBBY_LIST(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.LOBBY),
 
 	/**
-	 * Command to send text message.
+	 * Command used to create a lobby.
 	 */
-	SAY(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT),
+	LOBBY_CREATE(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.LOBBY),
 
 	/**
-	 * Command to send private text message.
+	 * Command used to delete a lobby.
 	 */
-	WHIPSER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT),
+	LOBBY_DELETE(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.LOBBY),
 
 	/**
-	 * Command to manipulate lobbies.
+	 * Command used to join a lobby.
 	 */
-	LOBBY(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT),
+	LOBBY_JOIN(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.LOBBY),
 
 	/**
-	 * Command to manipulate rooms.
+	 * Command used to leave a lobby.
 	 */
-	ROOM(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT);
+	LOBBY_LEAVE(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.LOBBY),
+
+	/**
+	 * Command used to list the rooms.
+	 */
+	ROOM_LIST(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.ROOM),
+
+	/**
+	 * Command used to create a room.
+	 */
+	ROOM_CREATE(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.ROOM),
+
+	/**
+	 * Command used to delete a room.
+	 */
+	ROOM_DELETE(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.ROOM),
+
+	/**
+	 * Command used to join a room.
+	 */
+	ROOM_JOIN(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.ROOM),
+
+	/**
+	 * Command used to leave a room.
+	 */
+	ROOM_LEAVE(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.ROOM),
+
+	/**
+	 * Command used to register a user.
+	 */
+	USER_REGISTER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.SYSTEM, ChatCommandDomainType.USER),
+
+	/**
+	 * Command used to unregister a user.
+	 */
+	USER_UNREGISTER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.SYSTEM, ChatCommandDomainType.USER),
+
+	/**
+	 * Command used to list users in a room.
+	 */
+	USER_LIST(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.SYSTEM, ChatCommandDomainType.USER),
+
+	/**
+	 * Command to send a text message.
+	 */
+	MESSAGE_SAY(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.MESSAGE),
+
+	/**
+	 * Command to send a private text message.
+	 */
+	MESSAGE_WHIPSER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.MESSAGE);
 
 	/**
 	 * Command category type.
@@ -58,15 +109,22 @@ public enum ChatCommandProtocol implements ICommandProtocolType
 	private final Enum<? extends ICommandGroupType> group;
 
 	/**
+	 * Command domain type.
+	 */
+	private final Enum<? extends ICommandDomainType> domain;
+
+	/**
 	 * Creates a new enumerated value based on given values.
 	 * <p>
 	 * @param category Command category type.
 	 * @param group Command group type.
+	 * @param domain Command domain type.
 	 */
-	private ChatCommandProtocol(final Enum<? extends ICommandCategoryType> category, final Enum<? extends ICommandGroupType> group)
+	private ChatCommandProtocol(final Enum<? extends ICommandCategoryType> category, final Enum<? extends ICommandGroupType> group, final Enum<? extends ICommandDomainType> domain)
 	{
 		this.category = category;
 		this.group = group;
+		this.domain = domain;
 	}
 
 	@Override
@@ -81,13 +139,19 @@ public enum ChatCommandProtocol implements ICommandProtocolType
 		return group;
 	}
 
+	@Override
+	public final Enum<? extends ICommandDomainType> getDomain()
+	{
+		return domain;
+	}
+
 	@SuppressWarnings("nls")
 	@Override
 	public final ChatCommandProtocol fromString(final String value)
 	{
 		if (value == null || value.trim().length() == 0)
 		{
-			throw new InvalidArgumentException("Chat command protocol string representation cannot be null!");
+			throw new InvalidArgumentException("Chat command protocol type string representation cannot be null!");
 		}
 
 		for (ChatCommandProtocol element : ChatCommandProtocol.values())

@@ -27,6 +27,7 @@ import com.heliosphere.athena.base.message.Message;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.actor.Status;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
@@ -157,27 +158,27 @@ public class ChatSupervisorActor extends AbstractActor
 	 * Handles {@link ChatSupervisorProtocol.RegisterUser} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRegisterUser(final ChatSupervisorProtocol.RegisterUser message) throws Exception
+	private final void handleRegisterUser(final ChatSupervisorProtocol.RegisterUser message)
 	{
 		if (message.getUser() == null || message.getUser().isEmpty())
 		{
-			throw new UserException("User (name) cannot be null or empty!");
+			getSender().tell(new Status.Failure(new UserException("User (name) cannot be null or empty!")), getSelf());
 		}
-
-		// Does this client's user name already registered?
-		if (clients.containsKey(message.getUser()))
+		else if (clients.containsKey(message.getUser()))
 		{
-			throw new UserException("User: " + message.getUser() + " is already registered!");
+			// Does this client's user name already registered?
+			getSender().tell(new Status.Failure(new UserException("User: " + message.getUser() + " is already registered!")), getSelf());
 		}
+		else
+		{
+			// Register the client and the user name.
+			clients.put(message.getUser(), getSender());
 
-		// Register the client and the user name.
-		clients.put(message.getUser(), getSender());
-
-		// Confirm the user has been registered.
-		getSender().tell(new ChatSupervisorProtocol.UserRegistered(message.getUser()), getSelf());
+			// Confirm the user has been registered.
+			getSender().tell(new ChatSupervisorProtocol.UserRegistered(message.getUser()), getSelf());
+		}
 	}
 
 	/**
@@ -190,11 +191,11 @@ public class ChatSupervisorActor extends AbstractActor
 	{
 		if (message.getUser() == null || message.getUser().isEmpty())
 		{
-			getSender().tell(new LobbyException("User (name) cannot be null or empty!"), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException("User (name) cannot be null or empty!")), getSelf());
 		}
 		else if (clients.get(message.getUser()) == null)
 		{
-			getSender().tell(new LobbyException(String.format("User: %1s is not registered!", message.getUser())), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException(String.format("User: %1s is not registered!", message.getUser()))), getSelf());
 		}
 		else
 		{
@@ -207,81 +208,81 @@ public class ChatSupervisorActor extends AbstractActor
 	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyCreate} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyCreate(final LobbyMessageProtocol.LobbyCreate message) throws Exception
+	private final void handleLobbyCreate(final LobbyMessageProtocol.LobbyCreate message)
 	{
 		if (message.getLobby() == null)
 		{
-			throw new UserException("Lobby (locale) cannot be null or empty!");
+			getSender().tell(new Status.Failure(new UserException("Lobby (locale) cannot be null or empty!")), getSelf());
 		}
-
-		if (lobbies.containsKey(message.getLobby()))
+		else if (lobbies.containsKey(message.getLobby()))
 		{
-			throw new UserException(String.format("Lobby for locale: %1s already exist!", message.getLobby()));
+			getSender().tell(new Status.Failure(new UserException(String.format("Lobby for locale: %1s already exist!", message.getLobby()))), getSelf());
 		}
+		else
+		{
+			// Create the lobby and register it.
+			ActorRef lobby = getContext().actorOf(LobbyActor.props(message.getLobby()), "lobby-" + message.getLobby().toString());
+			lobbies.put(message.getLobby(), lobby);
 
-		// Create the lobby and register it.
-		ActorRef lobby = getContext().actorOf(LobbyActor.props(message.getLobby()), "lobby-" + message.getLobby().toString());
-		lobbies.put(message.getLobby(), lobby);
-
-		// Send the client a confirmation message and inject the lobby reference.
-		getSender().tell(new LobbyMessageProtocol.LobbyCreated(message.getLobby()), getSelf());
+			// Send the client a confirmation message and inject the lobby reference.
+			getSender().tell(new LobbyMessageProtocol.LobbyCreated(message.getLobby()), getSelf());
+		}
 	}
 
 	/**
 	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyDelete} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyDelete(final LobbyMessageProtocol.LobbyDelete message) throws Exception
+	private final void handleLobbyDelete(final LobbyMessageProtocol.LobbyDelete message)
 	{
 		if (message.getLobby() == null)
 		{
-			throw new UserException("Lobby (locale) cannot be null or empty!");
+			getSender().tell(new Status.Failure(new UserException("Lobby (locale) cannot be null or empty!")), getSelf());
 		}
-
-		if (!lobbies.containsKey(message.getLobby()))
+		else if (!lobbies.containsKey(message.getLobby()))
 		{
-			throw new UserException(String.format("Lobby for locale: %1s does not exist!", message.getLobby()));
+			getSender().tell(new Status.Failure(new UserException(String.format("Lobby for locale: %1s does not exist!", message.getLobby()))), getSelf());
 		}
+		else
+		{
+			// Stop the given lobby.
+			ActorRef lobby = lobbies.get(message.getLobby());
+			getContext().stop(lobby);
 
-		// Stop the given lobby.
-		ActorRef lobby = lobbies.get(message.getLobby());
-		getContext().stop(lobby);
+			// Remove this lobby from the collection.
+			lobbies.remove(message.getLobby());
 
-		// Remove this lobby from the collection.
-		lobbies.remove(message.getLobby());
-
-		// Send the client a confirmation message.
-		getSender().tell(new LobbyMessageProtocol.LobbyDeleted(message.getLobby()), getSelf());
+			// Send the client a confirmation message.
+			getSender().tell(new LobbyMessageProtocol.LobbyDeleted(message.getLobby()), getSelf());
+		}
 	}
 
 	/**
 	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyJoin} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleLobbyJoin(final LobbyMessageProtocol.LobbyJoin message) throws Exception
+	private final void handleLobbyJoin(final LobbyMessageProtocol.LobbyJoin message)
 	{
 		if (message.getLobby() == null)
 		{
-			getSender().tell(new LobbyException("Lobby (locale) cannot be null or empty!"), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException("Lobby (locale) cannot be null or empty!")), getSelf());
 		}
-
-		if (!lobbies.containsKey(message.getLobby()))
+		else if (!lobbies.containsKey(message.getLobby()))
 		{
-			getSender().tell(new LobbyException(String.format("Lobby: lobby-%1s does not exist!", message.getLobby())), getSelf());
+			getSender().tell(new Status.Failure(new LobbyException(String.format("Lobby: lobby-%1s does not exist!", message.getLobby()))), getSelf());
 		}
-
-		// Forward the message to the lobby.
-		ActorRef lobby = lobbies.get(message.getLobby());
-		lobby.forward(message, getContext());
+		else
+		{
+			// Forward the message to the lobby.
+			ActorRef lobby = lobbies.get(message.getLobby());
+			lobby.forward(message, getContext());
+		}
 	}
 
 	@SuppressWarnings("nls")
@@ -301,5 +302,4 @@ public class ChatSupervisorActor extends AbstractActor
 
 		LOG.info("Has been started!");
 	}
-
 }
