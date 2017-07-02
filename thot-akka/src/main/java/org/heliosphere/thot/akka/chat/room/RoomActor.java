@@ -23,6 +23,7 @@ import com.heliosphere.athena.base.message.Message;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.actor.Status;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
@@ -94,14 +95,13 @@ public class RoomActor extends AbstractActor
 	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomJoin} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomJoin(final RoomMessageProtocol.RoomJoin message) throws Exception
+	private final void handleRoomJoin(final RoomMessageProtocol.RoomJoin message)
 	{
 		if (users.containsKey(message.getUser()))
 		{
-			getSender().tell(new RoomException("User: %1s has already joined room: %2s!"), getSelf());
+			getSender().tell(new Status.Failure(new RoomException(String.format("User: %1s has already joined room: %2s!", message.getUser(), name))), getSelf());
 		}
 		else
 		{
@@ -114,14 +114,13 @@ public class RoomActor extends AbstractActor
 	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.RoomLeave} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
 	@SuppressWarnings("nls")
-	private final void handleRoomLeave(final RoomMessageProtocol.RoomLeave message) throws Exception
+	private final void handleRoomLeave(final RoomMessageProtocol.RoomLeave message)
 	{
 		if (!users.containsKey(message.getUser()))
 		{
-			getSender().tell(new RoomException("User: %1s is not a member of room: %2s!"), getSelf());
+			getSender().tell(new Status.Failure(new RoomException(String.format("User: %1s is not a member of room: %2s!", message.getUser(), name))), getSelf());
 		}
 		else
 		{
@@ -134,9 +133,8 @@ public class RoomActor extends AbstractActor
 	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.UserMessageProtocol.UserList} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
-	private final void handleUserList(final UserMessageProtocol.UserList message) throws Exception
+	private final void handleUserList(final UserMessageProtocol.UserList message)
 	{
 		getSender().tell(new UserMessageProtocol.UserList(message.getRoom(), new ArrayList<>(users.keySet())), getSelf());
 	}
@@ -145,9 +143,8 @@ public class RoomActor extends AbstractActor
 	 * Handles a {@code say} message.
 	 * <hr>
 	 * @param message Message to process.
-	 * @throws Exception Thrown in case an error occurred while processing a message.
 	 */
-	private final void handleSay(final UserMessageProtocol.Say message) throws Exception
+	private final void handleSay(final UserMessageProtocol.Say message)
 	{
 		// Dispatch the message to all users in the room.
 		for (ActorRef user : users.values())
