@@ -35,6 +35,7 @@ import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol;
 import com.heliosphere.athena.base.command.response.ICommandResponse;
 import com.heliosphere.athena.base.file.internal.FileException;
+import com.heliosphere.athena.base.message.protocol.DefaultMessageProtocol;
 import com.heliosphere.athena.base.terminal.CommandTerminal;
 import com.heliosphere.athena.base.terminal.OutputTerminal;
 
@@ -176,6 +177,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				.match(RoomMessageProtocol.RoomLeft.class, response -> handleMessageRoomDisconnected(response))
 				.match(UserMessageProtocol.UserList.class, response -> handleMessageUserList(response))
 				.match(UserMessageProtocol.Said.class, message -> handleSaid(message))
+				.match(DefaultMessageProtocol.SubmitCommand.class, message -> handleSubmitCommand(message))
 				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Terminated.class, this::onTerminated)
 				.matchAny(any -> handleUnknown(any)).build();
@@ -215,8 +217,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	{
 		chatSystem = getSender();
 		terminal.appendToPane("Chat server has been contacted and has answered.\nPlease register with a user.\n\n", Color.WHITE);
-
-		// User can enter some commands.
+		
 		terminal.start();
 		output.start();
 	}
@@ -356,7 +357,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 					throw new CommandException("Cannot send a null message!");
 				}
 
-				roomProxy.tell(new UserMessageProtocol.Say(user, text), getSelf());
+				roomProxy.tell(new UserMessageProtocol.Say(this.user, text), getSelf());
 				break;
 
 			case MESSAGE_WHIPSER:
@@ -376,6 +377,8 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 			default:
 				break;
 		}
+		
+		terminal.resume();
 	}
 
 	/**
@@ -962,6 +965,20 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		terminal.resume();
 	}
 
+//	private final void executeAndStart()
+//	{
+//		// Do we have some submitted commands to execute first?
+//		if (terminal.hasCommandToSubmit()) 
+//		{
+//			terminal.doSubmitCommand();			
+//		}
+//		
+//		// User can start entering some commands.
+//		terminal.start();
+//		output.start();
+//
+//	}
+	
 	/**
 	 * Handles a {@code said} message.
 	 * <hr>
@@ -972,6 +989,16 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		output.printSay(LocalTime.now().toString(), message.getUser(), message.getMessage());
 	}
 
+	/**
+	 * Handles a {@code submit command} message.
+	 * <hr>
+	 * @param message Message to handle.
+	 */
+	private void handleSubmitCommand(final DefaultMessageProtocol.SubmitCommand message)
+	{
+		terminal.submitCommand(message);
+	}
+	
 	/**
 	 * Handles unknown commands.
 	 * <hr>

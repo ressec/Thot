@@ -99,11 +99,11 @@
         <parameter>
           <name>text</name>
           <description>Text of the say command.</description>
-          <tag>-text</tag>
-          <regexp>(-text=)\s*+(.++\*?)</regexp>
+          <tag></tag>
+          <regexp>(.+?)$</regexp>
           <type>String</type>
           <examples>
-            <example>/say -text=Hi guys ... happy to be there with you :)</example>
+            <example>/say Hi guys ... happy to be there with you :)</example>
           </examples>
         </parameter>
       </parameters>
