@@ -96,7 +96,7 @@ public enum ChatCommandProtocol implements ICommandProtocolType
 	/**
 	 * Command to send a private text message.
 	 */
-	MESSAGE_WHIPSER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.MESSAGE);
+	MESSAGE_WHISPER(DefaultCommandCategoryType.NORMAL, DefaultCommandGroupType.CHAT, ChatCommandDomainType.MESSAGE);
 
 	/**
 	 * Command category type.

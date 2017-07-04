@@ -76,6 +76,7 @@ public class RoomActor extends AbstractActor
 				.match(RoomMessageProtocol.RoomLeave.class, message -> handleRoomLeave(message))
 				.match(UserMessageProtocol.UserList.class, message -> handleUserList(message))
 				.match(UserMessageProtocol.Say.class, message -> handleSay(message))
+				.match(UserMessageProtocol.Whisper.class, message -> handleWhisper(message))
 				.matchAny(message -> handleUnknownMessage(message))
 				.build();
 	}
@@ -150,6 +151,30 @@ public class RoomActor extends AbstractActor
 		for (ActorRef user : users.values())
 		{
 			user.tell(new UserMessageProtocol.Said(message.getUser(), message.getMessage()), getSelf());
+		}
+	}
+
+	/**
+	 * Handles a {@code whisper} message.
+	 * <hr>
+	 * @param message Message to process.
+	 */
+	private final void handleWhisper(final UserMessageProtocol.Whisper message)
+	{
+		// Dispatch the message to the recipient user in the room.
+		ActorRef recipient = users.get(message.getRecipient());
+
+		// Dispatch the message to the recipient user in the room.
+		ActorRef sender = users.get(message.getSender());
+
+		if (recipient != null)
+		{
+			recipient.tell(new UserMessageProtocol.Whispered(message.getRecipient(), message.getMessage(), message.getSender()), getSelf());
+		}
+
+		if (sender != null)
+		{
+			sender.tell(new UserMessageProtocol.Whispered(message.getRecipient(), message.getMessage(), message.getSender()), getSelf());
 		}
 	}
 

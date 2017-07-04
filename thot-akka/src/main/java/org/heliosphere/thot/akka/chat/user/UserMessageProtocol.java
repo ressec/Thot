@@ -187,9 +187,14 @@ public class UserMessageProtocol implements IMessageProtocol
 	public final static class Whisper
 	{
 		/**
-		 * User.
+		 * Recipient user name.
 		 */
-		private final String user;
+		private final String recipient;
+
+		/**
+		 * Sender user name.
+		 */
+		private final String sender;
 
 		/**
 		 * Message.
@@ -199,23 +204,103 @@ public class UserMessageProtocol implements IMessageProtocol
 		/**
 		 * Creates a new message.
 		 * <hr>
-		 * @param user User name.
+		 * @param recipient Recipient user name.
 		 * @param message Message.
+		 * @param sender Sender user name.
 		 */
-		public Whisper(String user, String message)
+		public Whisper(String recipient, String message, String sender)
+		{
+			this.recipient = recipient;
+			this.message = message;
+			this.sender = sender;
+		}
+
+		/**
+		 * Returns the recipient user.
+		 * <hr>
+		 * @return Recipient user name.
+		 */
+		public final String getRecipient()
+		{
+			return recipient;
+		}
+
+		/**
+		 * Returns the sender user.
+		 * <hr>
+		 * @return Sender user name.
+		 */
+		public final String getSender()
+		{
+			return sender;
+		}
+
+		/**
+		 * Returns the message.
+		 * <hr>
+		 * @return Message.
+		 */
+		public final String getMessage()
+		{
+			return message;
+		}
+	}
+
+	/**
+	 * Message send by a {@link RoomActor} to a {@link TerminalActor} to notify a user sent a private message in a room to a specific user.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
+	public final static class Whispered
+	{
+		/**
+		 * Message.
+		 */
+		private final String message;
+
+		/**
+		 * Sender user name.
+		 */
+		private final String sender;
+
+		/**
+		 * User.
+		 */
+		private final String user;
+
+		/**
+		 * Creates a new message.
+		 * <hr>
+		 * @param user User.
+		 * @param message Message.
+		 * @param sender Sender user name.
+		 */
+		public Whispered(String user, String message, String sender)
 		{
 			this.user = user;
 			this.message = message;
+			this.sender = sender;
 		}
 
 		/**
 		 * Returns the user.
 		 * <hr>
-		 * @return User name.
+		 * @return User.
 		 */
 		public final String getUser()
 		{
 			return user;
+		}
+
+		/**
+		 * Returns the sender user.
+		 * <hr>
+		 * @return Sender user name.
+		 */
+		public final String getSender()
+		{
+			return sender;
 		}
 
 		/**

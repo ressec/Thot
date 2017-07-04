@@ -177,6 +177,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				.match(RoomMessageProtocol.RoomLeft.class, response -> handleMessageRoomDisconnected(response))
 				.match(UserMessageProtocol.UserList.class, response -> handleMessageUserList(response))
 				.match(UserMessageProtocol.Said.class, message -> handleSaid(message))
+				.match(UserMessageProtocol.Whispered.class, message -> handleWhispered(message))
 				.match(DefaultMessageProtocol.SubmitCommand.class, message -> handleSubmitCommand(message))
 				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Terminated.class, this::onTerminated)
@@ -217,7 +218,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	{
 		chatSystem = getSender();
 		terminal.appendToPane("Chat server has been contacted and has answered.\nPlease register with a user.\n\n", Color.WHITE);
-		
+
 		terminal.start();
 		output.start();
 	}
@@ -360,7 +361,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				roomProxy.tell(new UserMessageProtocol.Say(this.user, text), getSelf());
 				break;
 
-			case MESSAGE_WHIPSER:
+			case MESSAGE_WHISPER:
 				text = (String) command.getParameter("text").getValue();
 				user = (String) command.getParameter("user").getValue();
 				if (user == null)
@@ -371,13 +372,13 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				{
 					throw new CommandException("Cannot send a null message!");
 				}
-				roomProxy.tell(new UserMessageProtocol.Whisper(user, text), getSelf());
+				roomProxy.tell(new UserMessageProtocol.Whisper(user, text, this.user), getSelf());
 				break;
 
 			default:
 				break;
 		}
-		
+
 		terminal.resume();
 	}
 
@@ -545,7 +546,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		}
 		else
 		{
-			roomProxy.tell(new UserMessageProtocol.Whisper((String) user.getValue(), (String) text.getValue()), getSelf());
+			roomProxy.tell(new UserMessageProtocol.Whisper((String) user.getValue(), (String) text.getValue(), this.user), getSelf());
 		}
 
 		terminal.resume();
@@ -965,20 +966,20 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		terminal.resume();
 	}
 
-//	private final void executeAndStart()
-//	{
-//		// Do we have some submitted commands to execute first?
-//		if (terminal.hasCommandToSubmit()) 
-//		{
-//			terminal.doSubmitCommand();			
-//		}
-//		
-//		// User can start entering some commands.
-//		terminal.start();
-//		output.start();
-//
-//	}
-	
+	//	private final void executeAndStart()
+	//	{
+	//		// Do we have some submitted commands to execute first?
+	//		if (terminal.hasCommandToSubmit()) 
+	//		{
+	//			terminal.doSubmitCommand();			
+	//		}
+	//		
+	//		// User can start entering some commands.
+	//		terminal.start();
+	//		output.start();
+	//
+	//	}
+
 	/**
 	 * Handles a {@code said} message.
 	 * <hr>
@@ -990,6 +991,16 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
+	 * Handles a {@code whispered} message.
+	 * <hr>
+	 * @param message Message to handle.
+	 */
+	private void handleWhispered(final UserMessageProtocol.Whispered message)
+	{
+		output.printWhisper(LocalTime.now().toString(), message.getUser(), message.getMessage(), message.getSender());
+	}
+
+	/**
 	 * Handles a {@code submit command} message.
 	 * <hr>
 	 * @param message Message to handle.
@@ -998,7 +1009,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	{
 		terminal.submitCommand(message);
 	}
-	
+
 	/**
 	 * Handles unknown commands.
 	 * <hr>
