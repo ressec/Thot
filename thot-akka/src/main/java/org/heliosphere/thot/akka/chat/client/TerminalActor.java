@@ -18,10 +18,10 @@ import java.util.Locale;
 import org.apache.commons.collections4.ListUtils;
 import org.heliosphere.thot.akka.chat.client.command.ChatCommandDomainType;
 import org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol;
-import org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol;
-import org.heliosphere.thot.akka.chat.room.RoomMessageProtocol;
-import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol;
-import org.heliosphere.thot.akka.chat.user.UserMessageProtocol;
+import org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol;
+import org.heliosphere.thot.akka.chat.server.room.RoomMessageProtocol;
+import org.heliosphere.thot.akka.chat.server.supervisor.ChatSupervisorProtocol;
+import org.heliosphere.thot.akka.chat.server.user.UserMessageProtocol;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
@@ -211,7 +211,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.ConversationInitiated} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.server.supervisor.ChatSupervisorProtocol.ConversationInitiated} message.
 	 */
 	@SuppressWarnings("nls")
 	private final void handleConversationInitiated()
@@ -774,7 +774,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorProtocol.UserRegistered} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.server.supervisor.ChatSupervisorProtocol.UserRegistered} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
@@ -815,7 +815,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.room.RoomMessageProtocol.RoomList} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.server.room.RoomMessageProtocol.RoomList} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
@@ -841,7 +841,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.LobbyMessageProtocol.LobbyCreated} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyCreated} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
@@ -854,7 +854,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.LobbyMessageProtocol.LobbyDeleted} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyDeleted} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
@@ -867,7 +867,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyJoined} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyJoined} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */
@@ -941,7 +941,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	}
 
 	/**
-	 * Handles a {@link org.heliosphere.thot.akka.chat.supervisor.UserMessageProtocol.UserList} message.
+	 * Handles a {@link org.heliosphere.thot.akka.chat.server.user.UserMessageProtocol.UserList} message.
 	 * <hr>
 	 * @param response Message to handle.
 	 */

@@ -9,12 +9,12 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.application;
+package org.heliosphere.thot.akka.chat;
 
 import java.time.Duration;
 
 import org.heliosphere.thot.akka.chat.client.TerminalActor;
-import org.heliosphere.thot.akka.chat.supervisor.ChatSupervisorActor;
+import org.heliosphere.thot.akka.chat.server.supervisor.ChatSupervisorActor;
 
 import com.heliosphere.athena.base.message.protocol.DefaultMessageProtocol;
 

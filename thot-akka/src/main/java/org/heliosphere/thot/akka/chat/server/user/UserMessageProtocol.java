@@ -9,12 +9,12 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.user;
+package org.heliosphere.thot.akka.chat.server.user;
 
 import java.util.List;
 
 import org.heliosphere.thot.akka.chat.client.TerminalActor;
-import org.heliosphere.thot.akka.chat.room.RoomActor;
+import org.heliosphere.thot.akka.chat.server.room.RoomActor;
 
 import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 

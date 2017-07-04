@@ -9,18 +9,17 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.supervisor;
+package org.heliosphere.thot.akka.chat.server.supervisor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.client.ChatClientActor;
-import org.heliosphere.thot.akka.chat.lobby.LobbyActor;
-import org.heliosphere.thot.akka.chat.lobby.LobbyException;
-import org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol;
-import org.heliosphere.thot.akka.chat.user.UserException;
+import org.heliosphere.thot.akka.chat.server.lobby.LobbyActor;
+import org.heliosphere.thot.akka.chat.server.lobby.LobbyException;
+import org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol;
+import org.heliosphere.thot.akka.chat.server.user.UserException;
 
 import com.heliosphere.athena.base.message.Message;
 
@@ -182,7 +181,7 @@ public class ChatSupervisorActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyList} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyList} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */
@@ -205,7 +204,7 @@ public class ChatSupervisorActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyCreate} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyCreate} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */
@@ -232,7 +231,7 @@ public class ChatSupervisorActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyDelete} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyDelete} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */
@@ -262,7 +261,7 @@ public class ChatSupervisorActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.lobby.LobbyMessageProtocol.LobbyJoin} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyJoin} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */

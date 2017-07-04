@@ -9,16 +9,16 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.lobby;
+package org.heliosphere.thot.akka.chat.server.lobby;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.heliosphere.thot.akka.chat.room.RoomActor;
-import org.heliosphere.thot.akka.chat.room.RoomException;
-import org.heliosphere.thot.akka.chat.room.RoomMessageProtocol;
+import org.heliosphere.thot.akka.chat.server.room.RoomActor;
+import org.heliosphere.thot.akka.chat.server.room.RoomException;
+import org.heliosphere.thot.akka.chat.server.room.RoomMessageProtocol;
 
 import com.heliosphere.athena.base.message.Message;
 

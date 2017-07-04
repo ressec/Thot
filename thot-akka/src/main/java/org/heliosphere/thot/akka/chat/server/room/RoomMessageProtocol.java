@@ -9,7 +9,7 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.room;
+package org.heliosphere.thot.akka.chat.server.room;
 
 import java.util.List;
 import java.util.Locale;

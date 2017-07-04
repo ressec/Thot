@@ -9,14 +9,14 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.room;
+package org.heliosphere.thot.akka.chat.server.room;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.h2.engine.User;
-import org.heliosphere.thot.akka.chat.user.UserMessageProtocol;
+import org.heliosphere.thot.akka.chat.server.user.UserMessageProtocol;
 
 import com.heliosphere.athena.base.message.Message;
 
@@ -131,7 +131,7 @@ public class RoomActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.supervisor.UserMessageProtocol.UserList} message.
+	 * Handles {@link org.heliosphere.thot.akka.chat.server.user.UserMessageProtocol.UserList} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */

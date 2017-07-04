@@ -9,7 +9,7 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.supervisor;
+package org.heliosphere.thot.akka.chat.server.supervisor;
 
 import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
