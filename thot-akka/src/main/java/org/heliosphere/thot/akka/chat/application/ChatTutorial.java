@@ -22,7 +22,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 
 /**
- * {@code Akka} actor tutorial demonstrates ...
+ * {@code Akka} actor tutorial demonstrating a chat system.
  * <p>
  * This tutorial is creating an actor system with one user actor and one child actor. It
  * then ask (sending messages) the actors to output their reference on the console. It finally
@@ -49,19 +49,24 @@ public class ChatTutorial
 
 		// Create a first terminal chat client actor.
 		ActorRef terminal1 = system.actorOf(TerminalActor.props("Terminal #1", "/config/terminal/terminal-1.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-1");
-
 		// Create a second terminal chat client actor.
 		ActorRef terminal2 = system.actorOf(TerminalActor.props("Terminal #2", "/config/terminal/terminal-2.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-2");
+		// Create a third terminal chat client actor.
+		ActorRef terminal3 = system.actorOf(TerminalActor.props("Terminal #3", "/config/terminal/terminal-1.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-3");
 
 		Duration wait = Duration.ofMillis(300);
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=christophe", Duration.ofSeconds(1)), terminal1);
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -create=fr", wait), terminal1);
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), terminal1);
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/room -create=Discussion", wait), terminal1);
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), terminal1);
+		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=christophe", Duration.ofSeconds(1)), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -create=fr", wait), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/room -create=Discussion", wait), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
 
-		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=fabienne", Duration.ofSeconds(4)), terminal2);
-		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), terminal2);
-		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), terminal2);		
+		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=fabienne", Duration.ofSeconds(2)), ActorRef.noSender());
+		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
+		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
+
+		terminal3.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=alan", Duration.ofSeconds(2)), ActorRef.noSender());
+		terminal3.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
+		terminal3.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
 	}
 }
