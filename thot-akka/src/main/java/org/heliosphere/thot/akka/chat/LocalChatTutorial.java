@@ -31,7 +31,7 @@ import akka.actor.ActorSystem;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class ChatTutorial
+public class LocalChatTutorial
 {
 	/**
 	 * Creates a new chat tutorial actor system.
@@ -39,7 +39,7 @@ public class ChatTutorial
 	 * @param systemName Actor system name.
 	 */
 	@SuppressWarnings("nls")
-	public ChatTutorial(final String systemName)
+	public LocalChatTutorial(final String systemName)
 	{
 		// Create an actor system without special configuration file.
 		ActorSystem system = ActorSystem.create(systemName);
