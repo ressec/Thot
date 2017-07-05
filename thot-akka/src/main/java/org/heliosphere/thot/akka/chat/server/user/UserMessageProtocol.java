@@ -18,21 +18,21 @@ import org.heliosphere.thot.akka.chat.server.room.RoomActor;
 
 import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
-public class UserMessageProtocol implements IMessageProtocol
+public class UserMessageProtocol
 {
-	/**
-	 * Default serialization identifier.
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Message used to get a list of users in a room.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class UserList
+	public final static class UserList implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Room.
 		 */
@@ -82,8 +82,13 @@ public class UserMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Say
+	public final static class Say implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Message.
 		 */
@@ -133,8 +138,13 @@ public class UserMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Said
+	public final static class Said implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Message.
 		 */
@@ -184,8 +194,13 @@ public class UserMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Whisper
+	public final static class Whisper implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Recipient user name.
 		 */
@@ -252,8 +267,13 @@ public class UserMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Whispered
+	public final static class Whispered implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Message.
 		 */

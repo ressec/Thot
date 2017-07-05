@@ -19,22 +19,20 @@ import com.heliosphere.athena.base.message.internal.IMessageProtocol;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public final class ChatSupervisorProtocol implements IMessageProtocol
+public final class ChatSupervisorProtocol
 {
-	/**
-	 * Default serialization identifier.
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Message used to initiate a conversation with the server.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class InitiateConversation
+	public final static class InitiateConversation implements IMessageProtocol
 	{
-		// Empty.
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
 	}
 
 	/**
@@ -43,11 +41,13 @@ public final class ChatSupervisorProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class ConversationInitiated
+	public final static class ConversationInitiated implements IMessageProtocol
 	{
-		// Empty.
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
 	}
-
 
 	/**
 	 * Message used to register a user.
@@ -55,8 +55,13 @@ public final class ChatSupervisorProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RegisterUser
+	public final static class RegisterUser implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User name.
 		 */
@@ -89,8 +94,13 @@ public final class ChatSupervisorProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class UserRegistered
+	public final static class UserRegistered implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User name.
 		 */
@@ -102,6 +112,84 @@ public final class ChatSupervisorProtocol implements IMessageProtocol
 		 * @param user User name.
 		 */
 		public UserRegistered(String user)
+		{
+			this.user = user;
+		}
+
+		/**
+		 * Returns the user name.
+		 * <hr>
+		 * @return User name.
+		 */
+		public final String getUser()
+		{
+			return user;
+		}
+	}
+
+	/**
+	 * Message used to unregister a user.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
+	public final static class UnregisterUser implements IMessageProtocol
+	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * User name.
+		 */
+		private final String user;
+
+		/**
+		 * Creates a new message.
+		 * <hr>
+		 * @param user User name.
+		 */
+		public UnregisterUser(String user)
+		{
+			this.user = user;
+		}
+
+		/**
+		 * Returns the user name.
+		 * <hr>
+		 * @return User name.
+		 */
+		public final String getUser()
+		{
+			return user;
+		}
+	}
+
+	/**
+	 * Message used to confirm a user has been unregistered.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
+	public final static class UserUnregistered implements IMessageProtocol
+	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * User name.
+		 */
+		private final String user;
+
+		/**
+		 * Creates a new message.
+		 * <hr>
+		 * @param user User name.
+		 */
+		public UserUnregistered(String user)
 		{
 			this.user = user;
 		}

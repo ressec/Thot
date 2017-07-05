@@ -149,7 +149,9 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 			terminal.getCoordinator().registerExecutable(new HelpCommandProcessor(terminal.getInterpreter().getCommandDefinitions()));
 
 			// Contact the chat system supervisor and send him a message to get its time.
-			ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
+			//ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
+			ActorSelection selection = getContext().actorSelection("akka.tcp://ChatSystem@127.0.0.1:2551/user/chat-supervisor");
+
 			selection.tell(new ChatSupervisorProtocol.InitiateConversation(), getSelf());
 		}
 		catch (FileException e)

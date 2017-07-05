@@ -9,15 +9,24 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.tutorial.iot;
+package org.heliosphere.thot.akka.chat;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.heliosphere.thot.akka.chat.client.TerminalActor;
+
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+
+import akka.actor.ActorPath;
+import akka.actor.ActorPaths;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 
 /**
- * {@code Akka} actor tutorial demonstrates ...
+ * {@code Akka} actor tutorial demonstrating a cluster chat system.
  * <p>
  * This tutorial is creating an actor system with one user actor and one child actor. It
  * then ask (sending messages) the actors to output their reference on the console. It finally
@@ -26,37 +35,30 @@ import akka.actor.ActorSystem;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class IoTSupervisorTutorial
+public class ClusterChatClientTutorial
 {
 	/**
-	 * Creates a new actor.
+	 * Creates a new chat tutorial actor system.
 	 * <hr>
 	 * @param systemName Actor system name.
 	 */
 	@SuppressWarnings("nls")
-	public IoTSupervisorTutorial(final String systemName)
+	public ClusterChatClientTutorial(final String systemName)
 	{
+		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + 0).withFallback(ConfigFactory.load());
+
 		// Create an actor system without special configuration file.
-		ActorSystem system = ActorSystem.create(systemName);
+		ActorSystem system = ActorSystem.create(systemName, config);
 
-		try
-		{
-			// Create the supervisor actor.
-			ActorRef supervisor = system.actorOf(SupervisorActor.props(), "iot-supervisor");
+		// Create a terminal chat client actor.
+		ActorRef terminal = system.actorOf(TerminalActor.props(
+				"Terminal #1", "/config/terminal/terminal-1.properties",
+				"/config/command/chat-client-commands.xml"), "chat-terminal-1");
+	}
 
-			System.out.println("Press ENTER to exit the system");
-			System.in.read();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			system.terminate();
-		}
-
-		// Terminates the actor system.
-		system.terminate();
+	private final static Set<ActorPath> initialContacts()
+	{
+		return new HashSet<>(Arrays.asList(
+				ActorPaths.fromString("akka.tcp://ChatSystem@127.0.0.1:2551/system/receptionist")));
 	}
 }

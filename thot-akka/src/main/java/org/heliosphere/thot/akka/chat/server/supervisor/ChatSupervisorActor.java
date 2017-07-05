@@ -181,7 +181,7 @@ public class ChatSupervisorActor extends AbstractActor
 	}
 
 	/**
-	 * Handles {@link org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol.LobbyList} message.
+	 * Handles a {@code lobby list} message.
 	 * <hr>
 	 * @param message Message to process.
 	 */

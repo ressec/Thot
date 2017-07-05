@@ -16,21 +16,21 @@ import java.util.Locale;
 
 import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
-public class LobbyMessageProtocol implements IMessageProtocol
+public class LobbyMessageProtocol
 {
-	/**
-	 * Default serialization identifier.
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Message used to get the available list of lobbies.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyList
+	public final static class LobbyList implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -80,8 +80,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyCreate
+	public final static class LobbyCreate implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -131,8 +136,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyCreated
+	public final static class LobbyCreated implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Lobby's locale.
 		 */
@@ -165,8 +175,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDelete
+	public final static class LobbyDelete implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -216,8 +231,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDeleted
+	public final static class LobbyDeleted implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Lobby's locale.
 		 */
@@ -250,8 +270,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyJoin
+	public final static class LobbyJoin implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -301,8 +326,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyJoined
+	public final static class LobbyJoined implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -352,8 +382,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyLeave
+	public final static class LobbyLeave implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -403,8 +438,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyLeft
+	public final static class LobbyLeft implements IMessageProtocol
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
