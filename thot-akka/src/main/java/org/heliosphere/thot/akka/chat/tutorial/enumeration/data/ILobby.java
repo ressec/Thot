@@ -1,0 +1,37 @@
+/*
+ * Copyright(c) 2017 - Heliosphere Corp.
+ * ---------------------------------------------------------------------------
+ * This file is part of the Heliosphere's project which is licensed under the 
+ * Apache license version 2 and use is subject to license terms.
+ * You should have received a copy of the license with the project's artifact
+ * binaries and/or sources.
+ * 
+ * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
+ * ---------------------------------------------------------------------------
+ */
+package org.heliosphere.thot.akka.chat.tutorial.enumeration.data;
+
+import java.io.Serializable;
+
+/**
+ * Provides the behavior of a lobby.
+ * <hr>
+ * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+ * @version 1.0.0
+ */
+public interface ILobby extends Serializable
+{
+	/**
+	 * Returns the lobby's name.
+	 * <hr>
+	 * @return Lobby's name.
+	 */
+	String getName();
+
+	/**
+	 * Returns the lobby's unique identifier.
+	 * <hr>
+	 * @return Lobby's identifier.
+	 */
+	int getId();
+}
