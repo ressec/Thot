@@ -11,10 +11,9 @@
  */
 package org.heliosphere.thot.akka.chat.server.lobby;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
-
-import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
 public class LobbyMessageProtocol
 {
@@ -24,7 +23,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyList implements IMessageProtocol
+	public final static class LobbyList implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -80,7 +79,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyCreate implements IMessageProtocol
+	public final static class LobbyCreate implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -136,7 +135,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyCreated implements IMessageProtocol
+	public final static class LobbyCreated implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -175,7 +174,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDelete implements IMessageProtocol
+	public final static class LobbyDelete implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -231,7 +230,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDeleted implements IMessageProtocol
+	public final static class LobbyDeleted implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -270,7 +269,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyJoin implements IMessageProtocol
+	public final static class LobbyJoin implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -326,7 +325,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyJoined implements IMessageProtocol
+	public final static class LobbyJoined implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -382,7 +381,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyLeave implements IMessageProtocol
+	public final static class LobbyLeave implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -438,7 +437,7 @@ public class LobbyMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyLeft implements IMessageProtocol
+	public final static class LobbyLeft implements Serializable
 	{
 		/**
 		 * Default serialization identifier.

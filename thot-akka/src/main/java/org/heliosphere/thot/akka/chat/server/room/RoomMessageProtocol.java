@@ -11,10 +11,9 @@
  */
 package org.heliosphere.thot.akka.chat.server.room;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
-
-import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
 public class RoomMessageProtocol
 {
@@ -24,7 +23,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomList implements IMessageProtocol
+	public final static class RoomList implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -97,7 +96,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomCreate implements IMessageProtocol
+	public final static class RoomCreate implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -153,7 +152,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomCreated implements IMessageProtocol
+	public final static class RoomCreated implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -209,7 +208,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomDelete implements IMessageProtocol
+	public final static class RoomDelete implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -265,7 +264,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomDeleted implements IMessageProtocol
+	public final static class RoomDeleted implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -321,7 +320,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomJoin implements IMessageProtocol
+	public final static class RoomJoin implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -377,7 +376,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomJoined implements IMessageProtocol
+	public final static class RoomJoined implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -433,7 +432,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomLeave implements IMessageProtocol
+	public final static class RoomLeave implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -489,7 +488,7 @@ public class RoomMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomLeft implements IMessageProtocol
+	public final static class RoomLeft implements Serializable
 	{
 		/**
 		 * Default serialization identifier.

@@ -9,10 +9,11 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.client;
+package org.heliosphere.thot.akka.chat.tutorial.enumeration.client.actor;
 
 import java.awt.Color;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.collections4.ListUtils;
@@ -22,6 +23,9 @@ import org.heliosphere.thot.akka.chat.server.lobby.LobbyMessageProtocol;
 import org.heliosphere.thot.akka.chat.server.room.RoomMessageProtocol;
 import org.heliosphere.thot.akka.chat.server.supervisor.ChatSupervisorProtocol;
 import org.heliosphere.thot.akka.chat.server.user.UserMessageProtocol;
+import org.heliosphere.thot.akka.chat.tutorial.enumeration.data.ILobby;
+import org.heliosphere.thot.akka.chat.tutorial.enumeration.data.IRoom;
+import org.heliosphere.thot.akka.chat.tutorial.enumeration.data.IUser;
 
 import com.heliosphere.athena.base.command.internal.ICommand;
 import com.heliosphere.athena.base.command.internal.ICommandListener;
@@ -35,7 +39,13 @@ import com.heliosphere.athena.base.command.protocol.DefaultCommandCodeType;
 import com.heliosphere.athena.base.command.protocol.DefaultCommandProtocol;
 import com.heliosphere.athena.base.command.response.ICommandResponse;
 import com.heliosphere.athena.base.file.internal.FileException;
+import com.heliosphere.athena.base.message.Message;
+import com.heliosphere.athena.base.message.internal.IMessage;
+import com.heliosphere.athena.base.message.internal.protocol.MessageProtocolCategory;
 import com.heliosphere.athena.base.message.protocol.DefaultMessageProtocolUsingClasses;
+import com.heliosphere.athena.base.message.protocol.TestMessageProtocol;
+import com.heliosphere.athena.base.message.protocol.TestMessageProtocolDomain;
+import com.heliosphere.athena.base.message.protocol.TestMessageProtocolGroup;
 import com.heliosphere.athena.base.terminal.CommandTerminal;
 import com.heliosphere.athena.base.terminal.OutputTerminal;
 
@@ -100,17 +110,17 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	/**
 	 * Current lobby.
 	 */
-	private Locale lobby = null;
+	private ILobby lobby = null;
 
 	/**
 	 * Current room.
 	 */
-	private String room = null;
+	private IRoom room = null;
 
 	/**
 	 * Underlying user for this chat client.
 	 */
-	private String user = null;
+	private IUser user = null;
 
 	/**
 	 * Static creation pattern for a {@link TerminalActor}.
@@ -152,7 +162,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 			//ActorSelection selection = getContext().actorSelection("/user/chat-supervisor");
 			ActorSelection selection = getContext().actorSelection("akka.tcp://ChatSystem@127.0.0.1:2551/user/chat-supervisor");
 
-			selection.tell(new ChatSupervisorProtocol.InitiateConversation(), getSelf());
+			selection.tell(Message.createMessage(TestMessageProtocol.CONVERSATION_INITIATE), getSelf());
 		}
 		catch (FileException e)
 		{
@@ -164,22 +174,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	public Receive createReceive()
 	{
 		return receiveBuilder()
-				//.match(ICommand.class, command -> handleAndDispatchCommand(command)) // Generic handler & dispatcher for commands.
-				//.match(IMessage.class, message -> handleAndDispatchMessage(message))
-				//.match(ICommandResponse.class, response -> handleResponse(response))
-				.match(ChatSupervisorProtocol.ConversationInitiated.class, response -> handleConversationInitiated())
-				.match(ChatSupervisorProtocol.UserRegistered.class, response -> handleUserRegistered(response))
-				.match(LobbyMessageProtocol.LobbyList.class, response -> handleMessageLobbyList(response))
-				.match(LobbyMessageProtocol.LobbyCreated.class, response -> handleMessageLobbyCreated(response))
-				.match(LobbyMessageProtocol.LobbyDeleted.class, response -> handleMessageLobbyDeleted(response))
-				.match(LobbyMessageProtocol.LobbyJoined.class, response -> handleMessageLobbyJoined(response))
-				.match(RoomMessageProtocol.RoomList.class, response -> handleMessageRoomList(response))
-				.match(RoomMessageProtocol.RoomCreated.class, response -> handleMessageRoomCreated(response))
-				.match(RoomMessageProtocol.RoomJoined.class, response -> handleMessageRoomConnected(response))
-				.match(RoomMessageProtocol.RoomLeft.class, response -> handleMessageRoomDisconnected(response))
-				.match(UserMessageProtocol.UserList.class, response -> handleMessageUserList(response))
-				.match(UserMessageProtocol.Said.class, message -> handleSaid(message))
-				.match(UserMessageProtocol.Whispered.class, message -> handleWhispered(message))
+				.match(IMessage.class, message -> handleAndDispatchMessage(message))
 				.match(DefaultMessageProtocolUsingClasses.SubmitCommand.class, message -> handleSubmitCommand(message))
 				.match(Status.Failure.class, failure -> handleFailure(failure))
 				.match(Terminated.class, this::onTerminated)
@@ -225,45 +220,180 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		output.start();
 	}
 
-	//	/**
-	//	 * Handles and dispatch messages.
-	//	 * <hr>
-	//	 * @param message Message to process.
-	//	 */
-	//	@SuppressWarnings("nls")
-	//	protected void handleAndDispatchMessage(final IMessage message)
-	//	{
-	//		LOG.info(String.format("Received message [category=%1s, type=%2s, sender=%3s]", message.getCategoryType(), message.getType(), getSender()));
-	//
-	//		try
-	//		{
-	//			switch (message.getCategoryType())
-	//			{
-	//				case REQUEST:
-	//					// So then it to the server side to be processed.
-	//					chatSystem.tell(message, getSelf());
-	//					break;
-	//
-	//				case NOTIFICATION:
-	//					// So then it to the server side to be processed.
-	//					chatSystem.tell(message, getSelf());
-	//					break;
-	//
-	//				case REPLY:
-	//					// Reply messages are coming from server side.
-	//					handleReplyMessage(message);
-	//					break;
-	//
-	//				default:
-	//					break;
-	//			}
-	//		}
-	//		catch (Exception e)
-	//		{
-	//			// In case of a failure notify the end-user!
-	//			terminal.getTerminal().println(String.format("An error occurred due to: %1s", e.getMessage()));
-	//		}
-	//	}
+	/**
+	 * Handles and dispatch incoming message.
+	 * <hr>
+	 * @param message Incoming message to handle.
+	 */
+	@SuppressWarnings("nls")
+	protected void handleAndDispatchMessage(final IMessage message)
+	{
+		LOG.info(String.format("Received message [category=%1s, group=%2s, domain=%3s, sender=%4s]", message.getCategory(), message.getGroup(), message.getDomain(), getSender()));
+
+		try
+		{
+			switch ((MessageProtocolCategory) message.getCategory())
+			{
+				case APPLICATION:
+					handleApplicationMessage(message);
+					break;
+
+				case AUDIT:
+				case SECURITY:
+				case AUTHENTICATION:
+				case SYSTEM:
+				case BATCH:
+				case INFO:
+
+				default:
+					break;
+			}
+		}
+		catch (Exception e)
+		{
+			// In case of a failure notify the end-user!
+			terminal.getTerminal().println(String.format("An error occurred due to: %1s", e.getMessage()));
+		}
+	}
+
+	/**
+	 * Handles and dispatch incoming application message.
+	 * <hr>
+	 * @param message Incoming message to handle.
+	 */
+	protected void handleApplicationMessage(final IMessage message)
+	{
+		// Category is: MessageProtocolCategory#APPLICATION
+		switch ((TestMessageProtocolGroup) message.getGroup())
+		{
+			case CHAT:
+				handleApplicationChatMessage(message);
+				break;
+
+			case MESSAGE:
+
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Handles and dispatch incoming application chat message.
+	 * <hr>
+	 * @param message Incoming message to handle.
+	 */
+	protected void handleApplicationChatMessage(final IMessage message)
+	{
+		// Group is: TestMessageProtocolGroup#CHAT
+		switch ((TestMessageProtocolDomain) message.getDomain())
+		{
+			case CONVERSATION:
+				handleApplicationChatConversationMessage(message);
+				break;
+
+			case LOBBY:
+				handleApplicationChatConversationMessage(message);
+				break;
+
+			case MESSAGE:
+			case ROOM:
+			case USER:
+
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Handles and dispatch incoming application chat conversation message.
+	 * <hr>
+	 * @param message Incoming message to handle.
+	 */
+	@SuppressWarnings({ "incomplete-switch", "nls" })
+	protected void handleApplicationChatConversationMessage(final IMessage message)
+	{
+		// Domain is: TestMessageProtocolDomain#CONVERSATION
+		switch ((TestMessageProtocol) message.getProtocol())
+		{
+			case CONVERSATION_INITIATED:
+				chatSystem = getSender();
+				terminal.appendToPane("Chat server has been contacted and has answered.\nPlease register with a user.\n\n", Color.WHITE);
+
+				output.start();
+				terminal.start();
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Handles and dispatch incoming application chat lobby message.
+	 * <hr>
+	 * @param message Incoming message to handle.
+	 */
+	@SuppressWarnings({ "incomplete-switch", "nls" })
+	protected void handleApplicationChatLobbyMessage(final IMessage message)
+	{
+		ILobby lobby = null;
+
+		// Domain is: TestMessageProtocolDomain#LOBBY
+		switch ((TestMessageProtocol) message.getProtocol())
+		{
+			case LOBBY_CREATED:
+				lobby = (ILobby) message.getContent();
+				terminal.appendToPane(String.format("Lobby: lobby-%1s has been created.\n\n", lobby.getName()), Color.WHITE);
+				break;
+
+			case LOBBY_DELETED:
+				lobby = (ILobby) message.getContent();
+				terminal.appendToPane(String.format("Lobby: %1s has been deleted.", message.getContent()), Color.WHITE);
+				break;
+
+			case LOBBY_JOINED:
+				lobbyProxy = getSender();
+				this.lobby = (ILobby) message.getContent();
+
+				terminal.appendToPane(String.format("User: %1s has joined lobby-%2s.\n\n", user.getFirstName(), this.lobby.getName()), Color.WHITE);
+
+				output.setTitle(String.format("Chat window for user [%1s] on [lobby-%2s]", user, this.lobby.getName()));
+				output.appendToPane(String.format("Welcome %1s in: lobby-%2s\n\n", user.getFirstName(), this.lobby.getName()), Color.WHITE);
+
+				terminal.setPrompt(String.format("Command (%1s:%2s):>", user.getFirstName(), this.lobby.getName()));
+
+				output.getIO().getFrame().setVisible(true);
+				terminal.getIO().getFrame().setVisible(true); // Give back focus to terminal window.
+				terminal.resume();
+				break;
+
+			case LOBBY_LEFT:
+				break;
+
+			case LOBBY_LISTED:
+				if (message.getContent() == null)
+				{
+					terminal.getTerminal().println("No lobby!");
+				}
+				else
+				{
+					List<ILobby> lobbies = (List<ILobby>) message.getContent();
+					terminal.getTerminal().println(String.format("%1d existing lobby(ies):", lobbies.size()));
+					for (ILobby element : lobbies)
+					{
+						terminal.getTerminal().println(String.format("|   %1d - %2s", element.getId(), element.getName()));
+					}
+					terminal.getTerminal().println();
+				}
+
+				break;
+
+			default:
+				break;
+		}
+
+		terminal.resume();
+	}
 
 	//	/**
 	//	 * Handles reply {@link Message}.
@@ -360,7 +490,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 					throw new CommandException("Cannot send a null message!");
 				}
 
-				roomProxy.tell(new UserMessageProtocol.Say(this.user, text), getSelf());
+				//roomProxy.tell(Message.createMessage(TestMessageProtocol.MESSAGE_SAY, new TextMessage(text, this.user, null)), getSelf());
 				break;
 
 			case MESSAGE_WHISPER:
@@ -374,7 +504,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				{
 					throw new CommandException("Cannot send a null message!");
 				}
-				roomProxy.tell(new UserMessageProtocol.Whisper(user, text, this.user), getSelf());
+				//roomProxy.tell(new UserMessageProtocol.Whisper(user, text, this.user), getSelf());
 				break;
 
 			default:
@@ -395,27 +525,27 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		switch ((ChatCommandProtocol) command.getProtocol())
 		{
 			case LOBBY_LIST:
-				chatSystem.tell(new LobbyMessageProtocol.LobbyList(this.user, null), getSelf());
+				//chatSystem.tell(new LobbyMessageProtocol.LobbyList(this.user, null), getSelf());
 				break;
 
 			case LOBBY_CREATE:
 				locale = new Locale((String) command.getParameter("create").getValue());
-				chatSystem.tell(new LobbyMessageProtocol.LobbyCreate(this.user, locale), getSelf());
+				//chatSystem.tell(new LobbyMessageProtocol.LobbyCreate(this.user, locale), getSelf());
 				break;
 
 			case LOBBY_DELETE:
 				locale = new Locale((String) command.getParameter("delete").getValue());
-				chatSystem.tell(new LobbyMessageProtocol.LobbyDelete(this.user, locale), getSelf());
+				//chatSystem.tell(new LobbyMessageProtocol.LobbyDelete(this.user, locale), getSelf());
 				break;
 
 			case LOBBY_JOIN:
 				locale = new Locale((String) command.getParameter("join").getValue());
-				chatSystem.tell(new LobbyMessageProtocol.LobbyJoin(this.user, locale), getSelf());
+				//chatSystem.tell(new LobbyMessageProtocol.LobbyJoin(this.user, locale), getSelf());
 				break;
 
 			case LOBBY_LEAVE:
 				locale = new Locale((String) command.getParameter("leave").getValue());
-				chatSystem.tell(new LobbyMessageProtocol.LobbyLeave(this.user, locale), getSelf());
+				//chatSystem.tell(new LobbyMessageProtocol.LobbyLeave(this.user, locale), getSelf());
 				break;
 
 			default:
@@ -442,7 +572,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				{
 					throw new CommandException("You must have joined a lobby first before querying for rooms!");
 				}
-				lobbyProxy.tell(new RoomMessageProtocol.RoomList(this.user, lobby, null), getSelf());
+				//lobbyProxy.tell(new RoomMessageProtocol.RoomList(this.user, lobby, null), getSelf());
 				break;
 
 			case ROOM_CREATE:
@@ -451,7 +581,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				{
 					throw new CommandException("You must have joined a lobby first to create a room!");
 				}
-				lobbyProxy.tell(new RoomMessageProtocol.RoomCreate(this.user, room), getSelf());
+				//lobbyProxy.tell(new RoomMessageProtocol.RoomCreate(this.user, room), getSelf());
 				break;
 
 			case ROOM_DELETE:
@@ -460,7 +590,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				{
 					throw new CommandException("You must have joined a lobby first to delete a room!");
 				}
-				lobbyProxy.tell(new RoomMessageProtocol.RoomDelete(this.user, room), getSelf());
+				//lobbyProxy.tell(new RoomMessageProtocol.RoomDelete(this.user, room), getSelf());
 				break;
 
 			case ROOM_JOIN:
@@ -469,7 +599,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				{
 					throw new CommandException("You must have joined a lobby first to join a room!");
 				}
-				lobbyProxy.tell(new RoomMessageProtocol.RoomJoin(this.user, room), getSelf());
+				//lobbyProxy.tell(new RoomMessageProtocol.RoomJoin(this.user, room), getSelf());
 				break;
 
 			case ROOM_LEAVE:
@@ -478,7 +608,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 				{
 					throw new CommandException("You must have joined a room first to leave it!");
 				}
-				roomProxy.tell(new RoomMessageProtocol.RoomLeave(this.user, room), getSelf());
+				//roomProxy.tell(new RoomMessageProtocol.RoomLeave(this.user, room), getSelf());
 				break;
 		}
 	}
@@ -496,7 +626,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 					throw new CommandException("You must have joined a room first before querying for users!");
 				}
 
-				roomProxy.tell(new UserMessageProtocol.UserList(room, null), getSelf());
+				//roomProxy.tell(new UserMessageProtocol.UserList(room, null), getSelf());
 				break;
 
 			case USER_REGISTER:
@@ -522,7 +652,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 
 		if (text != null)
 		{
-			roomProxy.tell(new UserMessageProtocol.Say(user, (String) text.getValue()), getSelf());
+			//roomProxy.tell(new UserMessageProtocol.Say(user, (String) text.getValue()), getSelf());
 		}
 		else
 		{
@@ -548,7 +678,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		}
 		else
 		{
-			roomProxy.tell(new UserMessageProtocol.Whisper((String) user.getValue(), (String) text.getValue(), this.user), getSelf());
+			//roomProxy.tell(new UserMessageProtocol.Whisper((String) user.getValue(), (String) text.getValue(), this.user), getSelf());
 		}
 
 		terminal.resume();
@@ -770,7 +900,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 		{
 			if (user != null)
 			{
-				chatSystem.tell(new LobbyMessageProtocol.LobbyList(user, null), getSelf());
+				//chatSystem.tell(new LobbyMessageProtocol.LobbyList(user, null), getSelf());
 			}
 		}
 	}
@@ -783,7 +913,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	@SuppressWarnings("nls")
 	private void handleUserRegistered(final ChatSupervisorProtocol.UserRegistered response)
 	{
-		this.user = response.getUser();
+		//this.user = response.getUser();
 
 		terminal.setPrompt(String.format("Command (%1s):>", response.getUser()));
 		terminal.appendToPane(String.format("User: %1s is registered with chat system. \n\n", response.getUser()), Color.WHITE);
@@ -877,7 +1007,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	private void handleMessageLobbyJoined(final LobbyMessageProtocol.LobbyJoined response)
 	{
 		lobbyProxy = getSender();
-		lobby = response.getLobby();
+		//lobby = response.getLobby();
 
 		terminal.appendToPane(String.format("User: %1s has joined lobby-%2s.\n\n", response.getUser(), response.getLobby().toString()), Color.WHITE);
 
@@ -913,7 +1043,7 @@ public class TerminalActor extends AbstractActor implements ICommandListener
 	private void handleMessageRoomConnected(final RoomMessageProtocol.RoomJoined response)
 	{
 		roomProxy = getSender();
-		room = response.getRoom();
+		//room = response.getRoom();
 		terminal.appendToPane(String.format("User: %1s has joined room: %2s on lobby-%3s.\n\n", response.getUser(), response.getRoom(), lobby), Color.WHITE);
 
 		output.setTitle(String.format("Chat window for user [%1s] on [lobby-%2s] in room [%3s]", user, lobby.toString(), room));

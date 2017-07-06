@@ -16,7 +16,7 @@ import java.time.Duration;
 import org.heliosphere.thot.akka.chat.client.TerminalActor;
 import org.heliosphere.thot.akka.chat.server.supervisor.ChatSupervisorActor;
 
-import com.heliosphere.athena.base.message.protocol.DefaultMessageProtocol;
+import com.heliosphere.athena.base.message.protocol.DefaultMessageProtocolUsingClasses;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -55,18 +55,18 @@ public class LocalChatTutorial
 		ActorRef terminal3 = system.actorOf(TerminalActor.props("Terminal #3", "/config/terminal/terminal-1.properties", "/config/command/chat-client-commands.xml"), "chat-terminal-3");
 
 		Duration wait = Duration.ofMillis(300);
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=christophe", Duration.ofSeconds(1)), ActorRef.noSender());
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -create=fr", wait), ActorRef.noSender());
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/room -create=Discussion", wait), ActorRef.noSender());
-		terminal1.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/user -register=christophe", Duration.ofSeconds(1)), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/lobby -create=fr", wait), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/room -create=Discussion", wait), ActorRef.noSender());
+		terminal1.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
 
-		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=fabienne", Duration.ofSeconds(2)), ActorRef.noSender());
-		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
-		terminal2.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
+		terminal2.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/user -register=fabienne", Duration.ofSeconds(2)), ActorRef.noSender());
+		terminal2.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
+		terminal2.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
 
-		terminal3.tell(new DefaultMessageProtocol.SubmitCommand("/user -register=alan", Duration.ofSeconds(2)), ActorRef.noSender());
-		terminal3.tell(new DefaultMessageProtocol.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
-		terminal3.tell(new DefaultMessageProtocol.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
+		terminal3.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/user -register=alan", Duration.ofSeconds(2)), ActorRef.noSender());
+		terminal3.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/lobby -join=fr", wait), ActorRef.noSender());
+		terminal3.tell(new DefaultMessageProtocolUsingClasses.SubmitCommand("/room -join=Discussion", wait), ActorRef.noSender());
 	}
 }

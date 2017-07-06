@@ -11,7 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.server.supervisor;
 
-import com.heliosphere.athena.base.message.internal.IMessageProtocol;
+import java.io.Serializable;
 
 /**
  * Message protocol for a {@link ChatSupervisorActor} actor.
@@ -27,7 +27,7 @@ public final class ChatSupervisorProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class InitiateConversation implements IMessageProtocol
+	public final static class InitiateConversation implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -41,7 +41,7 @@ public final class ChatSupervisorProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class ConversationInitiated implements IMessageProtocol
+	public final static class ConversationInitiated implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -55,7 +55,7 @@ public final class ChatSupervisorProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RegisterUser implements IMessageProtocol
+	public final static class RegisterUser implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -94,7 +94,7 @@ public final class ChatSupervisorProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class UserRegistered implements IMessageProtocol
+	public final static class UserRegistered implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -133,7 +133,7 @@ public final class ChatSupervisorProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class UnregisterUser implements IMessageProtocol
+	public final static class UnregisterUser implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -172,7 +172,7 @@ public final class ChatSupervisorProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class UserUnregistered implements IMessageProtocol
+	public final static class UserUnregistered implements Serializable
 	{
 		/**
 		 * Default serialization identifier.

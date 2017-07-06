@@ -11,12 +11,11 @@
  */
 package org.heliosphere.thot.akka.chat.server.user;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.heliosphere.thot.akka.chat.client.TerminalActor;
 import org.heliosphere.thot.akka.chat.server.room.RoomActor;
-
-import com.heliosphere.athena.base.message.internal.IMessageProtocol;
 
 public class UserMessageProtocol
 {
@@ -26,7 +25,7 @@ public class UserMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class UserList implements IMessageProtocol
+	public final static class UserList implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -82,7 +81,7 @@ public class UserMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Say implements IMessageProtocol
+	public final static class Say implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -138,7 +137,7 @@ public class UserMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Said implements IMessageProtocol
+	public final static class Said implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -194,7 +193,7 @@ public class UserMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Whisper implements IMessageProtocol
+	public final static class Whisper implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
@@ -267,7 +266,7 @@ public class UserMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Whispered implements IMessageProtocol
+	public final static class Whispered implements Serializable
 	{
 		/**
 		 * Default serialization identifier.
