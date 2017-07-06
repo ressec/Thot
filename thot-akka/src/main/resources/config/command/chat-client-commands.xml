@@ -110,6 +110,41 @@
     </command>
 
     <!-- 
+      COMMAND: 'WHISPER' 
+    -->
+    <command>
+      <protocol>org.heliosphere.thot.akka.chat.client.command.ChatCommandProtocol.MESSAGE_WHISPER</protocol>
+      <processor></processor>
+      <name>whisper</name>
+      <description>Whispers a private message to a specific user in a room.</description>
+      <aliases>
+        <alias>w</alias>
+      </aliases>
+      <parameters>
+        <parameter>
+          <name>user</name>
+          <description>Text of the say command.</description>
+          <tag>-user</tag>
+          <regexp>(-user=)\s*+([a-zA-Z]++\*?)</regexp>
+          <type>String</type>
+          <examples>
+            <example>/whisper -user=alan Hi guys ... happy to be there with you :)</example>
+          </examples>
+        </parameter>
+        <parameter>
+          <name>text</name>
+          <description>Text of the whisper command.</description>
+          <tag></tag>
+          <regexp>(.+?)$</regexp>
+          <type>String</type>
+          <examples>
+            <example>/whisper -user=alan Hi guys ... happy to be there with you :)</example>
+          </examples>
+        </parameter>
+      </parameters>
+    </command>
+
+    <!-- 
       COMMAND: 'USER' 
     -->
     <command>

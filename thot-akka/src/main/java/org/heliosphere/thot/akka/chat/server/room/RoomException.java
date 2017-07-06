@@ -9,19 +9,19 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.user;
+package org.heliosphere.thot.akka.chat.server.room;
 
 import com.heliosphere.athena.base.exception.AbstractCheckedException;
 import com.heliosphere.athena.base.exception.IExceptionType;
 import com.heliosphere.athena.base.resource.bundle.IBundle;
 
 /**
- * Checked exception thrown to indicate an error occurred while processing a {@link User}.
+ * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
  * <hr>
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class UserException extends AbstractCheckedException
+public class RoomException extends AbstractCheckedException
 {
 	/**
 	 * Serialization identifier.
@@ -29,63 +29,66 @@ public class UserException extends AbstractCheckedException
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link User}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 */
-	public UserException()
+	public RoomException()
 	{
 		super();
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link User}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param key Resource bundle key (enumerated value coming from an
 	 * enumeration implementing the {@link IBundle} interface).
 	 */
-	public UserException(final Enum<? extends IBundle> key)
+	public RoomException(final Enum<? extends IBundle> key)
 	{
 		super(key);
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link User}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param key Exception key (enumerated value coming from an enumeration
 	 * implementing the {@link IExceptionType} interface).
-	 * @param parameters List of parameters used to populate the exception message.
+	 * @param parameters List of parameters used to populate the exception
+	 * message.
 	 */
-	public UserException(final Enum<?> key, final Object... parameters)
+	public RoomException(final Enum<?> key, final Object... parameters)
 	{
 		super(key, parameters);
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link User}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
 	 * @param exception Parent exception.
 	 */
-	public UserException(final Exception exception)
+	public RoomException(final Exception exception)
 	{
 		super(exception);
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link User}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
-	 * @param message Message describing the error being the cause of the raised exception.
+	 * @param message Message describing the error being the cause of the raised
+	 * exception.
 	 */
-	public UserException(final String message)
+	public RoomException(final String message)
 	{
 		super(message);
 	}
 
 	/**
-	 * Checked exception thrown to indicate an error occurred while processing a {@link User}.
+	 * Checked exception thrown to indicate an error occurred while processing a {@link RoomActor}.
 	 * <p>
-	 * @param message Message describing the error being the cause of the raised exception.
+	 * @param message Message describing the error being the cause of the raised
+	 * exception.
 	 * @param exception Parent exception.
 	 */
-	public UserException(final String message, final Exception exception)
+	public RoomException(final String message, final Exception exception)
 	{
 		super(message, exception);
 	}

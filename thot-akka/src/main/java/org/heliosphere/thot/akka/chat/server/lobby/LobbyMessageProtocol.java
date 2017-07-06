@@ -9,28 +9,27 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.lobby;
+package org.heliosphere.thot.akka.chat.server.lobby;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
-import com.heliosphere.athena.base.message.internal.IMessageProtocol;
-
-public class LobbyMessageProtocol implements IMessageProtocol
+public class LobbyMessageProtocol
 {
-	/**
-	 * Default serialization identifier.
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Message used to get the available list of lobbies.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyList
+	public final static class LobbyList implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -80,8 +79,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyCreate
+	public final static class LobbyCreate implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -131,8 +135,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyCreated
+	public final static class LobbyCreated implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Lobby's locale.
 		 */
@@ -165,8 +174,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDelete
+	public final static class LobbyDelete implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -216,8 +230,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyDeleted
+	public final static class LobbyDeleted implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Lobby's locale.
 		 */
@@ -250,8 +269,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyJoin
+	public final static class LobbyJoin implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -301,8 +325,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyJoined
+	public final static class LobbyJoined implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -352,8 +381,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyLeave
+	public final static class LobbyLeave implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -403,8 +437,13 @@ public class LobbyMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class LobbyLeft
+	public final static class LobbyLeft implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */

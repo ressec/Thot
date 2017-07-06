@@ -9,30 +9,29 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.user;
+package org.heliosphere.thot.akka.chat.server.user;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.heliosphere.thot.akka.chat.client.TerminalActor;
-import org.heliosphere.thot.akka.chat.room.RoomActor;
+import org.heliosphere.thot.akka.chat.server.room.RoomActor;
 
-import com.heliosphere.athena.base.message.internal.IMessageProtocol;
-
-public class UserMessageProtocol implements IMessageProtocol
+public class UserMessageProtocol
 {
-	/**
-	 * Default serialization identifier.
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Message used to get a list of users in a room.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class UserList
+	public final static class UserList implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Room.
 		 */
@@ -82,8 +81,13 @@ public class UserMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Say
+	public final static class Say implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Message.
 		 */
@@ -133,8 +137,13 @@ public class UserMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Said
+	public final static class Said implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Message.
 		 */
@@ -184,12 +193,22 @@ public class UserMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class Whisper
+	public final static class Whisper implements Serializable
 	{
 		/**
-		 * User.
+		 * Default serialization identifier.
 		 */
-		private final String user;
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Recipient user name.
+		 */
+		private final String recipient;
+
+		/**
+		 * Sender user name.
+		 */
+		private final String sender;
 
 		/**
 		 * Message.
@@ -199,23 +218,108 @@ public class UserMessageProtocol implements IMessageProtocol
 		/**
 		 * Creates a new message.
 		 * <hr>
-		 * @param user User name.
+		 * @param recipient Recipient user name.
 		 * @param message Message.
+		 * @param sender Sender user name.
 		 */
-		public Whisper(String user, String message)
+		public Whisper(String recipient, String message, String sender)
+		{
+			this.recipient = recipient;
+			this.message = message;
+			this.sender = sender;
+		}
+
+		/**
+		 * Returns the recipient user.
+		 * <hr>
+		 * @return Recipient user name.
+		 */
+		public final String getRecipient()
+		{
+			return recipient;
+		}
+
+		/**
+		 * Returns the sender user.
+		 * <hr>
+		 * @return Sender user name.
+		 */
+		public final String getSender()
+		{
+			return sender;
+		}
+
+		/**
+		 * Returns the message.
+		 * <hr>
+		 * @return Message.
+		 */
+		public final String getMessage()
+		{
+			return message;
+		}
+	}
+
+	/**
+	 * Message send by a {@link RoomActor} to a {@link TerminalActor} to notify a user sent a private message in a room to a specific user.
+	 * <hr>
+	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
+	 * @version 1.0.0
+	 */
+	public final static class Whispered implements Serializable
+	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Message.
+		 */
+		private final String message;
+
+		/**
+		 * Sender user name.
+		 */
+		private final String sender;
+
+		/**
+		 * User.
+		 */
+		private final String user;
+
+		/**
+		 * Creates a new message.
+		 * <hr>
+		 * @param user User.
+		 * @param message Message.
+		 * @param sender Sender user name.
+		 */
+		public Whispered(String user, String message, String sender)
 		{
 			this.user = user;
 			this.message = message;
+			this.sender = sender;
 		}
 
 		/**
 		 * Returns the user.
 		 * <hr>
-		 * @return User name.
+		 * @return User.
 		 */
 		public final String getUser()
 		{
 			return user;
+		}
+
+		/**
+		 * Returns the sender user.
+		 * <hr>
+		 * @return Sender user name.
+		 */
+		public final String getSender()
+		{
+			return sender;
 		}
 
 		/**

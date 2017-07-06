@@ -9,28 +9,27 @@
  * License can be consulted at http://www.apache.org/licenses/LICENSE-2.0
  * ---------------------------------------------------------------------------
  */
-package org.heliosphere.thot.akka.chat.room;
+package org.heliosphere.thot.akka.chat.server.room;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
-import com.heliosphere.athena.base.message.internal.IMessageProtocol;
-
-public class RoomMessageProtocol implements IMessageProtocol
+public class RoomMessageProtocol
 {
-	/**
-	 * Default serialization identifier.
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Message used to get the available list of rooms.
 	 * <hr>
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomList
+	public final static class RoomList implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -97,8 +96,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomCreate
+	public final static class RoomCreate implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -148,8 +152,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomCreated
+	public final static class RoomCreated implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -199,8 +208,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomDelete
+	public final static class RoomDelete implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -250,8 +264,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomDeleted
+	public final static class RoomDeleted implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -301,8 +320,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomJoin
+	public final static class RoomJoin implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -352,8 +376,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomJoined
+	public final static class RoomJoined implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -403,8 +432,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomLeave
+	public final static class RoomLeave implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
@@ -454,8 +488,13 @@ public class RoomMessageProtocol implements IMessageProtocol
 	 * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
 	 * @version 1.0.0
 	 */
-	public final static class RoomLeft
+	public final static class RoomLeft implements Serializable
 	{
+		/**
+		 * Default serialization identifier.
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * User.
 		 */
