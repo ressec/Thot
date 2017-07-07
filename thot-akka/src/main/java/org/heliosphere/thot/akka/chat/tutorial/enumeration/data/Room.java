@@ -17,7 +17,7 @@ package org.heliosphere.thot.akka.chat.tutorial.enumeration.data;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public class Room implements ILobby
+public class Room implements IRoom
 {
 	/**
 	 * Default serialization identifier.
@@ -32,18 +32,38 @@ public class Room implements ILobby
 	/**
 	 * Room's unique identifier.
 	 */
-	private int id;
+	private int uid;
 
 	/**
 	 * Creates a new room.
 	 * <hr>
 	 * @param name Room's name.
-	 * @param id Room's identifier.
 	 */
-	public Room(String name, int id)
+	public Room(String name)
 	{
 		this.name = name;
-		this.id = id;
+	}
+
+	/**
+	 * Creates a new room.
+	 * <hr>
+	 * @param uid Room's unique identifier.
+	 */
+	public Room(int uid)
+	{
+		this.uid = uid;
+	}
+
+	/**
+	 * Creates a new room.
+	 * <hr>
+	 * @param name Room's name.
+	 * @param uid Room's unique identifier.
+	 */
+	public Room(String name, int uid)
+	{
+		this.name = name;
+		this.uid = uid;
 	}
 
 	@Override
@@ -53,8 +73,8 @@ public class Room implements ILobby
 	}
 
 	@Override
-	public final int getId()
+	public final int getUid()
 	{
-		return id;
+		return uid;
 	}
 }

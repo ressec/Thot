@@ -11,7 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.tutorial.enumeration.data;
 
-import java.io.Serializable;
+import com.heliosphere.athena.base.message.internal.IMessageContent;
 
 /**
  * Provides the behavior of a lobby.
@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public interface ILobby extends Serializable
+public interface ILobby extends IMessageContent
 {
 	/**
 	 * Returns the lobby's name.
@@ -31,7 +31,7 @@ public interface ILobby extends Serializable
 	/**
 	 * Returns the lobby's unique identifier.
 	 * <hr>
-	 * @return Lobby's identifier.
+	 * @return Lobby's unique identifier.
 	 */
-	int getId();
+	int getUid();
 }

@@ -32,18 +32,38 @@ public class Lobby implements ILobby
 	/**
 	 * Lobby's unique identifier.
 	 */
-	private int id;
+	private int uid;
 
 	/**
 	 * Creates a new lobby.
 	 * <hr>
 	 * @param name Lobby's name.
-	 * @param id Lobby's identifier.
 	 */
-	public Lobby(String name, int id)
+	public Lobby(String name)
 	{
 		this.name = name;
-		this.id = id;
+	}
+
+	/**
+	 * Creates a new lobby.
+	 * <hr>
+	 * @param uid Lobby's unique identifier.
+	 */
+	public Lobby(int uid)
+	{
+		this.uid = uid;
+	}
+
+	/**
+	 * Creates a new lobby.
+	 * <hr>
+	 * @param name Lobby's name.
+	 * @param uid Lobby's unique identifier.
+	 */
+	public Lobby(String name, int uid)
+	{
+		this.name = name;
+		this.uid = uid;
 	}
 
 	@Override
@@ -53,8 +73,8 @@ public class Lobby implements ILobby
 	}
 
 	@Override
-	public final int getId()
+	public final int getUid()
 	{
-		return id;
+		return uid;
 	}
 }

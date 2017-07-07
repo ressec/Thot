@@ -44,6 +44,18 @@ public class TextMessage implements ITextMessage
 	 * <hr>
 	 * @param text Text of the message.
 	 * @param sender Sender of the message.
+	 */
+	public TextMessage(String text, IUser sender)
+	{
+		this.text = text;
+		this.sender = sender;
+	}
+
+	/**
+	 * Creates a new text message.
+	 * <hr>
+	 * @param text Text of the message.
+	 * @param sender Sender of the message.
 	 * @param recipient Recipient of the message.
 	 */
 	public TextMessage(String text, IUser sender, IUser recipient)
