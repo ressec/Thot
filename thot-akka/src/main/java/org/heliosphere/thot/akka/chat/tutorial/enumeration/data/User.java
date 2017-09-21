@@ -35,28 +35,67 @@ public class User implements IUser
 	private String lastname;
 
 	/**
+	 * User's alias.
+	 */
+	private String alias;
+
+	/**
 	 * User's unique identifier.
 	 */
-	private int id;
+	private int uid;
 
 	/**
 	 * Is the user authenticated against the server side?
 	 */
-	private boolean authenticated;
+	private boolean authenticated = false;
+
+	/**
+	 * Creates a new user.
+	 * <hr>
+	 * @param alias User's alias.
+	 */
+	public User(String alias)
+	{
+		this.alias = alias;
+	}
+
+	/**
+	 * Creates a new user.
+	 * <hr>
+	 * @param uid User's unique identifier.
+	 */
+	public User(int uid)
+	{
+		this.uid = uid;
+	}
 
 	/**
 	 * Creates a new user.
 	 * <hr>
 	 * @param firstname User's first name.
 	 * @param lastname User's last name.
-	 * @param id User's identifier.
-	 * @param authenticated Is the user authenticated?
 	 */
-	public User(String firstname, String lastname, int id, boolean authenticated)
+	public User(String firstname, String lastname)
 	{
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.id = id;
+	}
+
+	/**
+	 * Creates a new user.
+	 * <hr>
+	 * @param firstname User's first name.
+	 * @param lastname User's last name.
+	 * @param alias User's alias.
+	 * @param uid User's identifier.
+	 * @param authenticated Is the user authenticated?
+	 */
+	public User(String firstname, String lastname, String alias, int uid, boolean authenticated)
+	{
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.alias = alias;
+		this.uid = uid;
 		this.authenticated = authenticated;
 	}
 
@@ -73,9 +112,15 @@ public class User implements IUser
 	}
 
 	@Override
-	public final int getId()
+	public final String getAlias()
 	{
-		return id;
+		return alias;
+	}
+
+	@Override
+	public final int getUid()
+	{
+		return uid;
 	}
 
 	@Override

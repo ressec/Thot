@@ -11,7 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.tutorial.enumeration.data;
 
-import java.io.Serializable;
+import com.heliosphere.athena.base.message.internal.IMessageContent;
 
 /**
  * Provides the behavior of a user.
@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public interface IUser extends Serializable
+public interface IUser extends IMessageContent
 {
 	/**
 	 * Returns the user's first name.
@@ -36,11 +36,18 @@ public interface IUser extends Serializable
 	String getLastName();
 
 	/**
+	 * Returns the user's alias.
+	 * <hr>
+	 * @return User's alias.
+	 */
+	String getAlias();
+
+	/**
 	 * Returns the user's unique identifier.
 	 * <hr>
 	 * @return User's identifier.
 	 */
-	int getId();
+	int getUid();
 
 	/**
 	 * Returns if the user is authenticated against the server side?

@@ -11,7 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.tutorial.enumeration.data;
 
-import java.io.Serializable;
+import com.heliosphere.athena.base.message.internal.IMessageContent;
 
 /**
  * Provides the behavior of a text message.
@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public interface ITextMessage extends Serializable
+public interface ITextMessage extends IMessageContent
 {
 	/**
 	 * Returns the text message.

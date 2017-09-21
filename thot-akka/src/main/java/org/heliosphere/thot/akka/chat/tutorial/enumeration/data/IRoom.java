@@ -11,7 +11,7 @@
  */
 package org.heliosphere.thot.akka.chat.tutorial.enumeration.data;
 
-import java.io.Serializable;
+import com.heliosphere.athena.base.message.internal.IMessageContent;
 
 /**
  * Provides the behavior of a room.
@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author <a href="mailto:christophe.resse@gmail.com">Christophe Resse - Heliosphere</a>
  * @version 1.0.0
  */
-public interface IRoom extends Serializable
+public interface IRoom extends IMessageContent
 {
 	/**
 	 * Returns the room's name.
@@ -31,7 +31,7 @@ public interface IRoom extends Serializable
 	/**
 	 * Returns the room's unique identifier.
 	 * <hr>
-	 * @return Room's identifier.
+	 * @return Room's unique identifier.
 	 */
-	int getId();
+	int getUid();
 }
