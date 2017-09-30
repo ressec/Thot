@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>thot-jpa</artifactId>
+	<name>Thot JPA</name>
+	<inceptionYear>2017</inceptionYear>
+	<developers>
+		<developer>
+			<id>rec</id>
+			<name>Christophe Resse</name>
+			<email>christophe.resse@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<organization>
+		<name>Heliosphere Corporation</name>
+	</organization>
+	<build>
+		<plugins>
+		</plugins>
+	</build>
+	<properties>
+		<project.directory.benchmark>${basedir/benchmark}</project.directory.benchmark>
+		<project.directory.run>${basedir/run}</project.directory.run>
+		<project.directory.data>${basedir/data}</project.directory.data>
+		<project.directory.log>${basedir/log}</project.directory.log>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<modules>
+	</modules>
+	<parent>
+		<groupId>org.heliosphere.thot</groupId>
+		<artifactId>thot-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../thot-parent</relativePath>
+	</parent>
+		<dependencies>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+   			<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-data-jpa</artifactId>
+    		<version>1.5.7.RELEASE</version>
+		</dependency>
+		<dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.6.4</version>
+        </dependency>
+        
+	</dependencies>
+	
+	<description>Thot JPA is one of the Heliosphere's educational project based on the Java Persistence API library.</description>
+</project>
