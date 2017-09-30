@@ -374,5 +374,8 @@
 		<module>../thot-console</module>
 		
 		<module>../thot-quasar</module>
+		<module>../thot-jme</module>
+		
+		<module>../thot-jpa</module>
 	</modules>
 </project>
