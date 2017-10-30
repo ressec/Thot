@@ -1,6 +1,4 @@
 /**
- * Provides entities for the persistence part. 
- * <p>
- * @author Christophe Resse
+ * Provides artifacts on Java Persistence API experimentations.
  */
 package org.heliosphere.thot.jpa;

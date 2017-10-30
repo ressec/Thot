@@ -1,6 +1,5 @@
 /**
- * Provides entities containing tests for the persistence entities. 
- * <p>
- * @author Christophe Resse
+ * Provides tests on artifacts related to the Java Persistence API
+ * experimentations.
  */
 package org.heliosphere.thot.jpa.test;
