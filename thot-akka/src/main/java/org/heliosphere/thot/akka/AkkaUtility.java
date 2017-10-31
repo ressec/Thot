@@ -16,11 +16,17 @@ import java.util.Map;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 
+/**
+ * Utility class for Akka.
+ * <hr>
+ * @author Resse Christophe - Heliosphere Corp.
+ */
 public final class AkkaUtility
 {
 	/**
 	 * Dumps on the console the keys and their values for a given path.
 	 * <hr>
+	 * @param configuration Configuration file.
 	 * @param path Path.
 	 */
 	@SuppressWarnings("nls")
