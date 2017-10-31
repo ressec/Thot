@@ -15,13 +15,24 @@ import org.beryx.textio.TextTerminal;
 
 import com.google.gson.Gson;
 
+/**
+ * Utility class dedicated to the console.
+ * <hr>
+ * @author Resse Christophe - Heliosphere Corp.
+ */
 public class AppUtil
 {
-	public static void printGsonMessage(TextTerminal terminal, String initData)
+	/**
+	 * Prints a JSon message to a text terminal.
+	 * <hr>
+	 * @param terminal Terminal where to print the message.
+	 * @param data Json message to print.
+	 */
+	public static void printGsonMessage(TextTerminal terminal, String data)
 	{
-		if (initData != null && !initData.isEmpty())
+		if (data != null && !data.isEmpty())
 		{
-			String message = new Gson().fromJson(initData, String.class);
+			String message = new Gson().fromJson(data, String.class);
 			if (message != null && !message.isEmpty())
 			{
 				terminal.println(message);
